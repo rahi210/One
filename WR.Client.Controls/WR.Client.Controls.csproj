@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5D5E0542-7068-4629-B5B6-C48716689387}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WR.Client.Controls</RootNamespace>
+    <AssemblyName>WR.Client.Controls</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\ClientBin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\ClientBin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="frm_rule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_rule.Designer.cs">
+      <DependentUpon>frm_rule.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScreenCapture\ColorBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ScreenCapture\ColorBox.designer.cs">
+      <DependentUpon>ColorBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScreenCapture\ColorBoxDesginer.cs" />
+    <Compile Include="ScreenCapture\FrmCapture.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScreenCapture\FrmCapture.designer.cs">
+      <DependentUpon>FrmCapture.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScreenCapture\ImageProcessBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ScreenCapture\ImageProcessBox.designer.cs">
+      <DependentUpon>ImageProcessBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScreenCapture\MouseHook.cs" />
+    <Compile Include="ScreenCapture\ScreenCapture.cs" />
+    <Compile Include="ScreenCapture\ToolButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ScreenCapture\ToolButton.designer.cs">
+      <DependentUpon>ToolButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScreenCapture\ToolButtonDesigner.cs" />
+    <Compile Include="ScreenCapture\Win32.cs" />
+    <Compile Include="WrDataGridView .cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WrMenuItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WrMenuItem.Designer.cs">
+      <DependentUpon>WrMenuItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WrPictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WrRule.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WrRule.Designer.cs">
+      <DependentUpon>WrRule.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="frm_rule.resx">
+      <DependentUpon>frm_rule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="ScreenCapture\ColorBox.resx">
+      <DependentUpon>ColorBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScreenCapture\FrmCapture.resx">
+      <DependentUpon>FrmCapture.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WrMenuItem.resx">
+      <DependentUpon>WrMenuItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WrRule.resx">
+      <DependentUpon>WrRule.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WR.Client.Utils\WR.Client.Utils.csproj">
+      <Project>{E56BA1FD-3E8D-4153-9AAF-843452971A0E}</Project>
+      <Name>WR.Client.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WR.Utils\WR.Utils.csproj">
+      <Project>{E4D42E9B-1814-4E38-80F9-D8938E04B0D9}</Project>
+      <Name>WR.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddUser.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\arrow.png" />
+    <Content Include="Resources\brush.png" />
+    <Content Include="Resources\cancel.png" />
+    <Content Include="Resources\close.png" />
+    <Content Include="Resources\color.bmp" />
+    <Content Include="Resources\ellips.png" />
+    <Content Include="Resources\large.png" />
+    <Content Include="Resources\middle.png" />
+    <Content Include="Resources\none.png" />
+    <Content Include="Resources\ok.png" />
+    <Content Include="Resources\rect.png" />
+    <Content Include="Resources\save.png" />
+    <Content Include="Resources\separator.png" />
+    <Content Include="Resources\small.png" />
+    <Content Include="Resources\text.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
