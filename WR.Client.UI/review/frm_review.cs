@@ -1094,6 +1094,16 @@ namespace WR.Client.UI
 
             try
             {
+                string sinfPath = string.IsNullOrEmpty(DataCache.SinfPath) ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SINF") : DataCache.SinfPath;
+                var path = Path.Combine(sinfPath, string.Format("{0}_{1}", result.LOT, result.DEVICE));
+
+                filename = Path.Combine(path, string.Format("{0}.sinf", result.SUBSTRATE_ID.Replace(".", "").Replace(" ", "")));
+
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
                 IwrService service = wrService.GetService();
                 var dielayout = service.GetDielayoutById(result.DIELAYOUTID);
                 var dielist = service.GetDielayoutListById(result.DIELAYOUTID);
@@ -1119,7 +1129,7 @@ namespace WR.Client.UI
 
                 foreach (var result in resultList)
                 {
-                    var path = Path.Combine(sinfPath, result.DEVICE, result.LAYER, result.LOT);
+                    var path = Path.Combine(sinfPath, string.Format("{0}_{1}", result.LOT, result.DEVICE));
                     var filename = Path.Combine(path, string.Format("{0}.sinf", result.SUBSTRATE_ID.Replace(".", "").Replace(" ", "")));
 
                     if (!Directory.Exists(path))
@@ -1176,14 +1186,18 @@ namespace WR.Client.UI
                 try
                 {
                     var ent = grdData.SelectedRows[0].DataBoundItem as WmwaferResultEntity;
-                    SaveFileDialog sd = new SaveFileDialog();
-                    sd.FileName = string.Format("{0}.sinf", ent.SUBSTRATE_ID.Replace(".", "").Replace(" ", ""));
-                    sd.Filter = "SINF文件(*.sinf)|*.sinf";
-                    if (sd.ShowDialog() == DialogResult.OK)
-                    {
-                        ExportSinf(sd.FileName, ent);
-                        MsgBoxEx.Info("SINF file is complete.");
-                    }
+                    //SaveFileDialog sd = new SaveFileDialog();
+                    //sd.FileName = string.Format("{0}.sinf", ent.SUBSTRATE_ID.Replace(".", "").Replace(" ", ""));
+                    //sd.Filter = "SINF文件(*.sinf)|*.sinf";
+                    //if (sd.ShowDialog() == DialogResult.OK)
+                    //{
+                    //    ExportSinf(sd.FileName, ent);
+                    //    MsgBoxEx.Info("SINF file is complete.");
+                    //}
+
+                    ExportSinf("", ent);
+
+                    MsgBoxEx.Info("SINF file is complete.");
                 }
                 catch (Exception ex)
                 {
@@ -1250,14 +1264,17 @@ namespace WR.Client.UI
                     var wfs = DataCache.WaferResultInfo;
                     var ent = wfs.FirstOrDefault(p => p.RESULTID == node.Tag.ToString());
 
-                    SaveFileDialog sd = new SaveFileDialog();
-                    sd.FileName = string.Format("{0}.sinf", ent.SUBSTRATE_ID.Replace(".", "").Replace(" ", ""));
-                    sd.Filter = "SINF文件(*.sinf)|*.sinf";
-                    if (sd.ShowDialog() == DialogResult.OK)
-                    {
-                        ExportSinf(sd.FileName, ent);
-                        MsgBoxEx.Info("SINF file is complete.");
-                    }
+                    //SaveFileDialog sd = new SaveFileDialog();
+                    //sd.FileName = string.Format("{0}.sinf", ent.SUBSTRATE_ID.Replace(".", "").Replace(" ", ""));
+                    //sd.Filter = "SINF文件(*.sinf)|*.sinf";
+                    //if (sd.ShowDialog() == DialogResult.OK)
+                    //{
+                    //    ExportSinf(sd.FileName, ent);
+                    //    MsgBoxEx.Info("SINF file is complete.");
+                    //}
+                    ExportSinf("", ent);
+
+                    MsgBoxEx.Info("SINF file is complete.");
                 }
             }
             catch (Exception ex)

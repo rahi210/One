@@ -148,24 +148,22 @@ namespace WR.WCF.Site
 
                     if (!string.IsNullOrEmpty(operatorid))
                     {
-                        sql = string.Format(@"select rownum Id,a.device,a.layer,a.lot,a.substrate_slot,a.substrate_id,a.substrate_notchlocation,decode(t.SFIELD, 0, round(((d.cnt-nvl(b.defectivedie, 0))/d.cnt)*100,2), t.SFIELD) SFIELD,
+                        sql = string.Format(@"select rownum Id,a.device,a.layer,a.lot,a.substrate_slot,a.substrate_id,a.substrate_notchlocation,t.SFIELD,
                                                     decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
                                                     t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
-                                                    t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id from wm_waferresult t,wm_identification a,wm_inspectioninfo b,cmn_relation c,
-                                                    (select ta.layoutid,count(tb.id) cnt from wm_dielayout ta,wm_dielayoutlist tb where ta.layoutid=tb.layoutid and lower(trim(tb.disposition))<>'notexist' group by ta.layoutid) d
-                                                    where t.identificationid=a.identificationid and t.dielayoutid=d.layoutid and t.resultid=b.resultid and instr(a.device||'-'||a.layer,c.device||'-'||decode(c.layer,'*','',c.layer))>0 
+                                                    t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id from wm_waferresult t,wm_identification a,wm_inspectioninfo b,cmn_relation c
+                                                    where t.identificationid=a.identificationid and t.resultid=b.resultid and instr(a.device||'-'||a.layer,c.device||'-'||decode(c.layer,'*','',c.layer))>0 
                                                         and ((t.completiontime>={1} and t.completiontime<={2}) or {3}) and c.userid='{0}' and t.delflag='0' order by a.device,a.layer,a.lot,a.substrate_id",
                                                     operatorid, fromday, today, done == "1" ? "t.ischecked in ('0','1')" : "1=2"); //and t.createddate> to_number(to_char(sysdate,'yyyymmddhh24miss'))
 
                     }
                     else
                     {
-                        sql = string.Format(@"select rownum Id,a.device,a.layer,a.lot,a.substrate_slot,a.substrate_id,a.substrate_notchlocation,decode(t.SFIELD, 0, round(((d.cnt-nvl(b.defectivedie, 0))/d.cnt)*100,2), t.SFIELD) SFIELD,
+                        sql = string.Format(@"select rownum Id,a.device,a.layer,a.lot,a.substrate_slot,a.substrate_id,a.substrate_notchlocation,t.SFIELD,
                                                     decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
                                                     t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
-                                                    t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id from wm_waferresult t,wm_identification a,wm_inspectioninfo b,
-                                                    (select ta.layoutid,count(tb.id) cnt from wm_dielayout ta,wm_dielayoutlist tb where ta.layoutid=tb.layoutid and lower(trim(tb.disposition))<>'notexist' group by ta.layoutid) d
-                                                    where t.identificationid=a.identificationid and t.dielayoutid=d.layoutid and t.resultid=b.resultid
+                                                    t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id from wm_waferresult t,wm_identification a,wm_inspectioninfo b
+                                                    where t.identificationid=a.identificationid and t.resultid=b.resultid
                                                         and ((t.completiontime>={0} and t.completiontime<={1}) or {2}) and t.delflag='0' order by a.device,a.layer,a.lot,a.substrate_id",
                                                 fromday, today, done == "1" ? "t.ischecked in ('0','1')" : "1=2");
                     }
@@ -345,7 +343,7 @@ namespace WR.WCF.Site
                     string sql = string.Format(@"select a.id,a.passid,a.inspid,a.modifieddefect,a.inspclassifiid,a.imagename,a.area_,d.color,
                                                     a.ischecked,a.checkeddate,d.name as description,a.dieaddress,b.inspectedsurface,'0' adc,d.schemeid,d.id cclassid, a.size_ 
                                                     from wm_defectlist a,wm_inspectionpass b,wm_inspectioninfo c,wm_classificationitem d 
-                                                    where a.passid=b.passid and a.inspid=b.inspid and b.inspid=c.inspid and a.inspclassifiid=d.itemid 
+                                                    where a.passid=b.passid and a.inspid=b.inspid and b.inspid=c.inspid and a.inspclassifiid=d.itemid and a.resultid= c.resultid
                                                     and c.resultid='{0}' {1} order by a.id", resultid, ischk);
 
                     return db.SqlQuery<WmdefectlistEntity>(sql).ToList();
@@ -405,10 +403,12 @@ namespace WR.WCF.Site
             StringBuilder sbt = new StringBuilder();
             using (BFdbContext db = new BFdbContext())
             {
-                sbt.AppendFormat(@"select a.resultid,a.checkeddate,b.yieldnum,c.defectnum,a.dielayoutid from wm_waferresult a, 
-                                 (select ba.layoutid,count(ba.id) yieldnum from wm_dielayoutlist ba where lower(trim(ba.disposition))<>'notexist' group by ba.layoutid) b,
-                                (select ba.layoutid, count(ba.id) defectnum from wm_dielayoutlist ba where lower(trim(ba.disposition)) <> 'notexist' and ba.inspclassifiid<>'0' group by ba.layoutid) c
-                                where a.dielayoutid=b.layoutid and a.dielayoutid = c.layoutid and a.resultid='{0}'", resultid);
+                //                sbt.AppendFormat(@"select a.resultid,a.checkeddate,b.yieldnum,c.defectnum,a.dielayoutid from wm_waferresult a, 
+                //                                 (select ba.layoutid,count(ba.id) yieldnum from wm_dielayoutlist ba where lower(trim(ba.disposition))<>'notexist' group by ba.layoutid) b,
+                //                                (select ba.layoutid, count(ba.id) defectnum from wm_dielayoutlist ba where lower(trim(ba.disposition)) <> 'notexist' and ba.inspclassifiid<>'0' group by ba.layoutid) c
+                //                                where a.dielayoutid=b.layoutid and a.dielayoutid = c.layoutid and a.resultid='{0}'", resultid);
+                sbt.AppendFormat(@"select a.resultid,a.checkeddate,a.dielayoutid from wm_waferresult a
+                                    where a.resultid='{0}'", resultid);
 
                 var info = db.SqlQuery<WmwaferInfoEntity>(sbt.ToString()).ToList();
                 if (info == null || info.Count < 1)
@@ -435,7 +435,7 @@ namespace WR.WCF.Site
                             foreach (var item in modf)
                             {
                                 var ids = item.Split(new char[] { ',' });
-                              
+
                                 sbt.Clear();
                                 sbt.AppendFormat("update wm_defectlist set inspclassifiid='{3}',modifieddefect=inspclassifiid where id={0} and passid={1} and inspid='{2}'", ids);
                                 db.ExecuteSqlCommand(sbt.ToString());

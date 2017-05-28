@@ -1911,6 +1911,13 @@ namespace WR.Client.UI
                 wf.NUMDEFECT = ent.NUMDEFECT;
                 wf.SFIELD = ent.SFIELD;
 
+                var lotList = ((from w in DataCache.WaferResultInfo
+                                group w by new { w.DEVICE, w.LAYER, w.LOT } into l
+                                select new { DEVICE = l.Key.DEVICE, LAYER = l.Key.LAYER, LOT = l.Key.LOT, LFIELD = l.Average(s => s.SFIELD) }))
+                                    .ToList();
+
+                DataCache.WaferResultInfo.ForEach(s => s.LFIELD = lotList.FirstOrDefault(l => l.DEVICE == s.DEVICE && l.LAYER == s.LAYER && l.LOT == s.LOT).LFIELD);
+
                 lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", wf.LOT, wf.SUBSTRATE_ID, wf.NUMDEFECT, wf.SFIELD);
                 //if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0)
                 //{
@@ -1942,8 +1949,11 @@ namespace WR.Client.UI
             if (MsgBoxEx.ConfirmYesNo(MessageConst.frm_preview_msg001) == DialogResult.No)
                 return;
 
+            ShowLoading(ToopEnum.saving);
+
             IwrService service = wrService.GetService();
             int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "2");
+            Thread.Sleep(6000);
             if (res >= 0)
             {
                 var ent = service.GetWaferResultById(Resultid);
@@ -1972,6 +1982,8 @@ namespace WR.Client.UI
                     DrawDefect(dent.DieAddress);
                 }
             }
+
+            CloseLoading();
         }
 
         /// <summary>
@@ -2279,19 +2291,29 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void timer2_Tick(object sender, EventArgs e)
         {
-            IwrService service = wrService.GetService();
-
-            int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
-            if (res >= 0)
+            if (tlsSaveResult.Enabled == true)
             {
-                var ent = service.GetWaferResultById(Resultid);
-                var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
-                wf.ISCHECKED = ent.ISCHECKED;
-                wf.CHECKEDDATE = ent.CHECKEDDATE;
-                wf.NUMDEFECT = ent.NUMDEFECT;
-                wf.SFIELD = ent.SFIELD;
+                IwrService service = wrService.GetService();
 
-                lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", Oparams[1], Oparams[2], wf.NUMDEFECT, wf.SFIELD);
+                int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
+                if (res >= 0)
+                {
+                    var ent = service.GetWaferResultById(Resultid);
+                    var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
+                    wf.ISCHECKED = ent.ISCHECKED;
+                    wf.CHECKEDDATE = ent.CHECKEDDATE;
+                    wf.NUMDEFECT = ent.NUMDEFECT;
+                    wf.SFIELD = ent.SFIELD;
+
+                    var lotList = ((from w in DataCache.WaferResultInfo
+                                    group w by new { w.DEVICE, w.LAYER, w.LOT } into l
+                                    select new { DEVICE = l.Key.DEVICE, LAYER = l.Key.LAYER, LOT = l.Key.LOT, LFIELD = l.Average(s => s.SFIELD) }))
+                                   .ToList();
+
+                    DataCache.WaferResultInfo.ForEach(s => s.LFIELD = lotList.FirstOrDefault(l => l.DEVICE == s.DEVICE && l.LAYER == s.LAYER && l.LOT == s.LOT).LFIELD);
+
+                    lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", Oparams[1], Oparams[2], wf.NUMDEFECT, wf.SFIELD);
+                }
             }
         }
 

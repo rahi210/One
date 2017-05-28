@@ -26,6 +26,12 @@ namespace WR.Client.Utils
                 textFormat = "exporting{0}";
                 lbl.Text = "exporting";
             }
+            else
+            {
+                //文件下载
+                textFormat = "saving{0}";
+                lbl.Text = "saving";
+            }
 
             timer1.Interval = 500;
             timer1.Enabled = true;

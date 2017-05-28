@@ -11,7 +11,8 @@ namespace WR.Client.UI
         public enum ToopEnum
         {
             loading = 0,
-            downloading = 1
+            downloading = 1,
+            saving = 2
         }
 
         //加载窗体
