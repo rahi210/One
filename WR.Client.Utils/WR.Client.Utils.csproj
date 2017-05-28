@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E56BA1FD-3E8D-4153-9AAF-843452971A0E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WR.Client.Utils</RootNamespace>
+    <AssemblyName>WR.Client.Utils</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\ClientBin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\ClientBin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DevComponents.DotNetBar2, Version=11.5.0.0, Culture=neutral, PublicKeyToken=c39c3242a43eee2b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ClientBin\DevComponents.DotNetBar2.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BindingCollection.cs" />
+    <Compile Include="DrawHelper.cs" />
+    <Compile Include="EndPointEx.cs" />
+    <Compile Include="MessageConst.cs" />
+    <Compile Include="MsgBoxEx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MsgBoxEx.Designer.cs">
+      <DependentUpon>MsgBoxEx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ObjectPropertyCompare.cs" />
+    <Compile Include="ProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProgressForm.Designer.cs">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ResourceHepler.cs" />
+    <Compile Include="WCFService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WR.Client.Resoures\WR.Client.Resoures.csproj">
+      <Project>{CE1FA646-9B57-4BF0-A774-6BE8A8FDA5F8}</Project>
+      <Name>WR.Client.Resoures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WR.Utils\WR.Utils.csproj">
+      <Project>{E4D42E9B-1814-4E38-80F9-D8938E04B0D9}</Project>
+      <Name>WR.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WR.WCF.Contract\WR.WCF.Contract.csproj">
+      <Project>{E83BBFAE-D01F-4BB2-992E-94327716DE3C}</Project>
+      <Name>WR.WCF.Contract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WR.WCF.DataContract\WR.WCF.DataContract.csproj">
+      <Project>{F38C254A-1C00-42E3-8230-49EAEA72725E}</Project>
+      <Name>WR.WCF.DataContract</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MsgBoxEx.resx">
+      <DependentUpon>MsgBoxEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProgressForm.resx">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\msg_alert_128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\msg_error_128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\msg_info_128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\msg_question_128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\loading.gif" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

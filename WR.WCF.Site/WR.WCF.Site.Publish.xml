@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="C:\SMEE" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="配置文件1" publishMethod="FileSystem" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="bin/System.Web.Extensions.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/NPOI.xml" publishTime="03/01/2016 10:10:21" />
+    <file relUrl="Global.asax" publishTime="08/11/2015 20:24:19" />
+    <file relUrl="bin/ICSharpCode.SharpZipLib.dll" publishTime="03/01/2016 10:10:20" />
+    <file relUrl="bin/System.Drawing.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/System.Runtime.Serialization.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/System.Data.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/WR.WCF.DataContract.pdb" publishTime="05/22/2017 21:28:11" />
+    <file relUrl="bin/WR.WCF.Contract.pdb" publishTime="05/24/2017 08:17:17" />
+    <file relUrl="bin/Start.pdb" publishTime="05/24/2017 08:17:16" />
+    <file relUrl="bin/System.Web.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="wmService.svc" publishTime="08/11/2015 20:24:19" />
+    <file relUrl="bin/System.Configuration.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/WR.Utils.pdb" publishTime="05/14/2017 14:12:20" />
+    <file relUrl="bin/System.Web.Services.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/DevComponents.DotNetBar2.xml" publishTime="10/11/2013 14:28:46" />
+    <file relUrl="bin/log4net.dll" publishTime="08/27/2012 16:33:35" />
+    <file relUrl="bin/System.ServiceModel.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/System.Xml.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/WR.Utils.dll" publishTime="05/14/2017 14:12:21" />
+    <file relUrl="bin/WR.DAL.EF.dll" publishTime="05/26/2017 10:36:54" />
+    <file relUrl="bin/System.Web.DynamicData.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/WR.WCF.DataContract.dll" publishTime="05/24/2017 08:17:11" />
+    <file relUrl="bin/WR.WCF.Contract.dll" publishTime="05/24/2017 08:17:18" />
+    <file relUrl="bin/System.Data.Entity.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/WR.WCF.Site.pdb" publishTime="05/26/2017 10:36:54" />
+    <file relUrl="bin/System.Xml.Linq.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/NPOI.dll" publishTime="03/01/2016 10:10:20" />
+    <file relUrl="bin/System.Data.DataSetExtensions.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="sysService.svc" publishTime="08/11/2015 20:24:19" />
+    <file relUrl="bin/System.Web.ApplicationServices.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/WR.WCF.Site.dll" publishTime="05/26/2017 10:36:55" />
+    <file relUrl="bin/System.Data.Services.Client.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/WR.DAL.EF.pdb" publishTime="05/26/2017 10:36:53" />
+    <file relUrl="bin/System.Data.Services.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/EntityFramework.dll" publishTime="03/30/2015 00:41:05" />
+    <file relUrl="bin/System.ServiceModel.Web.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="wrService.svc" publishTime="09/14/2015 21:55:47" />
+    <file relUrl="bin/System.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/System.EnterpriseServices.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="Web.config" publishTime="04/04/2017 22:00:05" />
+    <file relUrl="bin/System.Web.Entity.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/Start.exe" publishTime="05/24/2017 08:17:17" />
+    <file relUrl="bin/DevComponents.DotNetBar2.dll" publishTime="10/18/2013 00:35:38" />
+  </publishProfile>
+</publishData>

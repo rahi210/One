@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="D:\Order\Pos\BuOrder.Pos\ServerBin" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="配置文件1" publishMethod="FileSystem" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="Web.config" publishTime="07/23/2015 23:10:06" />
+    <file relUrl="bin/BuOrder.WCF.Site.pdb" publishTime="07/31/2015 21:29:40" />
+    <file relUrl="bin/BuOrder.DAL.EF.pdb" publishTime="07/31/2015 21:29:40" />
+    <file relUrl="bin/BuOrder.WCF.DataContract.dll" publishTime="07/31/2015 21:29:39" />
+    <file relUrl="bin/BuOrder.WCF.Contract.dll" publishTime="07/31/2015 21:29:40" />
+    <file relUrl="bin/BuOrder.Utils.dll" publishTime="07/30/2015 21:56:57" />
+    <file relUrl="sysService.svc" publishTime="07/16/2015 22:19:15" />
+    <file relUrl="productService.svc" publishTime="07/19/2015 21:27:10" />
+    <file relUrl="bin/BuOrder.DAL.EF.dll" publishTime="07/31/2015 21:29:40" />
+    <file relUrl="bin/log4net.dll" publishTime="08/27/2012 16:33:35" />
+    <file relUrl="bin/EntityFramework.dll" publishTime="03/30/2015 00:41:05" />
+    <file relUrl="wmService.svc" publishTime="07/15/2015 22:19:11" />
+    <file relUrl="bin/BuOrder.WCF.Site.dll" publishTime="07/31/2015 21:29:40" />
+    <file relUrl="bin/BuOrder.WCF.DataContract.pdb" publishTime="07/31/2015 21:29:39" />
+    <file relUrl="Global.asax" publishTime="07/17/2015 22:31:00" />
+    <file relUrl="bin/BuOrder.WCF.Contract.pdb" publishTime="07/31/2015 21:29:40" />
+    <file relUrl="bin/BuOrder.Utils.pdb" publishTime="07/30/2015 21:56:57" />
+  </publishProfile>
+</publishData>

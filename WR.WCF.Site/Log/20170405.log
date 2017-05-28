@@ -1,0 +1,9 @@
+[2017-04-05 08:23:54,949][13][INFO ][WR.WCF.Site.sysService:WR.Utils.LoggerEx.Info(C:\yang.luo\others\SMEE\WFRC_Src\WR.Utils\LogSevrice.cs:95)] - MethodName:Login start at 08:23:54
+[2017-04-05 08:23:58,447][13][INFO ][WR.WCF.Site.sysService:WR.Utils.LoggerEx.Info(C:\yang.luo\others\SMEE\WFRC_Src\WR.Utils\LogSevrice.cs:95)] - MethodName:Login1 start at 08:23:58
+[2017-04-05 08:24:02,273][13][INFO ][WR.WCF.Site.sysService:WR.Utils.LoggerEx.Info(C:\yang.luo\others\SMEE\WFRC_Src\WR.Utils\LogSevrice.cs:95)] - MethodName:Login stop at 08:24:02
+[2017-04-05 08:24:02,515][13][INFO ][WR.WCF.Site.sysService:WR.Utils.LoggerEx.Info(C:\yang.luo\others\SMEE\WFRC_Src\WR.Utils\LogSevrice.cs:95)] - MethodName:GetCmn start at 08:24:02
+[2017-04-05 08:24:02,571][13][INFO ][WR.WCF.Site.sysService:WR.Utils.LoggerEx.Info(C:\yang.luo\others\SMEE\WFRC_Src\WR.Utils\LogSevrice.cs:95)] - MethodName:GetCmn stop at 08:24:02
+[2017-04-05 08:24:02,598][17][INFO ][WR.WCF.Site.sysService:WR.Utils.LoggerEx.Info(C:\yang.luo\others\SMEE\WFRC_Src\WR.Utils\LogSevrice.cs:95)] - MethodName:GetMenuByUserId start at 08:24:02
+[2017-04-05 08:24:03,476][17][INFO ][WR.WCF.Site.sysService:WR.Utils.LoggerEx.Info(C:\yang.luo\others\SMEE\WFRC_Src\WR.Utils\LogSevrice.cs:95)] - MethodName:GetMenuByUserId stop at 08:24:03
+[2017-04-05 08:24:03,597][17][INFO ][WR.WCF.Site.wrService:WR.Utils.LoggerEx.Info(C:\yang.luo\others\SMEE\WFRC_Src\WR.Utils\LogSevrice.cs:95)] - MethodName:GetIdentification start at 08:24:03
+[2017-04-05 08:24:04,902][17][INFO ][WR.WCF.Site.wrService:WR.Utils.LoggerEx.Info(C:\yang.luo\others\SMEE\WFRC_Src\WR.Utils\LogSevrice.cs:95)] - MethodName:GetWaferResult start at 08:24:04
