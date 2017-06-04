@@ -1633,6 +1633,8 @@ namespace WR.Client.UI
             var ent = DataCache.WaferResultInfo[nextid];
             Resultid = ent.RESULTID;
             SaveResultid(Resultid, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT, ent.SFIELD);
+
+            Oparams = new string[] { ent.RESULTID, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT.ToString(), ent.SFIELD.ToString() };
             lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT, ent.SFIELD);
 
             hasDraw = true;
@@ -1679,6 +1681,8 @@ namespace WR.Client.UI
             var ent = DataCache.WaferResultInfo[nextid];
             Resultid = ent.RESULTID;
             SaveResultid(Resultid, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT, ent.SFIELD);
+
+            Oparams = new string[] { ent.RESULTID, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT.ToString(), ent.SFIELD.ToString() };
             lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT, ent.SFIELD);
 
             hasDraw = true;
@@ -1953,7 +1957,7 @@ namespace WR.Client.UI
 
             IwrService service = wrService.GetService();
             int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "2");
-            Thread.Sleep(6000);
+           
             if (res >= 0)
             {
                 var ent = service.GetWaferResultById(Resultid);
