@@ -62,6 +62,8 @@ namespace WR.Client.UI
             }
 
             cbxInterval.Checked = DataCache.UserInfo.IntervalDays > 0 ? true : false;
+            if (cbxInterval.Checked)
+                nudDay.Value = DataCache.UserInfo.IntervalDays;
 
             InitClassificationRole(service);
 
