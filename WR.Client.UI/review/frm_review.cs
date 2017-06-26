@@ -12,6 +12,7 @@ using WR.Client.WCF;
 using WR.Utils;
 using WR.WCF.Contract;
 using WR.WCF.DataContract;
+using System.Threading.Tasks;
 
 namespace WR.Client.UI
 {
@@ -1090,7 +1091,15 @@ namespace WR.Client.UI
 
         private void ExportSinf(string filename, WmwaferResultEntity result)
         {
-            ShowLoading(ToopEnum.downloading);
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(() =>
+                       {
+                           ShowLoading(ToopEnum.downloading);
+                       }));
+            }
+            else
+                ShowLoading(ToopEnum.downloading);
 
             try
             {
@@ -1113,42 +1122,96 @@ namespace WR.Client.UI
             }
             finally
             {
-                CloseLoading();
+                if (this.InvokeRequired)
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        CloseLoading();
+                    }));
+                }
+                else
+                    CloseLoading();
             }
         }
 
         private void BatchExportSinf(List<WmwaferResultEntity> resultList)
         {
-            ShowLoading(ToopEnum.downloading);
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(() =>
+                {
+                    ShowLoading(ToopEnum.downloading);
+                }));
+            }
+            else
+                ShowLoading(ToopEnum.downloading);
 
             try
             {
+
+                Task[] tasks = new Task[resultList.Count];
+
                 IwrService service = wrService.GetService();
 
                 string sinfPath = string.IsNullOrEmpty(DataCache.SinfPath) ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SINF") : DataCache.SinfPath;
 
-                foreach (var result in resultList)
+                //foreach (var result in resultList)
+                //{
+                //    tasks[i] = Task.Factory.StartNew(() =>
+                //    {
+                //        var path = Path.Combine(sinfPath, string.Format("{0}_{1}", result.LOT, result.DEVICE));
+                //        var filename = Path.Combine(path, string.Format("{0}.sinf", result.SUBSTRATE_ID.Replace(".", "").Replace(" ", "")));
+
+                //        if (!Directory.Exists(path))
+                //        {
+                //            Directory.CreateDirectory(path);
+                //        }
+
+                //        var dielayout = service.GetDielayoutById(result.DIELAYOUTID);
+                //        var dielist = service.GetDielayoutListById(result.DIELAYOUTID);
+                //        var defectlit = service.GetDefectList(result.RESULTID, "");
+
+                //        CHGSinf sinf = new CHGSinf();
+                //        bool res = sinf.Export(filename, result.RECIPE_ID, result.LOT, result.SUBSTRATE_ID, result.SUBSTRATE_NOTCHLOCATION, dielayout, dielist, defectlit);
+                //    });
+
+                for (int i = 0; i < resultList.Count; i++)
                 {
-                    var path = Path.Combine(sinfPath, string.Format("{0}_{1}", result.LOT, result.DEVICE));
-                    var filename = Path.Combine(path, string.Format("{0}.sinf", result.SUBSTRATE_ID.Replace(".", "").Replace(" ", "")));
 
-                    if (!Directory.Exists(path))
+                    var result = resultList[i];
+
+                    tasks[i] = Task.Factory.StartNew(() =>
                     {
-                        Directory.CreateDirectory(path);
-                    }
+                        var path = Path.Combine(sinfPath, string.Format("{0}_{1}", result.LOT, result.DEVICE));
+                        var filename = Path.Combine(path, string.Format("{0}.sinf", result.SUBSTRATE_ID.Replace(".", "").Replace(" ", "")));
 
-                    var dielayout = service.GetDielayoutById(result.DIELAYOUTID);
-                    var dielist = service.GetDielayoutListById(result.DIELAYOUTID);
-                    var defectlit = service.GetDefectList(result.RESULTID, "");
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
 
-                    CHGSinf sinf = new CHGSinf();
-                    bool res = sinf.Export(filename, result.RECIPE_ID, result.LOT, result.SUBSTRATE_ID, result.SUBSTRATE_NOTCHLOCATION, dielayout, dielist, defectlit);
+                        var dielayout = service.GetDielayoutById(result.DIELAYOUTID);
+                        var dielist = service.GetDielayoutListById(result.DIELAYOUTID);
+                        var defectlit = service.GetDefectList(result.RESULTID, "");
 
+                        CHGSinf sinf = new CHGSinf();
+                        bool res = sinf.Export(filename, result.RECIPE_ID, result.LOT, result.SUBSTRATE_ID, result.SUBSTRATE_NOTCHLOCATION, dielayout, dielist, defectlit);
+                    });
                 }
+
+                Task.WaitAll(tasks);
             }
             finally
             {
-                CloseLoading();
+                if (this.InvokeRequired)
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        CloseLoading();
+                    }));
+                }
+                else
+                    CloseLoading();
             }
         }
 
@@ -1248,9 +1311,21 @@ namespace WR.Client.UI
                     //batch import
                     var wfs = DataCache.WaferResultInfo.Where(s => s.DEVICE.Equals(node.Text) || s.LAYER.Equals(node.Text) || s.LOT.Equals(node.Text)).ToList();
 
-                    BatchExportSinf(wfs);
+                    //Thread thr = new Thread(new ThreadStart(() =>
+                    //{
+                    //    BatchExportSinf(wfs);
 
-                    MsgBoxEx.Info("SINF file is complete.");
+                    //    MsgBoxEx.Info("SINF file is complete.");
+                    //}));
+
+                    //thr.IsBackground = true;
+                    //thr.Start();
+
+                    Task.Factory.StartNew(() =>{
+                        BatchExportSinf(wfs);
+
+                        MsgBoxEx.Info("SINF file is complete.");
+                    });
                 }
                 else
                 {
@@ -1272,9 +1347,15 @@ namespace WR.Client.UI
                     //    ExportSinf(sd.FileName, ent);
                     //    MsgBoxEx.Info("SINF file is complete.");
                     //}
-                    ExportSinf("", ent);
 
-                    MsgBoxEx.Info("SINF file is complete.");
+                    Thread thr = new Thread(new ThreadStart(() =>
+                    {
+                        ExportSinf("", ent);
+                        MsgBoxEx.Info("SINF file is complete.");
+                    }));
+
+                    thr.IsBackground = true;
+                    thr.Start();
                 }
             }
             catch (Exception ex)

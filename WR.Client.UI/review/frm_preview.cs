@@ -14,6 +14,7 @@ using WR.Client.WCF;
 using WR.WCF.Contract;
 using WR.WCF.DataContract;
 using WR.Client.Controls;
+using WR.Utils;
 
 namespace WR.Client.UI
 {
@@ -68,6 +69,10 @@ namespace WR.Client.UI
         private List<WmdielayoutlistEntitiy> _dielayoutlist;
 
         public bool IsLayoutRole { get; set; }
+        public bool IsSave { get; set; }
+
+        private DateTime lastRunTime;
+        //private LoggerEx log = null;
 
         public frm_preview()
         {
@@ -111,6 +116,12 @@ namespace WR.Client.UI
             }
 
             panel2.Width = Convert.ToInt32(panel4.Height * 1.25);
+
+            lastRunTime = DateTime.Now;
+
+            //log = LogService.Getlog(this.GetType());
+
+            IsSave = true;
         }
 
         private void GetLayout()
@@ -532,15 +543,47 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void grdData_SelectionChanged(object sender, EventArgs e)
         {
+            //log.Debug("SelectionChanged Start...............");
             if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0 && grdData.Visible)
             {
+                timer2.Enabled = false;
+
                 ResetTck();
+                //log.Debug("GetImage Start...............");
                 GetImage(grdData.SelectedRows[0].Cells["ColImageName"].Value as string);
                 //picWafer.Invalidate();
-
+                //log.Debug("GetImage End...............");
                 var ent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
-                DrawDefect(ent.DieAddress);
+
+                int seconds = (DateTime.Now - lastRunTime).Milliseconds;
+                //log.Debug(seconds);
+                if (seconds > 500)
+                {
+                    //log.Debug("DrawDefect Start...............");
+                    DrawDefect(ent.DieAddress);
+                    //log.Debug("DrawDefect End...............");
+                    //var thr = new Thread(() =>
+                    //{
+                    //    if (this.InvokeRequired)
+                    //    {
+                    //        this.BeginInvoke(new Action(() =>
+                    //        {
+                    //            DrawDefect(ent.DieAddress);
+                    //        }));
+                    //    }
+                    //    else
+                    //    {
+                    //        DrawDefect(ent.DieAddress);
+                    //    }
+                    //});
+                    //thr.Start();
+                }
+
+                lastRunTime = DateTime.Now;
+
+                timer2.Enabled = true;
             }
+            //log.Debug("SelectionChanged End...............");
         }
 
         /// <summary>
@@ -1614,6 +1657,9 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void tlsPsample_Click(object sender, EventArgs e)
         {
+            if (IsSave == false && MsgBoxEx.ConfirmYesNo("Are you sure to save the changes") == DialogResult.Yes)
+                timer2_Tick(sender, e);
+
             int total = DataCache.WaferResultInfo.Count;
             if (total <= 1)
                 return;
@@ -1638,6 +1684,7 @@ namespace WR.Client.UI
             lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT, ent.SFIELD);
 
             hasDraw = true;
+            IsSave = true;
             InitData();
 
             SetClsMenu();
@@ -1662,6 +1709,9 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void tlsNsample_Click(object sender, EventArgs e)
         {
+            if (IsSave == false && MsgBoxEx.ConfirmYesNo("Are you sure to save the changes") == DialogResult.Yes)
+                timer2_Tick(sender, e);
+
             int total = DataCache.WaferResultInfo.Count;
             if (total <= 1)
                 return;
@@ -1686,6 +1736,8 @@ namespace WR.Client.UI
             lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT, ent.SFIELD);
 
             hasDraw = true;
+            IsSave = true;
+
             InitData();
 
             SetClsMenu();
@@ -1904,6 +1956,8 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void tlsSaveResult_Click(object sender, EventArgs e)
         {
+            ShowLoading(ToopEnum.saving);
+
             IwrService service = wrService.GetService();
             int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
             if (res >= 0)
@@ -1940,7 +1994,11 @@ namespace WR.Client.UI
                     var list = grdData.DataSource as List<WmdefectlistEntity>;
                     DrawDefect(list[lstView.SelectedIndices[0]].DieAddress);
                 }
+
+                IsSave = true;
             }
+
+            CloseLoading();
         }
 
         /// <summary>
@@ -1955,39 +2013,46 @@ namespace WR.Client.UI
 
             ShowLoading(ToopEnum.saving);
 
-            IwrService service = wrService.GetService();
-            int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "2");
-           
-            if (res >= 0)
+            try
             {
-                var ent = service.GetWaferResultById(Resultid);
-                var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
-                wf.ISCHECKED = ent.ISCHECKED;
-                wf.CHECKEDDATE = ent.CHECKEDDATE;
-                wf.NUMDEFECT = ent.NUMDEFECT;
-                wf.SFIELD = ent.SFIELD;
+                IwrService service = wrService.GetService();
+                int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "2");
 
-                if (wf.ISCHECKED == "2")
+                if (res >= 0)
                 {
-                    tlsSaveResult.Enabled = false;
-                    tlsFinish.Enabled = false;
-                    tlsReclass.Enabled = false;
-                }
-                else
-                {
-                    tlsSaveResult.Enabled = true;
-                    tlsFinish.Enabled = true;
-                    tlsReclass.Enabled = true;
-                }
+                    var ent = service.GetWaferResultById(Resultid);
+                    var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
+                    wf.ISCHECKED = ent.ISCHECKED;
+                    wf.CHECKEDDATE = ent.CHECKEDDATE;
+                    wf.NUMDEFECT = ent.NUMDEFECT;
+                    wf.SFIELD = ent.SFIELD;
 
-                if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0)
-                {
-                    var dent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
-                    DrawDefect(dent.DieAddress);
+                    if (wf.ISCHECKED == "2")
+                    {
+                        tlsSaveResult.Enabled = false;
+                        tlsFinish.Enabled = false;
+                        tlsReclass.Enabled = false;
+                    }
+                    else
+                    {
+                        tlsSaveResult.Enabled = true;
+                        tlsFinish.Enabled = true;
+                        tlsReclass.Enabled = true;
+                    }
+
+                    if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0)
+                    {
+                        var dent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
+                        DrawDefect(dent.DieAddress);
+                    }
+
+                    IsSave = true;
                 }
             }
-
-            CloseLoading();
+            finally
+            {
+                CloseLoading();
+            }
         }
 
         /// <summary>
@@ -2078,7 +2143,6 @@ namespace WR.Client.UI
                                         //DrawDefect(ent.DieAddress);
 
                                         tabControl1_SelectedIndexChanged(null, null);
-
                                     }
                                 }
                             }
@@ -2167,6 +2231,7 @@ namespace WR.Client.UI
         private void UpdateDefectClassification(WmdefectlistEntity model)
         {
             var count = 1;
+            IsSave = false;
 
             List<WmdefectlistEntity> list = grdData.DataSource as List<WmdefectlistEntity>;
 
@@ -2297,26 +2362,44 @@ namespace WR.Client.UI
         {
             if (tlsSaveResult.Enabled == true)
             {
-                IwrService service = wrService.GetService();
+                ShowLoading(ToopEnum.saving);
 
-                int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
-                if (res >= 0)
+                try
                 {
-                    var ent = service.GetWaferResultById(Resultid);
-                    var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
-                    wf.ISCHECKED = ent.ISCHECKED;
-                    wf.CHECKEDDATE = ent.CHECKEDDATE;
-                    wf.NUMDEFECT = ent.NUMDEFECT;
-                    wf.SFIELD = ent.SFIELD;
+                    //log.Debug("SaveResult Start...............");
+                    IwrService service = wrService.GetService();
 
-                    var lotList = ((from w in DataCache.WaferResultInfo
-                                    group w by new { w.DEVICE, w.LAYER, w.LOT } into l
-                                    select new { DEVICE = l.Key.DEVICE, LAYER = l.Key.LAYER, LOT = l.Key.LOT, LFIELD = l.Average(s => s.SFIELD) }))
-                                   .ToList();
+                    //log.Debug("UpdateDefect Start...............");
+                    int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
+                    //log.Debug("UpdateDefect End...............");
+                    if (res >= 0)
+                    {
+                        //log.Debug("GetWaferResultById Start...............");
+                        var ent = service.GetWaferResultById(Resultid);
+                        //log.Debug("GetWaferResultById End...............");
+                        var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
+                        wf.ISCHECKED = ent.ISCHECKED;
+                        wf.CHECKEDDATE = ent.CHECKEDDATE;
+                        wf.NUMDEFECT = ent.NUMDEFECT;
+                        wf.SFIELD = ent.SFIELD;
 
-                    DataCache.WaferResultInfo.ForEach(s => s.LFIELD = lotList.FirstOrDefault(l => l.DEVICE == s.DEVICE && l.LAYER == s.LAYER && l.LOT == s.LOT).LFIELD);
+                        var lotList = ((from w in DataCache.WaferResultInfo
+                                        group w by new { w.DEVICE, w.LAYER, w.LOT } into l
+                                        select new { DEVICE = l.Key.DEVICE, LAYER = l.Key.LAYER, LOT = l.Key.LOT, LFIELD = l.Average(s => s.SFIELD) }))
+                                       .ToList();
 
-                    lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", Oparams[1], Oparams[2], wf.NUMDEFECT, wf.SFIELD);
+                        DataCache.WaferResultInfo.ForEach(s => s.LFIELD = lotList.FirstOrDefault(l => l.DEVICE == s.DEVICE && l.LAYER == s.LAYER && l.LOT == s.LOT).LFIELD);
+
+                        lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", Oparams[1], Oparams[2], wf.NUMDEFECT, wf.SFIELD);
+
+                        IsSave = true;
+                    }
+
+                    //log.Debug("SaveResult End...............");
+                }
+                finally
+                {
+                    CloseLoading();
                 }
             }
         }
@@ -2352,6 +2435,9 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void frm_preview_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (IsSave == false && MsgBoxEx.ConfirmYesNo("Are you sure to save the changes") == DialogResult.Yes)
+                timer2_Tick(sender, e);
+            
             if (IsLayoutRole)
             {
                 var layout = string.Empty;
