@@ -154,6 +154,9 @@
   <data name="list32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\list32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="re-classify" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\re-classify.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="zoom_in" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\zoom_in.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -313,10 +316,13 @@
   <data name="Restore32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Restore32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="capture32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\capture32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="top1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\top1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="capture32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\capture32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="re-classify1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\re-classify.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

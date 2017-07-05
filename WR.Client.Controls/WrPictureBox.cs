@@ -3,13 +3,20 @@ using System.Windows.Forms;
 using WR.Client.Utils;
 using System.Collections.Generic;
 using System;
+using System.Drawing.Drawing2D;
+using System.Collections;
 
 namespace WR.Client.Controls
 {
     public class WrPictureBox : PictureBox
     {
         public List<DefectCoordinate> DefectList { get; set; }
+        public List<DieLayout> DieLayoutList { get; set; }
+        public int RowCnt { get; set; }
+        public int ColCnt { get; set; }
         public string CurrentDefect { get; set; }
+        public ArrayList SelectDefect { get; set; }
+        public Rectangle SelectRect { get; set; }
 
         //缩放后图片
         private Image destImage;
@@ -32,7 +39,42 @@ namespace WR.Client.Controls
         public double scaleY = 1;
 
         //放大缩小倍数
-        public int ZoomMultiple { get; set; }
+        //public int ZoomMultiple { get; set; }
+
+        public int ZoomMultiple
+        {
+            get
+            {
+                return _zoom;
+            }
+            set
+            {
+                this.Status = "";
+
+                if (value > 1)
+                {
+                    _zoom = value;
+                    this.ReDraw();
+                }
+                else
+                {
+                    if (HasDraw)
+                        _zoom = 1;
+                    else
+                        _zoom = value;
+
+                    locX = 0;
+                    locY = 0;
+
+                    this.ReDraw();
+                }
+            }
+        } private int _zoom = 0;
+
+        //操作状态
+        public string Status { get; set; }
+        ////是否需要重绘
+        public bool HasDraw { get; set; }
 
         public delegate void DelegateDefectChanged(EventDefectArg e);
         /// <summary>
@@ -44,6 +86,8 @@ namespace WR.Client.Controls
         {
             this.BackgroundImageLayout = ImageLayout.Center;
             this.Cursor = Cursors.Hand;
+
+            SelectDefect = new ArrayList();
         }
 
         protected override void Dispose(bool disposing)
@@ -101,46 +145,49 @@ namespace WR.Client.Controls
                 this.BackgroundImage = destImage;
                 //this.Refresh();
 
-                if (ZoomMultiple > 0)
+                if (!HasDraw)
                 {
-                    //ZoomOut(ZoomMultiple);
-                    int w = (int)(((double)WrImage.Width / (WrImage.Width + WrImage.Height)) * (double)ZoomMultiple);
-                    int h = (int)(((double)WrImage.Height / (WrImage.Width + WrImage.Height)) * (double)ZoomMultiple);
-
-                    int destWidth = destImage.Width + (w < 2 ? 2 : w);
-                    int destHeight = destImage.Height + (h < 2 ? 2 : h);
-
-                    if (destWidth > 1280)
-                        destWidth = 1280;
-                    if (destHeight > 1280)
-                        destHeight = 1280;
-
-                    scaleX = (double)WrImage.Width / destWidth;
-                    scaleY = (double)WrImage.Height / destHeight;
-
-                    destImage = DrawHelper.ResizeImage(WrImage, destWidth, destHeight);
-                    this.BackgroundImage = destImage;
-                    briImage = DrawHelper.ResizeImage(WrImage, destWidth, destHeight);
-
-                    if (locStartX > 0 || locStartY > 0)
+                    if (ZoomMultiple > 0)
                     {
-                        if (destImage.Width - this.Width < locStartY && destImage.Width > this.Width)
-                            locStartX = destImage.Width - this.Width;
-                        if (destImage.Height - this.Height < locStartY && destImage.Height > this.Height)
-                            locStartX = destImage.Height - this.Height;
+                        //ZoomOut(ZoomMultiple);
+                        int w = (int)(((double)WrImage.Width / (WrImage.Width + WrImage.Height)) * (double)ZoomMultiple);
+                        int h = (int)(((double)WrImage.Height / (WrImage.Width + WrImage.Height)) * (double)ZoomMultiple);
 
-                        this.BackgroundImage = DrawHelper.Cut(destImage, locStartX, locStartY, this.Width, this.Height);
+                        int destWidth = destImage.Width + (w < 2 ? 2 : w);
+                        int destHeight = destImage.Height + (h < 2 ? 2 : h);
+
+                        if (destWidth > 1280)
+                            destWidth = 1280;
+                        if (destHeight > 1280)
+                            destHeight = 1280;
+
+                        scaleX = (double)WrImage.Width / destWidth;
+                        scaleY = (double)WrImage.Height / destHeight;
+
+                        destImage = DrawHelper.ResizeImage(WrImage, destWidth, destHeight);
+                        this.BackgroundImage = destImage;
+                        briImage = DrawHelper.ResizeImage(WrImage, destWidth, destHeight);
+
+                        if (locStartX > 0 || locStartY > 0)
+                        {
+                            if (destImage.Width - this.Width < locStartY && destImage.Width > this.Width)
+                                locStartX = destImage.Width - this.Width;
+                            if (destImage.Height - this.Height < locStartY && destImage.Height > this.Height)
+                                locStartX = destImage.Height - this.Height;
+
+                            this.BackgroundImage = DrawHelper.Cut(destImage, locStartX, locStartY, this.Width, this.Height);
+                        }
+
+                        this.Refresh();
                     }
+                    else if (ZoomMultiple < 0)
+                        ZoomIn(ZoomMultiple);
+                    else
+                        this.Refresh();
 
-                    this.Refresh();
+                    locX = 0;
+                    locY = 0;
                 }
-                else if (ZoomMultiple < 0)
-                    ZoomIn(ZoomMultiple);
-                else
-                    this.Refresh();
-
-                locX = 0;
-                locY = 0;
             }
         }
 
@@ -165,26 +212,31 @@ namespace WR.Client.Controls
             if (destImage == null)
                 return;
 
-            int w = (int)(((double)WrImage.Width / (WrImage.Width + WrImage.Height)) * (double)scale);
-            int h = (int)(((double)WrImage.Height / (WrImage.Width + WrImage.Height)) * (double)scale);
-            int destWidth = destImage.Width - (w < 2 ? 2 : w);
-            int destHeight = destImage.Height - (h < 2 ? 2 : h);
+            if (!HasDraw)
+            {
+                int w = (int)(((double)WrImage.Width / (WrImage.Width + WrImage.Height)) * (double)scale);
+                int h = (int)(((double)WrImage.Height / (WrImage.Width + WrImage.Height)) * (double)scale);
+                int destWidth = destImage.Width - (w < 2 ? 2 : w);
+                int destHeight = destImage.Height - (h < 2 ? 2 : h);
 
-            if (destWidth < 50)
-                destWidth = 50;
-            if (destHeight < 50)
-                destHeight = 50;
+                if (destWidth < 50)
+                    destWidth = 50;
+                if (destHeight < 50)
+                    destHeight = 50;
 
-            scaleX = (double)WrImage.Width / destWidth;
-            scaleY = (double)WrImage.Height / destHeight;
+                scaleX = (double)WrImage.Width / destWidth;
+                scaleY = (double)WrImage.Height / destHeight;
 
-            destImage = DrawHelper.ResizeImage(WrImage, destWidth, destHeight);
-            briImage = DrawHelper.ResizeImage(WrImage, destWidth, destHeight);
-            this.BackgroundImage = destImage;
-            this.Refresh();
+                destImage = DrawHelper.ResizeImage(WrImage, destWidth, destHeight);
+                briImage = DrawHelper.ResizeImage(WrImage, destWidth, destHeight);
+                this.BackgroundImage = destImage;
+                this.Refresh();
 
-            locX = 0;
-            locY = 0;
+                locX = 0;
+                locY = 0;
+
+                ZoomMultiple -= scale;
+            }
         }
 
         /// <summary>
@@ -196,27 +248,32 @@ namespace WR.Client.Controls
             if (destImage == null)
                 return;
 
-            int w = (int)(((double)WrImage.Width / (WrImage.Width + WrImage.Height)) * (double)scale);
-            int h = (int)(((double)WrImage.Height / (WrImage.Width + WrImage.Height)) * (double)scale);
+            if (!HasDraw)
+            {
+                int w = (int)(((double)WrImage.Width / (WrImage.Width + WrImage.Height)) * (double)scale);
+                int h = (int)(((double)WrImage.Height / (WrImage.Width + WrImage.Height)) * (double)scale);
 
-            int destWidth = destImage.Width + (w < 2 ? 2 : w);
-            int destHeight = destImage.Height + (h < 2 ? 2 : h);
+                int destWidth = destImage.Width + (w < 2 ? 2 : w);
+                int destHeight = destImage.Height + (h < 2 ? 2 : h);
 
-            if (destWidth > 1280)
-                destWidth = 1280;
-            if (destHeight > 1280)
-                destHeight = 1280;
+                if (destWidth > 1280)
+                    destWidth = 1280;
+                if (destHeight > 1280)
+                    destHeight = 1280;
 
-            scaleX = (double)WrImage.Width / destWidth;
-            scaleY = (double)WrImage.Height / destHeight;
+                scaleX = (double)WrImage.Width / destWidth;
+                scaleY = (double)WrImage.Height / destHeight;
 
-            destImage = DrawHelper.ResizeImage(WrImage, destWidth, destHeight);
-            this.BackgroundImage = destImage;
-            briImage = DrawHelper.ResizeImage(WrImage, destWidth, destHeight);
-            this.Refresh();
+                destImage = DrawHelper.ResizeImage(WrImage, destWidth, destHeight);
+                this.BackgroundImage = destImage;
+                briImage = DrawHelper.ResizeImage(WrImage, destWidth, destHeight);
+                this.Refresh();
 
-            locX = 0;
-            locY = 0;
+                locX = 0;
+                locY = 0;
+
+                ZoomMultiple += scale;
+            }
         }
 
         /// <summary>
@@ -354,10 +411,11 @@ namespace WR.Client.Controls
 
             if (e.Button == MouseButtons.Left && destImage != null)
             {
-                if (destImage.Width <= this.Width && destImage.Height <= this.Height)
-                    return;
+                //if (destImage.Width <= this.Width && destImage.Height <= this.Height)
+                //    return;
 
                 mousedownpoint = e.Location;
+                //MessageBox.Show(e.X.ToString()+","+e.Y.ToString()+"-"+e.Location.X.ToString()+","+e.Location.Y.ToString());
                 drag = true;
             }
 
@@ -372,24 +430,44 @@ namespace WR.Client.Controls
         {
             if (e.Button == MouseButtons.Left && drag)
             {
-                locX = locX - (e.Location.X - mousedownpoint.X);
-                locY = locY - (e.Location.Y - mousedownpoint.Y);
+                if (HasDraw)
+                {
+                    if (this.Status != "Reclass")
+                    {
+                        //locX = locX - (e.Location.X - mousedownpoint.X);
+                        //locY = locY - (e.Location.Y - mousedownpoint.Y);
 
-                if (locX < 0 || destImage.Width <= this.Width)
-                    locX = 0;
-                if (locY < 0 || destImage.Height <= this.Height)
-                    locY = 0;
+                        locX = locX - (int)((e.Location.X - mousedownpoint.X) / scaleX);
+                        locY = locY - (int)((e.Location.Y - mousedownpoint.Y) / scaleY);
+                    }
 
-                if (destImage.Width - this.Width < locX && destImage.Width > this.Width)
-                    locX = destImage.Width - this.Width;
-                if (destImage.Height - this.Height < locY && destImage.Height > this.Height)
-                    locY = destImage.Height - this.Height;
+                    locStartX = e.Location.X;
+                    locStartY = e.Location.Y;
+                    //this.Status = "";
 
-                locStartX = locX;
-                locStartY = locY;
+                    ReDraw();
+                }
+                else
+                {
+                    locX = locX - (e.Location.X - mousedownpoint.X);
+                    locY = locY - (e.Location.Y - mousedownpoint.Y);
 
-                this.BackgroundImage = DrawHelper.Cut(destImage, locX, locY, this.Width, this.Height);
-                this.Refresh();
+                    if (locX < 0 || destImage.Width <= this.Width)
+                        locX = 0;
+                    if (locY < 0 || destImage.Height <= this.Height)
+                        locY = 0;
+
+                    if (destImage.Width - this.Width < locX && destImage.Width > this.Width)
+                        locX = destImage.Width - this.Width;
+                    if (destImage.Height - this.Height < locY && destImage.Height > this.Height)
+                        locY = destImage.Height - this.Height;
+
+                    locStartX = locX;
+                    locStartY = locY;
+
+                    this.BackgroundImage = DrawHelper.Cut(destImage, locX, locY, this.Width, this.Height);
+                    this.Refresh();
+                }
             }
 
             base.OnMouseMove(e);
@@ -399,13 +477,38 @@ namespace WR.Client.Controls
         {
             drag = false;
 
-            if (DefectList != null)
+            if (e.Button == MouseButtons.Left)
             {
-                if (locX > 0 || locY > 0)
-                    GetCurrentDefect(new Point(e.X + locX, e.Y + locY));
-                else
-                    GetCurrentDefect(new Point(e.X + locStartX, e.Y + locStartY));
+                if (DefectList != null)
+                {
+                    SelectDefect.Clear();
+                    //if (locX > 0 || locY > 0)
+                    //    GetCurrentDefect(new Point(e.X + locX, e.Y + locY));
+                    //else
+                    //    GetCurrentDefect(new Point(e.X + locStartX, e.Y + locStartY));
 
+                    if ((((e.X - locX - this.mousedownpoint.X) / this.ZoomMultiple) + ((e.Y - locY - this.mousedownpoint.Y) / this.ZoomMultiple)) > 12)
+                    {
+                        foreach (var defect in DefectList)
+                        {
+                            if (defect.Points[0].X <= (e.X) / this.ZoomMultiple & defect.Points[2].X >= this.mousedownpoint.X / this.ZoomMultiple
+                                & defect.Points[0].Y <= (e.Y) / this.ZoomMultiple & defect.Points[2].Y >= this.mousedownpoint.Y / this.ZoomMultiple)
+                            {
+                                SelectDefect.Add(defect.Location);
+                            }
+                        }
+
+                        if (SelectDefect.Count > 0)
+                            DefectChanged(new EventDefectArg() { Location = SelectDefect[0].ToString() });
+
+                    }
+                    else
+                    {
+                        //MessageBox.Show(e.X.ToString()+","+e.Y.ToString());
+
+                        GetCurrentDefect(new Point((int)e.X / this.ZoomMultiple, (int)e.Y / this.ZoomMultiple));
+                    }
+                }
             }
 
             base.OnMouseUp(e);
@@ -417,19 +520,41 @@ namespace WR.Client.Controls
         /// <param name="e"></param>
         protected override void OnMouseWheel(MouseEventArgs e)
         {
+            //if (destImage != null)
+            //{
+            //    if (e.Delta > 0)
+            //    {
+            //        ZoomOut(50);
+
+            //        ZoomMultiple += 50;
+            //    }
+            //    else if (e.Delta < 0)
+            //    {
+            //        ZoomIn(50);
+
+            //        ZoomMultiple -= 50;
+            //    }
+            //}
+
             if (destImage != null)
             {
                 if (e.Delta > 0)
                 {
-                    ZoomOut(50);
-
-                    ZoomMultiple += 50;
+                    if (HasDraw)
+                        ZoomMultiple += 1;
+                    else
+                    {
+                        ZoomOut(50);
+                    }
                 }
                 else if (e.Delta < 0)
                 {
-                    ZoomIn(50);
-
-                    ZoomMultiple -= 50;
+                    if (HasDraw)
+                        ZoomMultiple -= 1;
+                    else
+                    {
+                        ZoomIn(50);
+                    }
                 }
             }
 
@@ -447,14 +572,16 @@ namespace WR.Client.Controls
             var location = string.Empty;
 
             //根据偏移量计算坐标
-            start.X = Convert.ToInt32(start.X * scaleX);
-            start.Y = Convert.ToInt32(start.Y * scaleY);
+            //start.X = Convert.ToInt32(start.X * scaleX);
+            //start.Y = Convert.ToInt32(start.Y * scaleY);
 
             var index = DefectList.FindIndex(s => s.Points.IsPointInPolygon(start));
 
             if (index > -1)
             {
                 location = DefectList[index].Location;
+
+                SelectDefect.Add(location);
 
                 if (CurrentDefect != location)
                     DefectChanged(new EventDefectArg() { Location = location });
@@ -463,6 +590,216 @@ namespace WR.Client.Controls
             }
 
             return location;
+        }
+
+        private Brush _bgColor = new SolidBrush(SystemColors.ControlDarkDark);
+        private Brush _egPen = new SolidBrush(SystemColors.Control);
+        private Pen _linePen = new Pen(Color.White);
+
+        private Brush _dPen = new SolidBrush(Color.Black);
+        private Brush _lPen = new SolidBrush(Color.DarkGreen);
+        private Brush _rPen = new SolidBrush(Color.Red);
+
+        /// <summary>
+        /// 画图
+        /// </summary>
+        public void ReDraw()
+        {
+            if (!HasDraw)
+                return;
+
+            var col = ColCnt;
+            var row = RowCnt;
+            string loction = CurrentDefect;
+            List<DieLayout> _dielayoutlist = DieLayoutList;
+            List<DefectCoordinate> _defectlist = DefectList;
+
+            if (_dielayoutlist == null || _dielayoutlist.Count < 1)
+                return;
+
+            if (ZoomMultiple <= 0)
+                ZoomMultiple = 1;
+
+            ////拖拽坐标
+            //int dragX = locX;
+            //int dragY = locY;
+
+            //die宽、高
+            int ww = 5;
+            int wh = 4;
+            int wd = col * ww + 40;
+            int hg = row * wh + 40;
+
+            if (col == row)
+            {
+                ww = 5;
+                wh = 5;
+                hg = row * wh + 20;
+            }
+            else if (col < row)
+            {
+                ww = 4;
+                wh = 5;
+
+                wd = col * ww + 40;
+                hg = row * wh + 20;
+            }
+            else if ((col - row) > 30)
+            {
+                wh = 6;
+                hg = row * wh + 20;
+            }
+            else if ((col - row) < 10)
+            {
+                wd = col * ww + 60;
+                hg = row * wh + 60;
+            }
+
+            //计算偏移量
+            int offsetX = (wd - col * ww) / 2 + locX;
+            int offsetY = (hg - row * wh) / 2 + locY;
+
+            //背景图
+            Bitmap btp = new Bitmap(wd, hg);
+            Graphics gc = Graphics.FromImage(btp);
+            gc.Clear(Color.White);
+            gc.SmoothingMode = SmoothingMode.HighSpeed;
+
+            GraphicsPath ep = new GraphicsPath();
+            //ep.AddEllipse(0, 0, btp.Width * ZoomMultiple, btp.Height * ZoomMultiple);
+            ep.AddEllipse(locX * ZoomMultiple, locY * ZoomMultiple, btp.Width * ZoomMultiple, btp.Height * ZoomMultiple);
+            gc.FillPath(_bgColor, ep);
+
+            //背景颜色
+            GraphicsPath bp = new GraphicsPath();
+            //晶片颜色
+            GraphicsPath wp = new GraphicsPath();
+            //缺陷晶片颜色
+            GraphicsPath rp = new GraphicsPath();
+
+            //画出die
+            foreach (DieLayout die in _dielayoutlist)
+            {
+                bp.AddRectangle(new Rectangle((die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, ww * this.ZoomMultiple, wh * this.ZoomMultiple));
+                wp.AddRectangle(new Rectangle((die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple, (wh - 1) * this.ZoomMultiple));
+
+                if (!string.IsNullOrEmpty(die.FillColor))
+                    gc.FillRectangle(new SolidBrush(ConvterColor(Color.Gray.Name)), (die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple);
+
+                if (string.Format("{0},{1}", die.X, die.Y) == loction)
+                {
+                    //System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.Red, 2);
+                    //myPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                    //gc.DrawRectangle(myPen, (die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, ww * this.ZoomMultiple, wh * this.ZoomMultiple);
+                    //myPen.Dispose();
+
+                }
+            }
+
+            gc.FillPath(_dPen, bp);
+            gc.FillPath(_lPen, wp);
+
+            bool lineg = false;
+            int lx = 0;
+            int ly = 0;
+
+            double scaleX = Math.Round(Convert.ToDouble(this.Width) / wd, 8);
+            double scaleY = Math.Round(Convert.ToDouble(this.Height) / hg, 8);
+
+            //画出defect
+            foreach (DefectCoordinate def in _defectlist)
+            {
+                if (string.IsNullOrEmpty(def.Location))
+                    continue;
+
+                string[] adr = def.Location.Split(new char[] { ',' });
+                int ax = int.Parse(adr[0]);
+                int ay = int.Parse(adr[1]);
+
+                gc.FillRectangle(new SolidBrush(ConvterColor(def.FillColor)), (ax * ww + offsetX) * this.ZoomMultiple, ((row - ay) * wh + offsetY) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple, (wh - 1) * this.ZoomMultiple);
+
+                def.Points = new List<Point>() { new Point(Convert.ToInt32((ax * ww + offsetX) * scaleX),Convert.ToInt32(((row - ay) * wh + offsetY) * scaleY))
+                    ,new Point(Convert.ToInt32((ax * ww + offsetX+ww-1) * scaleX),Convert.ToInt32(((row - ay) * wh + offsetY) * scaleY))
+                    ,new Point(Convert.ToInt32((ax * ww + offsetX+ww-1) * scaleX),Convert.ToInt32(((row - ay) * wh + offsetY+wh-1) * scaleY))
+                    ,new Point(Convert.ToInt32((ax * ww + offsetX) * scaleX),Convert.ToInt32(((row - ay) * wh + offsetY+wh-1) * scaleY))};
+
+                //判断定位画线
+                if (def.Location == loction)
+                {
+                    lineg = true;
+                    lx = ax;
+                    ly = row - ay;
+
+                    //System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.Red);
+                    //myPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+                    //gc.DrawRectangle(myPen, (ax * ww + offsetX) * this.ZoomMultiple, ((row - ay) * wh + offsetY) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple, (wh - 1) * this.ZoomMultiple);
+                    //myPen.Dispose();
+                }
+            }
+
+            //定位画线
+            if (lineg)
+            {
+                gc.DrawLine(_linePen, 0, (ly * wh + offsetY + 1) * this.ZoomMultiple, btp.Width * this.ZoomMultiple, (ly * wh + offsetY + 1) * this.ZoomMultiple);
+                gc.DrawLine(_linePen, (lx * ww + offsetX + 1) * this.ZoomMultiple, 0, (lx * ww + offsetX + 1) * this.ZoomMultiple, btp.Height * this.ZoomMultiple);
+            }
+
+            //画出定位三角
+            Point p1 = new Point(btp.Width / 2, btp.Height - 10);
+            Point p2 = new Point(btp.Width / 2 - 6, btp.Height);
+            Point p3 = new Point(btp.Width / 2 + 6, btp.Height);
+            gc.FillPolygon(_egPen, new Point[] { p1, p2, p3 }, System.Drawing.Drawing2D.FillMode.Alternate);
+
+            if (this.Status == "Reclass")
+            {
+                System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.Red, 1.5f *this.ZoomMultiple);
+                myPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                gc.DrawRectangle(myPen, (int)((this.mousedownpoint.X) / scaleX), (int)((this.mousedownpoint.Y) / scaleY),
+                    (int)((this.locStartX - this.mousedownpoint.X) / scaleX), (int)((this.locStartY - this.mousedownpoint.Y) / scaleY));
+
+                SelectRect = new Rectangle((int)((this.mousedownpoint.X)), (int)((this.mousedownpoint.Y)),
+                    (int)((this.locStartX - this.mousedownpoint.X)), (int)((this.locStartY - this.mousedownpoint.Y)));
+
+                myPen.Dispose();
+            }
+
+            gc.Dispose();
+
+            //缩略图片
+            Bitmap outBmp = new Bitmap(this.Width, this.Height);
+
+            Graphics g = Graphics.FromImage(outBmp);
+            g.Clear(Color.Transparent);
+
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.CompositingQuality = CompositingQuality.HighQuality;
+            g.SmoothingMode = SmoothingMode.HighQuality;
+
+            g.DrawImage(btp, new Rectangle(0, 0, outBmp.Width, outBmp.Height), new Rectangle(0, 0, btp.Width, btp.Height), GraphicsUnit.Pixel);
+            g.Dispose();
+
+            //绑定图片
+            this.WrImage = outBmp;
+
+            HasDraw = true;
+        }
+
+        private Color ConvterColor(string color)
+        {
+            try
+            {
+                return ColorTranslator.FromHtml(color);
+            }
+            catch
+            {
+                if (!color.StartsWith("#"))
+                    color = "#" + color;
+
+                if (color.Length > 7)
+                    return ColorTranslator.FromHtml(color.Substring(0, 7));
+
+                return ColorTranslator.FromHtml(color);
+            }
         }
     }
 
@@ -474,6 +811,18 @@ namespace WR.Client.Controls
         public System.Collections.Generic.List<Point> Points { get; set; }
 
         public string Location { get; set; }
+
+        public string FillColor { get; set; }
+
+        public bool IsSelected { get; set; }
+    }
+
+    public class DieLayout
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        public string FillColor { get; set; }
     }
 
     public static class PointHelper
