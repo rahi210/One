@@ -188,6 +188,8 @@ namespace WR.Client.Controls
                     locX = 0;
                     locY = 0;
                 }
+                else
+                    this.Refresh();
             }
         }
 
@@ -736,7 +738,7 @@ namespace WR.Client.Controls
                     //myPen.Dispose();
                 }
             }
-
+            
             //定位画线
             if (lineg)
             {
@@ -752,7 +754,7 @@ namespace WR.Client.Controls
 
             if (this.Status == "Reclass")
             {
-                System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.Red, 1.5f *this.ZoomMultiple);
+                System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.Red, 1.5f * this.ZoomMultiple);
                 myPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                 gc.DrawRectangle(myPen, (int)((this.mousedownpoint.X) / scaleX), (int)((this.mousedownpoint.Y) / scaleY),
                     (int)((this.locStartX - this.mousedownpoint.X) / scaleX), (int)((this.locStartY - this.mousedownpoint.Y) / scaleY));
@@ -782,6 +784,7 @@ namespace WR.Client.Controls
             this.WrImage = outBmp;
 
             HasDraw = true;
+            //this.Refresh();
         }
 
         private Color ConvterColor(string color)

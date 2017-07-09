@@ -454,6 +454,9 @@ namespace WR.Client.UI
 
                             UpdateDefectClassification(ent);
                         }
+
+                        picWafer.Status = "";
+                        picWafer.ReDraw();
                     }
                     else
                     {
@@ -582,6 +585,8 @@ namespace WR.Client.UI
             //}
         }
 
+        System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+        string dieLoction = string.Empty;
         /// <summary>
         /// 选中行变化
         /// </summary>
@@ -601,12 +606,16 @@ namespace WR.Client.UI
                 //log.Debug("GetImage End...............");
                 var ent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
 
-                int seconds = (DateTime.Now - lastRunTime).Milliseconds;
+                stopWatch.Stop();
+                //int seconds = (DateTime.Now - lastRunTime).Milliseconds;
+                long seconds = stopWatch.ElapsedMilliseconds;
+
                 //log.Debug(seconds);
-                if (seconds > 500)
+                if (seconds > 1000)
                 {
                     //log.Debug("DrawDefect Start...............");
                     DrawDefect(ent.DieAddress);
+
                     //log.Debug("DrawDefect End...............");
                     //var thr = new Thread(() =>
                     //{
@@ -624,8 +633,15 @@ namespace WR.Client.UI
                     //});
                     //thr.Start();
                 }
+                else
+                {
+                    dieLoction = ent.DieAddress;
+                    if (seconds > 0)
+                        timer3.Enabled = true;
+                }
 
                 lastRunTime = DateTime.Now;
+                stopWatch.Restart();
 
                 timer2.Enabled = true;
             }
@@ -648,8 +664,16 @@ namespace WR.Client.UI
 
             var items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
 
+            var defectlist = new List<WmdefectlistEntity>();
+            var classId = Convert.ToInt32(tlsClass.ComboBox.SelectedValue);
+
+            if (classId != -1)
+                defectlist = grdData.DataSource as List<WmdefectlistEntity>;
+            else
+                defectlist = _defectlist;
+
             //画出defect
-            foreach (WmdefectlistEntity def in _defectlist)
+            foreach (WmdefectlistEntity def in defectlist)
             {
                 if (string.IsNullOrEmpty(def.DieAddress))
                     continue;
@@ -673,7 +697,7 @@ namespace WR.Client.UI
                 //picWafer.DefectList.Add(defectModel);
             }
 
-            picWafer.DefectList = _defectlist.Select(s => new { Location = s.DieAddress, FillColor = s.Color }).Distinct()
+            picWafer.DefectList = defectlist.Select(s => new { Location = s.DieAddress, FillColor = s.Color }).Distinct()
                 .Select(s => new DefectCoordinate { Location = s.Location, FillColor = s.FillColor }).ToList();
             picWafer.DieLayoutList = listDieLayout;
             picWafer.RowCnt = row;
@@ -2387,11 +2411,14 @@ namespace WR.Client.UI
 
             InitClassList();
 
-            if (grdData.Rows.Count > grdData.CurrentCell.RowIndex + count)
-                grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.CurrentCell.RowIndex + count];
-            else
-                grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.Rows.Count - 1];
+            if (cnmReclass.Tag.ToString() != "2")
+            {
+                if (grdData.Rows.Count > grdData.CurrentCell.RowIndex + count)
+                    grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.CurrentCell.RowIndex + count];
+                else
+                    grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.Rows.Count - 1];
 
+            }
             //重新计算良率 
             decimal goodCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID == 0);
             decimal defectCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID != 0);
@@ -2449,8 +2476,8 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void lblReset_Click(object sender, EventArgs e)
         {
-            if (picWafer.ZoomMultiple == 1)
-                return;
+            //if (picWafer.ZoomMultiple == 1)
+            //    return;
 
             //if (picWafer.ZoomMultiple > 0)
             //    picWafer.ZoomIn(picWafer.ZoomMultiple);
@@ -2533,6 +2560,9 @@ namespace WR.Client.UI
 
             //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(list);
             grdData.DataSource = list;
+
+            if (list.Count > 0)
+                DrawDefect(list[0].DieAddress);
         }
 
         /// <summary>
@@ -2610,6 +2640,13 @@ namespace WR.Client.UI
         private void lblReclass_Click(object sender, EventArgs e)
         {
             picWafer.Status = "Reclass";
+        }
+
+        private void timer3_Tick(object sender, EventArgs e)
+        {
+            timer3.Enabled = false;
+
+            DrawDefect(dieLoction);
         }
     }
 

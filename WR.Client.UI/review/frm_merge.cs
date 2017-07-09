@@ -122,7 +122,15 @@ namespace WR.Client.UI
                         if (sinf.DieArray[i].Length == 0)
                             continue;
 
-                        newSINF[i] = MergeRow(newSINF[i], sinf.DieArray[i]);
+                        var newValue = MergeRow(newSINF[i], sinf.DieArray[i]);
+
+                        if (newValue.Contains("error"))
+                        {
+                            MsgBoxEx.Info(string.Format("In line:{0},Numbers cannot be merged with non-numbers(--,@@).", i));
+                            return;
+                        }
+
+                        newSINF[i] = newValue;
                     }
                 }
             }
