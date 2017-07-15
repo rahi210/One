@@ -738,7 +738,7 @@ namespace WR.Client.Controls
                     //myPen.Dispose();
                 }
             }
-            
+
             //定位画线
             if (lineg)
             {
@@ -747,6 +747,9 @@ namespace WR.Client.Controls
             }
 
             //画出定位三角
+            //Point p1 = new Point((btp.Width / 2) * this.ZoomMultiple, (btp.Height - 10) * this.ZoomMultiple);
+            //Point p2 = new Point((btp.Width / 2 - 6) * this.ZoomMultiple, btp.Height * this.ZoomMultiple);
+            //Point p3 = new Point((btp.Width / 2 + 6) * this.ZoomMultiple, btp.Height * this.ZoomMultiple);
             Point p1 = new Point(btp.Width / 2, btp.Height - 10);
             Point p2 = new Point(btp.Width / 2 - 6, btp.Height);
             Point p3 = new Point(btp.Width / 2 + 6, btp.Height);
@@ -791,7 +794,21 @@ namespace WR.Client.Controls
         {
             try
             {
-                return ColorTranslator.FromHtml(color);
+                var newColor = Color.FromName(color);
+
+                if (!newColor.IsKnownColor)
+                {
+                    if (!color.StartsWith("#"))
+                        color = "#" + color;
+
+                    if (color.Length > 7)
+                        newColor = ColorTranslator.FromHtml(color.Substring(0, 7));
+                    else
+                        newColor = ColorTranslator.FromHtml(color);
+                }
+
+                return newColor;
+                //return ColorTranslator.FromHtml(color);
             }
             catch
             {

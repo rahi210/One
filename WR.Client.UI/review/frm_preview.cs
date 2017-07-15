@@ -125,6 +125,9 @@ namespace WR.Client.UI
             IsSave = true;
         }
 
+        /// <summary>
+        /// 获取页面布局
+        /// </summary>
         private void GetLayout()
         {
             var layout = WR.Utils.Config.GetAppSetting("previewLayout");
@@ -176,6 +179,7 @@ namespace WR.Client.UI
         /// </summary>
         private void InitClassList()
         {
+
             var classList = (from c in _defectlist
                              orderby c.Cclassid
                              group c by new { c.Cclassid, c.Description } into g
@@ -445,7 +449,7 @@ namespace WR.Client.UI
                             var ent = list.FirstOrDefault(s => s.DieAddress == def.ToString() && s.Cclassid != itm.ID);
 
                             if (ent == null)
-                                return;
+                                continue;
 
                             ent.Cclassid = itm.ID;
                             ent.InspclassifiId = itm.ITEMID;
@@ -455,6 +459,7 @@ namespace WR.Client.UI
                             UpdateDefectClassification(ent);
                         }
 
+                        InitClassList();
                         picWafer.Status = "";
                         picWafer.ReDraw();
                     }
@@ -665,7 +670,11 @@ namespace WR.Client.UI
             var items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
 
             var defectlist = new List<WmdefectlistEntity>();
-            var classId = Convert.ToInt32(tlsClass.ComboBox.SelectedValue);
+            //var classId = Convert.ToInt32(tlsClass.ComboBox.SelectedValue);
+            var classId = -1;
+
+            if (tlsClass.ComboBox.SelectedValue != null)
+                classId = Convert.ToInt32(tlsClass.ComboBox.SelectedValue);
 
             if (classId != -1)
                 defectlist = grdData.DataSource as List<WmdefectlistEntity>;
@@ -1225,7 +1234,22 @@ namespace WR.Client.UI
         {
             try
             {
-                return ColorTranslator.FromHtml(color);
+                //return ColorTranslator.FromHtml(color);
+
+                var newColor = Color.FromName(color);
+
+                if (!newColor.IsKnownColor)
+                {
+                    if (!color.StartsWith("#"))
+                        color = "#" + color;
+
+                    if (color.Length > 7)
+                        newColor = ColorTranslator.FromHtml(color.Substring(0, 7));
+                    else
+                        newColor = ColorTranslator.FromHtml(color);
+                }
+
+                return newColor;
             }
             catch
             {
@@ -2382,16 +2406,18 @@ namespace WR.Client.UI
                     //if (grdData.Visible)
                     //    grdData.InvalidateRow(index);
                 }
+
+                count = (int)model.Id;
             }
 
-            if (model.Cclassid == 1)
+            if (model.Cclassid != -1)
             {
                 //获取die下其他的缺陷
                 var defectIdList = list.Where(s => s.DieAddress == model.DieAddress
                     && s.PASSID == model.PASSID && s.INSPID == model.INSPID && s.Id != model.Id)
                     .Select(s => s.Id).ToList();
 
-                count += defectIdList.Count;
+                //count += defectIdList.Count;
 
                 foreach (var id in defectIdList)
                 {
@@ -2402,19 +2428,24 @@ namespace WR.Client.UI
                     list[index].ModifiedDefect = model.ModifiedDefect;
                     list[index].Description = model.Description;
 
+                    count = index;
                     //if (grdData.Visible)
                     //    grdData.InvalidateRow(index);
                 }
+
+                if (model.Id > count)
+                    count = (int)model.Id;
             }
 
             UpdateDieLayout(model.DieAddress, (int)model.Cclassid);
 
-            InitClassList();
-
-            if (cnmReclass.Tag.ToString() != "2")
+            if (cnmReclass.Tag == null || cnmReclass.Tag.ToString() != "2")
             {
+                InitClassList();
+
                 if (grdData.Rows.Count > grdData.CurrentCell.RowIndex + count)
-                    grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.CurrentCell.RowIndex + count];
+                    //grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.CurrentCell.RowIndex + count];
+                    grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, count + 1];
                 else
                     grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.Rows.Count - 1];
 
@@ -2552,7 +2583,11 @@ namespace WR.Client.UI
 
         private void tlsClass_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var classId = Convert.ToInt32(tlsClass.ComboBox.SelectedValue);
+            var classId = -1;
+
+            if (tlsClass.ComboBox.SelectedValue != null)
+                classId = Convert.ToInt32(tlsClass.ComboBox.SelectedValue);
+
             var list = _defectlist;
 
             if (classId != -1)
@@ -2628,7 +2663,6 @@ namespace WR.Client.UI
                     cnmReclass.Show(MousePosition.X, MousePosition.Y);
                     cnmReclass.Tag = "2";
                 }
-
             }
         }
 

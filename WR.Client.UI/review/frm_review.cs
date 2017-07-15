@@ -1104,7 +1104,7 @@ namespace WR.Client.UI
             try
             {
                 string sinfPath = string.IsNullOrEmpty(DataCache.SinfPath) ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SINF") : DataCache.SinfPath;
-                var path = Path.Combine(sinfPath, string.Format("{0}_{1}", result.LOT, result.DEVICE));
+                var path = Path.Combine(sinfPath, string.Format("{0}-{1}", result.LOT, result.DEVICE));
 
                 filename = Path.Combine(path, string.Format("{0}.sinf", result.SUBSTRATE_ID.Replace(".", "").Replace(" ", "")));
 
