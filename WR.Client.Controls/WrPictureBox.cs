@@ -436,11 +436,21 @@ namespace WR.Client.Controls
                 {
                     if (this.Status != "Reclass")
                     {
-                        //locX = locX - (e.Location.X - mousedownpoint.X);
-                        //locY = locY - (e.Location.Y - mousedownpoint.Y);
+                        //locX = locX - (int)((e.Location.X - mousedownpoint.X) / scaleX);
+                        //locY = locY - (int)((e.Location.Y - mousedownpoint.Y) / scaleY);
 
-                        locX = locX - (int)((e.Location.X - mousedownpoint.X) / scaleX);
-                        locY = locY - (int)((e.Location.Y - mousedownpoint.Y) / scaleY);
+                        if (this.ZoomMultiple > 1)
+                        {
+                            //var newlocX = locX + (int)((e.Location.X - mousedownpoint.X) / scaleX);
+                            //var newlocY = locY + (int)((e.Location.Y - mousedownpoint.Y) / scaleY);
+                            locX = locX + (int)((e.Location.X - mousedownpoint.X) / scaleX);
+                            locY = locY + (int)((e.Location.Y - mousedownpoint.Y) / scaleY);
+
+                            //if ((Math.Abs(newlocX)*scaleX + e.Location.X) - this.Width <= 0)
+                            //    locX = newlocX;
+                            //if ((Math.Abs(newlocY * scaleY) + e.Location.Y) - this.Height <= 0)
+                            //    locY = newlocY;
+                        }
                     }
 
                     locStartX = e.Location.X;
@@ -747,17 +757,18 @@ namespace WR.Client.Controls
             }
 
             //画出定位三角
-            //Point p1 = new Point((btp.Width / 2) * this.ZoomMultiple, (btp.Height - 10) * this.ZoomMultiple);
-            //Point p2 = new Point((btp.Width / 2 - 6) * this.ZoomMultiple, btp.Height * this.ZoomMultiple);
-            //Point p3 = new Point((btp.Width / 2 + 6) * this.ZoomMultiple, btp.Height * this.ZoomMultiple);
-            Point p1 = new Point(btp.Width / 2, btp.Height - 10);
-            Point p2 = new Point(btp.Width / 2 - 6, btp.Height);
-            Point p3 = new Point(btp.Width / 2 + 6, btp.Height);
+            Point p1 = new Point((btp.Width / 2) * this.ZoomMultiple, (btp.Height - 10) * this.ZoomMultiple);
+            Point p2 = new Point((btp.Width / 2 - 6) * this.ZoomMultiple, btp.Height * this.ZoomMultiple);
+            Point p3 = new Point((btp.Width / 2 + 6) * this.ZoomMultiple, btp.Height * this.ZoomMultiple);
+            //Point p1 = new Point(btp.Width / 2, btp.Height - 10);
+            //Point p2 = new Point(btp.Width / 2 - 6, btp.Height);
+            //Point p3 = new Point(btp.Width / 2 + 6, btp.Height);
             gc.FillPolygon(_egPen, new Point[] { p1, p2, p3 }, System.Drawing.Drawing2D.FillMode.Alternate);
 
             if (this.Status == "Reclass")
             {
-                System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.Red, 1.5f * this.ZoomMultiple);
+                //System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.Red, 1.5f * this.ZoomMultiple);
+                System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.Red, (float)(1.5 / scaleX));
                 myPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                 gc.DrawRectangle(myPen, (int)((this.mousedownpoint.X) / scaleX), (int)((this.mousedownpoint.Y) / scaleY),
                     (int)((this.locStartX - this.mousedownpoint.X) / scaleX), (int)((this.locStartY - this.mousedownpoint.Y) / scaleY));
@@ -785,6 +796,8 @@ namespace WR.Client.Controls
 
             //绑定图片
             this.WrImage = outBmp;
+            this.scaleX = scaleX;
+            this.scaleY = scaleY;
 
             HasDraw = true;
             //this.Refresh();

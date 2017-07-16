@@ -1349,7 +1349,11 @@ namespace WR.Client.UI
                 DataPoint p = new DataPoint();
 
                 //p.SetValueXY(i + 1, list[i].Points);
-                p.SetValueXY(list[i].DESCRIPTION, list[i].Points);
+                var xValue = string.Empty;
+
+                if (!string.IsNullOrEmpty(list[i].DESCRIPTION))
+                    xValue = list[i].DESCRIPTION;
+                p.SetValueXY(xValue, list[i].Points);
                 p.Label = list[i].Points.ToString();
 
                 serie.Points.Add(p);
@@ -2443,8 +2447,9 @@ namespace WR.Client.UI
             {
                 InitClassList();
 
-                if (grdData.Rows.Count > grdData.CurrentCell.RowIndex + count)
-                    //grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.CurrentCell.RowIndex + count];
+                //if (grdData.Rows.Count > grdData.CurrentCell.RowIndex + count)
+                //grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.CurrentCell.RowIndex + count];
+                if (grdData.Rows.Count > count + 1)
                     grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, count + 1];
                 else
                     grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.Rows.Count - 1];
