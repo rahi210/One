@@ -115,7 +115,7 @@ namespace WR.Client.UI
                 splitter2.Enabled = false;
                 splitter3.Enabled = false;
             }
-
+           
             panel2.Width = Convert.ToInt32(panel4.Height * 1.25);
 
             lastRunTime = DateTime.Now;
@@ -235,7 +235,8 @@ namespace WR.Client.UI
                     else
                         sts = GetStatus();
 
-                    var defList = service.GetDefectList(Resultid, sts);
+                    var defList = service.GetDefectList(Resultid, sts).OrderBy(s => s.ImageName).ToList();
+                    //var defList = service.GetDefectList(Resultid, sts).ToList();
                     _defectlist = defList;
 
                     if (this.InvokeRequired)
@@ -2385,7 +2386,7 @@ namespace WR.Client.UI
         /// </summary>
         private void UpdateDefectClassification(WmdefectlistEntity model)
         {
-            var count = 1;
+            var count = grdData.CurrentCell.RowIndex;
             IsSave = false;
 
             List<WmdefectlistEntity> list = grdData.DataSource as List<WmdefectlistEntity>;
@@ -2407,14 +2408,19 @@ namespace WR.Client.UI
                     list[index].Description = model.Description;
 
                     UpdateDieLayout(list[index].DieAddress, (int)model.Cclassid);
-                    //if (grdData.Visible)
-                    //    grdData.InvalidateRow(index);
+
+                    if (grdData.Visible)
+                        grdData.InvalidateRow(index);
+
+                    count = index;
                 }
 
-                count = (int)model.Id;
+                //count = (int)model.Id;
+                if (grdData.CurrentCell.RowIndex > count)
+                    count = grdData.CurrentCell.RowIndex;
             }
 
-            if (model.Cclassid != -1)
+            if (cnmReclass.Tag.ToString() == "2")
             {
                 //获取die下其他的缺陷
                 var defectIdList = list.Where(s => s.DieAddress == model.DieAddress
@@ -2433,8 +2439,8 @@ namespace WR.Client.UI
                     list[index].Description = model.Description;
 
                     count = index;
-                    //if (grdData.Visible)
-                    //    grdData.InvalidateRow(index);
+                    if (grdData.Visible)
+                        grdData.InvalidateRow(index);
                 }
 
                 if (model.Id > count)

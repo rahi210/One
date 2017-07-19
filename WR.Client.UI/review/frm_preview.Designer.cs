@@ -1202,7 +1202,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 26);
             this.tabPage2.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(448, 299);
+            this.tabPage2.Size = new System.Drawing.Size(452, 299);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Report";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1259,7 +1259,7 @@
             this.grdReport.RowHeadersVisible = false;
             this.grdReport.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.grdReport.RowTemplate.Height = 23;
-            this.grdReport.Size = new System.Drawing.Size(448, 128);
+            this.grdReport.Size = new System.Drawing.Size(452, 128);
             this.grdReport.TabIndex = 2;
             this.grdReport.Click += new System.EventHandler(this.panel5_Click);
             // 
@@ -1338,7 +1338,7 @@
             series1.SmartLabelStyle.CalloutLineAnchorCapStyle = System.Windows.Forms.DataVisualization.Charting.LineAnchorCapStyle.Round;
             series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String;
             this.chtDefect.Series.Add(series1);
-            this.chtDefect.Size = new System.Drawing.Size(448, 171);
+            this.chtDefect.Size = new System.Drawing.Size(452, 171);
             this.chtDefect.TabIndex = 3;
             // 
             // imageList2
