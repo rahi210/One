@@ -83,7 +83,7 @@ namespace WR.Client.UI
 
             picWafer.DefectList = new List<Controls.DefectCoordinate>();
 
-            GetLayout();
+            //GetLayout();
         }
 
         private void frm_preview_Load(object sender, EventArgs e)
@@ -115,8 +115,8 @@ namespace WR.Client.UI
                 splitter2.Enabled = false;
                 splitter3.Enabled = false;
             }
-           
-            panel2.Width = Convert.ToInt32(panel4.Height * 1.25);
+
+            //panel2.Width = Convert.ToInt32(panel4.Height * 1.25);
 
             lastRunTime = DateTime.Now;
 
@@ -180,6 +180,8 @@ namespace WR.Client.UI
         private void InitClassList()
         {
 
+            tlsClass.SelectedIndexChanged -= new System.EventHandler(this.tlsClass_SelectedIndexChanged);
+
             var classList = (from c in _defectlist
                              orderby c.Cclassid
                              group c by new { c.Cclassid, c.Description } into g
@@ -190,6 +192,8 @@ namespace WR.Client.UI
             tlsClass.ComboBox.DisplayMember = "Description";
             tlsClass.ComboBox.ValueMember = "Cclassid";
             tlsClass.ComboBox.DataSource = classList;
+
+            tlsClass.SelectedIndexChanged += new System.EventHandler(this.tlsClass_SelectedIndexChanged);
         }
 
         /// <summary>
@@ -458,11 +462,15 @@ namespace WR.Client.UI
                             ent.Description = itm.NAME;
 
                             UpdateDefectClassification(ent);
+
+                            var index = list.FindIndex(s => s.Id == ent.Id);
+                            grdData.InvalidateRow(index);
                         }
 
                         InitClassList();
                         picWafer.Status = "";
-                        picWafer.ReDraw();
+                        DrawDefect(picWafer.CurrentDefect);
+                        //grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.CurrentCell.RowIndex + 1];
                     }
                     else
                     {
@@ -1839,6 +1847,7 @@ namespace WR.Client.UI
 
             hasDraw = true;
             IsSave = true;
+            picWafer.ZoomMultiple = 1;
             InitData();
 
             SetClsMenu();
@@ -1892,6 +1901,7 @@ namespace WR.Client.UI
             hasDraw = true;
             IsSave = true;
 
+            picWafer.ZoomMultiple = 1;
             InitData();
 
             SetClsMenu();
@@ -2420,7 +2430,7 @@ namespace WR.Client.UI
                     count = grdData.CurrentCell.RowIndex;
             }
 
-            if (cnmReclass.Tag.ToString() == "2")
+            if (cnmReclass.Tag != null && cnmReclass.Tag.ToString() == "2")
             {
                 //获取die下其他的缺陷
                 var defectIdList = list.Where(s => s.DieAddress == model.DieAddress
@@ -2655,14 +2665,14 @@ namespace WR.Client.UI
 
             tabControl1.Height = panel2.Height - height;
 
-            DrawDefect("0,0");
+            DrawDefect(picWafer.CurrentDefect);
         }
 
         private void splitter2_SplitterMoved(object sender, SplitterEventArgs e)
         {
             panel2.Width = Convert.ToInt32(panel4.Height * 1.25);
 
-            DrawDefect("0,0");
+            DrawDefect(picWafer.CurrentDefect);
         }
 
         private void picWafer_MouseClick(object sender, MouseEventArgs e)
@@ -2692,6 +2702,12 @@ namespace WR.Client.UI
             timer3.Enabled = false;
 
             DrawDefect(dieLoction);
+        }
+
+        private void frm_preview_Shown(object sender, EventArgs e)
+        {
+            GetLayout();
+            panel2.Width = Convert.ToInt32(panel4.Height * 1.25);
         }
     }
 

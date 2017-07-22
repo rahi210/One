@@ -1401,9 +1401,9 @@
             this.Name = "frm_preview";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Wafer Preview";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frm_preview_FormClosing);
             this.Load += new System.EventHandler(this.frm_preview_Load);
+            this.Shown += new System.EventHandler(this.frm_preview_Shown);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.cnmReclass.ResumeLayout(false);
