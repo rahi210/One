@@ -96,7 +96,7 @@ namespace WR.Client.UI
             if (Oparams != null && Oparams.Length > 2)
             {
                 Resultid = Oparams[0];
-                lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", Oparams[1], Oparams[2], Oparams[3], Oparams[4]);
+                lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", Oparams[1], Oparams[2], Oparams[3], Oparams[4]);
             }
 
             //InitData();
@@ -1364,7 +1364,7 @@ namespace WR.Client.UI
                     xValue = list[i].DESCRIPTION;
                 p.SetValueXY(xValue, list[i].Points);
                 p.Label = list[i].Points.ToString();
-
+                
                 serie.Points.Add(p);
             }
         }
@@ -1843,7 +1843,7 @@ namespace WR.Client.UI
             SaveResultid(Resultid, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT, ent.SFIELD);
 
             Oparams = new string[] { ent.RESULTID, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT.ToString(), ent.SFIELD.ToString() };
-            lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT, ent.SFIELD);
+            lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT, ent.SFIELD);
 
             hasDraw = true;
             IsSave = true;
@@ -1896,7 +1896,7 @@ namespace WR.Client.UI
             SaveResultid(Resultid, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT, ent.SFIELD);
 
             Oparams = new string[] { ent.RESULTID, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT.ToString(), ent.SFIELD.ToString() };
-            lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT, ent.SFIELD);
+            lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT, ent.SFIELD);
 
             hasDraw = true;
             IsSave = true;
@@ -2120,6 +2120,12 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void tlsSaveResult_Click(object sender, EventArgs e)
         {
+            if (GetDataArchiveStatus())
+            {
+                MsgBoxEx.Info("Data is archiving, please wait a moment");
+                return;
+            }
+
             ShowLoading(ToopEnum.saving);
 
             IwrService service = wrService.GetService();
@@ -2140,7 +2146,7 @@ namespace WR.Client.UI
 
                 DataCache.WaferResultInfo.ForEach(s => s.LFIELD = lotList.FirstOrDefault(l => l.DEVICE == s.DEVICE && l.LAYER == s.LAYER && l.LOT == s.LOT).LFIELD);
 
-                lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", wf.LOT, wf.SUBSTRATE_ID, wf.NUMDEFECT, wf.SFIELD);
+                lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", wf.LOT, wf.SUBSTRATE_ID, wf.NUMDEFECT, wf.SFIELD);
                 //if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0)
                 //{
                 //    var dent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
@@ -2172,6 +2178,12 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void tlsFinish_Click(object sender, EventArgs e)
         {
+            if (GetDataArchiveStatus())
+            {
+                MsgBoxEx.Info("Data is archiving, please wait a moment");
+                return;
+            }
+
             if (MsgBoxEx.ConfirmYesNo(MessageConst.frm_preview_msg001) == DialogResult.No)
                 return;
 
@@ -2401,33 +2413,36 @@ namespace WR.Client.UI
 
             List<WmdefectlistEntity> list = grdData.DataSource as List<WmdefectlistEntity>;
 
-            //获取同一个image下其他的缺陷
-            if (!string.IsNullOrEmpty(model.ImageName))
+            if ((cnmReclass.Tag != null && cnmReclass.Tag.ToString() == "2") || model.Cclassid != 0)
             {
-                var defectIdList = list.Where(s => s.ImageName == model.ImageName
-                      && s.Id != model.Id)
-                      .Select(s => s.Id).ToList();
-
-                foreach (var id in defectIdList)
+                //获取同一个image下其他的缺陷
+                if (!string.IsNullOrEmpty(model.ImageName))
                 {
-                    var index = list.FindIndex(s => s.Id == id);
+                    var defectIdList = list.Where(s => s.ImageName == model.ImageName
+                          && s.Id != model.Id)
+                          .Select(s => s.Id).ToList();
 
-                    list[index].Cclassid = model.Cclassid;
-                    list[index].InspclassifiId = model.InspclassifiId;
-                    list[index].ModifiedDefect = model.ModifiedDefect;
-                    list[index].Description = model.Description;
+                    foreach (var id in defectIdList)
+                    {
+                        var index = list.FindIndex(s => s.Id == id);
 
-                    UpdateDieLayout(list[index].DieAddress, (int)model.Cclassid);
+                        list[index].Cclassid = model.Cclassid;
+                        list[index].InspclassifiId = model.InspclassifiId;
+                        list[index].ModifiedDefect = model.ModifiedDefect;
+                        list[index].Description = model.Description;
 
-                    if (grdData.Visible)
-                        grdData.InvalidateRow(index);
+                        UpdateDieLayout(list[index].DieAddress, (int)model.Cclassid);
 
-                    count = index;
+                        if (grdData.Visible)
+                            grdData.InvalidateRow(index);
+
+                        count = index;
+                    }
+
+                    //count = (int)model.Id;
+                    if (grdData.CurrentCell.RowIndex > count)
+                        count = grdData.CurrentCell.RowIndex;
                 }
-
-                //count = (int)model.Id;
-                if (grdData.CurrentCell.RowIndex > count)
-                    count = grdData.CurrentCell.RowIndex;
             }
 
             if (cnmReclass.Tag != null && cnmReclass.Tag.ToString() == "2")
@@ -2478,7 +2493,7 @@ namespace WR.Client.UI
             Oparams[3] = defectCnt.ToString();
             Oparams[4] = (goodCnt / _dielayoutlist.Count * 100).ToString("0.00");
 
-            lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", Oparams[1], Oparams[2], Oparams[3], Oparams[4]);
+            lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", Oparams[1], Oparams[2], Oparams[3], Oparams[4]);
         }
 
         /// <summary>
@@ -2548,6 +2563,9 @@ namespace WR.Client.UI
         {
             if (tlsSaveResult.Enabled == true)
             {
+                if (GetDataArchiveStatus())
+                    return;
+
                 ShowLoading(ToopEnum.saving);
 
                 try
@@ -2576,7 +2594,7 @@ namespace WR.Client.UI
 
                         DataCache.WaferResultInfo.ForEach(s => s.LFIELD = lotList.FirstOrDefault(l => l.DEVICE == s.DEVICE && l.LAYER == s.LAYER && l.LOT == s.LOT).LFIELD);
 
-                        lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect:{2} Yield:{3}", Oparams[1], Oparams[2], wf.NUMDEFECT, wf.SFIELD);
+                        lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", Oparams[1], Oparams[2], wf.NUMDEFECT, wf.SFIELD);
 
                         IsSave = true;
                     }
@@ -2708,6 +2726,13 @@ namespace WR.Client.UI
         {
             GetLayout();
             panel2.Width = Convert.ToInt32(panel4.Height * 1.25);
+        }
+
+        private bool GetDataArchiveStatus()
+        {
+            IsysService service = sysService.GetService();
+
+            return service.GetCmn("3020").Count(s => s.CODE == "1") > 0;
         }
     }
 

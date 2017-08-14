@@ -61,6 +61,7 @@ namespace WR.Client.UI
 
                 model.DieArray = File.ReadAllLines(clbSinfs.CheckedItems[i].ToString());
                 model.Path = clbSinfs.CheckedItems[i].ToString();
+                model.Name = model.Path.Substring(model.Path.LastIndexOf("\\") + 1);
 
                 if (model.DieArray.Length > 0)
                 {
@@ -126,7 +127,7 @@ namespace WR.Client.UI
 
                         if (newValue.Contains("error"))
                         {
-                            MsgBoxEx.Info(string.Format("In line:{0},Numbers cannot be merged with non-numbers(--,@@).", i));
+                            MsgBoxEx.Info(string.Format("Numbers cannot be merged with non-numbers(--,@@),In line:{0},File Name:{1}.", i, sinf.Name));
                             return;
                         }
 

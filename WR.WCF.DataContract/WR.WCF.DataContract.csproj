@@ -45,6 +45,7 @@
     <Compile Include="CMNDICT.cs" />
     <Compile Include="CMNRELATION.cs" />
     <Compile Include="CMNRULE.cs" />
+    <Compile Include="DiskInfoEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TBMENU.cs" />
     <Compile Include="TBROLE.cs" />

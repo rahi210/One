@@ -11,6 +11,7 @@ using WR.Utils;
 using WR.WCF.Contract;
 using WR.WCF.DataContract;
 using WR.DAL.EF;
+using System.Diagnostics;
 
 namespace WR.WCF.Site
 {
@@ -263,10 +264,15 @@ namespace WR.WCF.Site
         {
             try
             {
-                if (!File.Exists(Utils.PathCombine(Utils.ImgUpdatePath, filename)))
+                //if (!File.Exists(Utils.PathCombine(Utils.ImgUpdatePath, filename)))
+                //    throw new FaultException("非法请求。");
+
+                var files = Directory.GetFiles(Utils.PathCombine(Utils.ImgUpdatePath, filename), "*.xml");
+                if (files.Length == 0)
                     throw new FaultException("非法请求。");
 
-                FileStream fstream = new FileStream(Utils.PathCombine(Utils.ImgUpdatePath, filename), FileMode.Open, FileAccess.Read, FileShare.Read);
+                //FileStream fstream = new FileStream(Utils.PathCombine(Utils.ImgUpdatePath, filename), FileMode.Open, FileAccess.Read, FileShare.Read);
+                FileStream fstream = new FileStream(files[0], FileMode.Open, FileAccess.Read, FileShare.Read);
 
                 var incomingRequest = WebOperationContext.Current.IncomingRequest;
                 var outgoingResponse = WebOperationContext.Current.OutgoingResponse;
@@ -789,7 +795,7 @@ namespace WR.WCF.Site
         {
             using (BFdbContext db = new BFdbContext())
             {
-                string sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.inspcnt
+                string sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.inspcnt,ta.resultid
                                                 from wm_waferresult ta,wm_identification tb,
                                                 (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
                                                 (select b.resultid,count(inspecteddieid) inspcnt 
@@ -798,7 +804,7 @@ namespace WR.WCF.Site
                                                         and instr(tb.device||'|'||tb.layer||'|'||tb.lot||'|','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2}  order by tb.substrate_id", lot, stDate, edDate);
 
                 if (lot.EndsWith("|||"))
-                    sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.inspcnt
+                    sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.inspcnt,ta.resultid
                                                 from wm_waferresult ta,wm_identification tb,
                                                 (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
                                                 (select b.resultid,count(inspecteddieid) inspcnt 
@@ -807,7 +813,7 @@ namespace WR.WCF.Site
                                                         and instr(tb.device||'|||','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate);
 
                 else if (lot.EndsWith("||"))
-                    sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.inspcnt
+                    sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.inspcnt,ta.resultid
                                                 from wm_waferresult ta,wm_identification tb,
                                                 (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
                                                 (select b.resultid,count(inspecteddieid) inspcnt 
@@ -826,19 +832,30 @@ namespace WR.WCF.Site
                 using (BFdbContext db = new BFdbContext())
                 {
                     if (lot.EndsWith("|||"))
+                    {
                         return db.SqlQuery<WMCLASSIFICATIONITEM>(string.Format(@"select a.*
                                                                               from wm_classificationitem a
                                                                              where a.schemeid in (select ta.classificationinfoid
                                                                                                     from wm_waferresult ta, wm_identification tb
                                                                                                    where instr(tb.device || '|||', '{0}') > 0  and ta.identificationid=tb.identificationid
                                                                                                      and rownum < 2)", lot)).ToList();
-                    else
+                    }
+                    else if (lot.EndsWith("||"))
                     {
                         return db.SqlQuery<WMCLASSIFICATIONITEM>(string.Format(@"select a.*
                                                                               from wm_classificationitem a
                                                                              where a.schemeid in (select ta.classificationinfoid
                                                                                                     from wm_waferresult ta, wm_identification tb 
                                                                                                    where instr(tb.device ||'|'||tb.layer||'||', '{0}') > 0  and ta.identificationid=tb.identificationid
+                                                                                                     and rownum < 2)", lot)).ToList();
+                    }
+                    else
+                    {
+                        return db.SqlQuery<WMCLASSIFICATIONITEM>(string.Format(@"select a.*
+                                                                              from wm_classificationitem a
+                                                                             where a.schemeid in (select ta.classificationinfoid
+                                                                                                    from wm_waferresult ta, wm_identification tb 
+                                                                                                   where instr(tb.device ||'|'||tb.layer||'|'||tb.lot||'|', '{0}') > 0  and ta.identificationid=tb.identificationid
                                                                                                      and rownum < 2)", lot)).ToList();
                     }
                 }
@@ -880,32 +897,32 @@ namespace WR.WCF.Site
                     string sql = "";
 
                     if (lot.EndsWith("|||"))
-                        sql = string.Format(@"select c.device, c.layer,c.lot, a.inspclassifiid, c.substrate_id,count(a.id) NumCnt
+                        sql = string.Format(@"select c.device, c.layer,c.lot, a.inspclassifiid, c.substrate_id,count(a.id) NumCnt, a.resultid
                                                   from wm_defectlist       a,
                                                        wm_waferresult      b,
                                                        wm_identification   c
                                                  where a.resultid = b.resultid
                                                    and b.identificationid = c.identificationid
                                                    and b.delflag='0' and instr(c.device||'|||','{0}')>0 and b.completiontime>={1} and b.completiontime<={2} 
-                                                 group by c.device, c.layer,c.lot,c.substrate_id, a.inspclassifiid", lot, stDate, edDate);
+                                                 group by c.device, c.layer,c.lot,c.substrate_id, a.inspclassifiid, a.resultid", lot, stDate, edDate);
                     else if (lot.EndsWith("||"))
-                        sql = string.Format(@"select c.device, c.layer, c.lot,a.inspclassifiid, c.substrate_id,count(a.id) NumCnt
+                        sql = string.Format(@"select c.device, c.layer, c.lot,a.inspclassifiid, c.substrate_id,count(a.id) NumCnt, a.resultid
                                                   from wm_defectlist       a,
                                                        wm_waferresult      b,
                                                        wm_identification   c
                                                  where a.resultid = b.resultid
                                                    and b.identificationid = c.identificationid
                                                    and b.delflag='0' and instr(c.device||'|'||c.layer||'||','{0}')>0 and b.completiontime>={1} and b.completiontime<={2} 
-                                                 group by c.device, c.layer,c.lot,c.substrate_id, a.inspclassifiid", lot, stDate, edDate);
+                                                 group by c.device, c.layer,c.lot,c.substrate_id, a.inspclassifiid, a.resultid", lot, stDate, edDate);
                     else
-                        sql = string.Format(@"select c.device, c.layer,c.lot, a.inspclassifiid,c.substrate_id, count(a.id) NumCnt
+                        sql = string.Format(@"select c.device, c.layer,c.lot, a.inspclassifiid,c.substrate_id, count(a.id) NumCnt, a.resultid
                                                   from wm_defectlist       a,
                                                        wm_waferresult      b,
                                                        wm_identification   c
                                                  where a.resultid = b.resultid
                                                    and b.identificationid = c.identificationid
                                                    and b.delflag='0' and instr(c.device||'|'||c.layer||'|'||c.lot||'|','{0}')>0 and b.completiontime>={1} and b.completiontime<={2} 
-                                                 group by c.device, c.layer,c.lot, c.substrate_id,a.inspclassifiid", lot, stDate, edDate);
+                                                 group by c.device, c.layer,c.lot, c.substrate_id,a.inspclassifiid, a.resultid", lot, stDate, edDate);
 
                     //log.Error(sql);
                     return db.SqlQuery<WmItemsSummaryEntity>(sql).ToList();
@@ -990,6 +1007,161 @@ namespace WR.WCF.Site
                 log.Error(ex);
                 throw GetFault(ex);
             }
+        }
+
+        public string DataArchive(string sdate, string edate, string type)
+        {
+            try
+            {
+                StringBuilder sbt = new StringBuilder();
+                using (BFdbContext db = new BFdbContext())
+                {
+                    BFParameters param = BFParameters.CreateParameters();
+                    param.Add(":sdate_", sdate, DbType.String, ParameterDirection.Input);
+                    param.Add(":edate_", edate, DbType.String, ParameterDirection.Input);
+                    param.Add(":type_", type, DbType.String, ParameterDirection.Input);
+
+                    param.Add(":o_errcode", System.DBNull.Value, DbType.String, ParameterDirection.Output, 10);
+                    param.Add(":o_message", System.DBNull.Value, DbType.String, ParameterDirection.Output, 100);
+
+                    //return db.ExecuteProcedure<MessageEntity>("sp_date_archive", param);
+                    var rs = db.ExecuteProcedure("sp_date_archive", param);
+
+                    log.Info(string.Format("sdate_:{0} edate_:{1} type_:{2} o_errcode:{3} o_message:{4}", sdate, edate, type, param.DbParameters[3].Value, param.DbParameters[4].Value));
+
+                    return param.DbParameters[4].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        /// <summary>
+        /// 数据库的备份和恢复
+        /// </summary>
+        /// <param name="type">0:备份 1:恢复</param>
+        /// <returns></returns>
+        public int ImpOrExpDatabase(string type, string date = null)
+        {
+            if (type == "0")
+            {
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DBFile", System.DateTime.Today.ToString("yyyyMMdd"));
+
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
+                //var currentTime = System.DateTime.Now.ToString("yyyyMMdd");
+
+                //创建一个进程实例
+                Process p = new Process();
+                //生成备份文件的文件名称
+                string filename = string.Format("{0}\\{1}.dmp", path, System.DateTime.Today.ToString("yyyyMMdd"));
+                string logname = string.Format("{0}\\{1}_exp.log", path, System.DateTime.Now.ToString("yyyyMMddHHmmss"));
+
+                try
+                {
+                    //导出程序路径
+                    p.StartInfo.FileName = "C:\\app\\yang.luo\\product\\11.2.0\\dbhome_2\\BIN\\exp.exe";
+                    //启用操作系统外壳程序执行
+                    p.StartInfo.UseShellExecute = true;
+                    //显示dos窗口执行过程
+                    p.StartInfo.CreateNoWindow = false;
+                    p.StartInfo.Arguments = "idmp/idmp@its file=" + filename + " TABLES=(acc_cell_bak) log=" + logname;
+                    p.Start();
+                    p.WaitForExit();
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                    throw GetFault(ex);
+                }
+                finally
+                {
+                    p.Dispose();
+
+                    log.Info(string.Format("type:{0} filename:{1} logname:{2}", type, filename, logname));
+                }
+            }
+            else
+            {
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DBFile", date.Substring(0, 8));
+                var filename = string.Format("{0}\\{1}.dmp", path, date);
+                var logname = string.Format("{0}\\{1}_imp.log", path, System.DateTime.Now.ToString("yyyyMMddHHmmss"));
+
+                if (!File.Exists(filename))
+                    return -2;
+
+                //创建一个进程实例
+                Process p = new Process();
+
+                try
+                {
+                    //导出程序路径
+                    p.StartInfo.FileName = "C:\\app\\yang.luo\\product\\11.2.0\\dbhome_2\\BIN\\imp.exe";
+                    //启用操作系统外壳程序执行
+                    p.StartInfo.UseShellExecute = true;
+                    //显示dos窗口执行过程
+                    p.StartInfo.CreateNoWindow = false;
+                    p.StartInfo.Arguments = "idmp/idmp@its file=" + filename + " TABLES=(acc_cell_bak) ignore=y log=" + logname;
+                    p.Start();
+                    p.WaitForExit();
+                    p.Dispose();
+
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                    throw GetFault(ex);
+                }
+                finally
+                {
+                    p.Dispose();
+                    log.Info(string.Format("type:{0} filename:{1} logname:{2}", type, filename, logname));
+                }
+            }
+
+            return 0;
+        }
+
+        public List<string> GetDBFilesList()
+        {
+            try
+            {
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DBFile");
+
+                DirectoryInfo dirInfo = new DirectoryInfo(path);
+
+                return dirInfo.GetFiles("*.dmp", SearchOption.AllDirectories).Select(s => s.Name.Split('.')[0]).ToList();
+                //var pathlist= System.IO.Directory.GetFiles(path, "*.dmp",SearchOption.AllDirectories);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public List<DiskInfoEntity> GetDiskList()
+        {
+            var list = new List<DiskInfoEntity>();
+
+            DriveInfo[] drives = DriveInfo.GetDrives();
+            foreach (DriveInfo drive in drives)
+            {
+                list.Add(new DiskInfoEntity()
+                {
+                    Name = drive.Name,
+
+                    TotalSize = Convert.ToDouble(drive.TotalSize / (1024 * 1024 * 1024)),
+                    FreeSpace = Convert.ToDouble(drive.TotalFreeSpace / (1024 * 1024 * 1024)),
+                    UsedSpace = Convert.ToDouble(drive.TotalSize / (1024 * 1024 * 1024)) - Convert.ToDouble(drive.TotalFreeSpace / (1024 * 1024 * 1024))
+                });
+            }
+
+            return list;
         }
     }
 }

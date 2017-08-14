@@ -98,5 +98,17 @@ namespace WR.WCF.Contract
 
         [OperationContract]
         List<WmClassificationItemEntity> GetBaseClassificationItem();
+
+        [OperationContract]
+        string DataArchive(string sdate, string edate, string type);
+
+        [OperationContract]
+        int ImpOrExpDatabase(string type, string date = null);
+
+        [OperationContract]
+        List<string> GetDBFilesList();
+
+        [OperationContract]
+        List<DiskInfoEntity> GetDiskList();
     }
 }

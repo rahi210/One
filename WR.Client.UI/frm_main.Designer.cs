@@ -33,7 +33,10 @@
             this.pnlContext = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.cnsHelp = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tlsConn = new System.Windows.Forms.ToolStripMenuItem();
+            this.tlsAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlLeft = new System.Windows.Forms.Panel();
+            this.mnuArchive = new WR.Client.Controls.WrMenuItem();
             this.mnuLogout = new WR.Client.Controls.WrMenuItem();
             this.mnuSelection = new WR.Client.Controls.WrMenuItem();
             this.lblLeftRole = new System.Windows.Forms.Label();
@@ -55,8 +58,6 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.tlsConn = new System.Windows.Forms.ToolStripMenuItem();
-            this.tlsAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.cnsHelp.SuspendLayout();
             this.pnlLeft.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -87,9 +88,26 @@
             this.cnsHelp.Name = "cnsHelp";
             this.cnsHelp.Size = new System.Drawing.Size(191, 48);
             // 
+            // tlsConn
+            // 
+            this.tlsConn.Image = global::WR.Client.UI.Properties.Resources.connection;
+            this.tlsConn.Name = "tlsConn";
+            this.tlsConn.Size = new System.Drawing.Size(190, 22);
+            this.tlsConn.Text = "Connection settings";
+            this.tlsConn.Click += new System.EventHandler(this.tlsConn_Click);
+            // 
+            // tlsAbout
+            // 
+            this.tlsAbout.Image = global::WR.Client.UI.Properties.Resources.about;
+            this.tlsAbout.Name = "tlsAbout";
+            this.tlsAbout.Size = new System.Drawing.Size(190, 22);
+            this.tlsAbout.Text = "About me";
+            this.tlsAbout.Click += new System.EventHandler(this.tlsAbout_Click);
+            // 
             // pnlLeft
             // 
             this.pnlLeft.BackgroundImage = global::WR.Client.UI.Properties.Resources.left;
+            this.pnlLeft.Controls.Add(this.mnuArchive);
             this.pnlLeft.Controls.Add(this.mnuLogout);
             this.pnlLeft.Controls.Add(this.mnuSelection);
             this.pnlLeft.Controls.Add(this.lblLeftRole);
@@ -107,13 +125,28 @@
             this.pnlLeft.Size = new System.Drawing.Size(235, 640);
             this.pnlLeft.TabIndex = 1;
             // 
+            // mnuArchive
+            // 
+            this.mnuArchive.BackColor = System.Drawing.Color.Transparent;
+            this.mnuArchive.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.mnuArchive.ItemBgColor = System.Drawing.Color.Transparent;
+            this.mnuArchive.ItemImage = global::WR.Client.UI.Properties.Resources.Archive;
+            this.mnuArchive.Location = new System.Drawing.Point(0, 247);
+            this.mnuArchive.Name = "mnuArchive";
+            this.mnuArchive.Size = new System.Drawing.Size(255, 57);
+            this.mnuArchive.TabIndex = 8;
+            this.mnuArchive.Tag = "50001";
+            this.mnuArchive.Visible = false;
+            this.mnuArchive.WrText = "Data Manage";
+            this.mnuArchive.ItemClick += new System.EventHandler(this.mnuSelect_ItemClick);
+            // 
             // mnuLogout
             // 
             this.mnuLogout.BackColor = System.Drawing.Color.Transparent;
             this.mnuLogout.Cursor = System.Windows.Forms.Cursors.Hand;
             this.mnuLogout.ItemBgColor = System.Drawing.Color.Transparent;
             this.mnuLogout.ItemImage = global::WR.Client.UI.Properties.Resources.logout;
-            this.mnuLogout.Location = new System.Drawing.Point(4, 441);
+            this.mnuLogout.Location = new System.Drawing.Point(4, 502);
             this.mnuLogout.Name = "mnuLogout";
             this.mnuLogout.Size = new System.Drawing.Size(255, 57);
             this.mnuLogout.TabIndex = 7;
@@ -140,7 +173,7 @@
             this.lblLeftRole.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblLeftRole.Font = new System.Drawing.Font("宋体", 10F);
             this.lblLeftRole.ForeColor = System.Drawing.Color.White;
-            this.lblLeftRole.Location = new System.Drawing.Point(58, 404);
+            this.lblLeftRole.Location = new System.Drawing.Point(58, 465);
             this.lblLeftRole.Name = "lblLeftRole";
             this.lblLeftRole.Size = new System.Drawing.Size(208, 30);
             this.lblLeftRole.TabIndex = 5;
@@ -170,7 +203,7 @@
             this.lblLeftPwd.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblLeftPwd.Font = new System.Drawing.Font("宋体", 10F);
             this.lblLeftPwd.ForeColor = System.Drawing.Color.White;
-            this.lblLeftPwd.Location = new System.Drawing.Point(58, 308);
+            this.lblLeftPwd.Location = new System.Drawing.Point(58, 369);
             this.lblLeftPwd.Name = "lblLeftPwd";
             this.lblLeftPwd.Size = new System.Drawing.Size(208, 30);
             this.lblLeftPwd.TabIndex = 5;
@@ -185,7 +218,7 @@
             this.lblLeftOptions.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblLeftOptions.Font = new System.Drawing.Font("宋体", 10F);
             this.lblLeftOptions.ForeColor = System.Drawing.Color.White;
-            this.lblLeftOptions.Location = new System.Drawing.Point(58, 340);
+            this.lblLeftOptions.Location = new System.Drawing.Point(58, 401);
             this.lblLeftOptions.Name = "lblLeftOptions";
             this.lblLeftOptions.Size = new System.Drawing.Size(208, 30);
             this.lblLeftOptions.TabIndex = 5;
@@ -200,7 +233,7 @@
             this.lblLeftUser.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblLeftUser.Font = new System.Drawing.Font("宋体", 10F);
             this.lblLeftUser.ForeColor = System.Drawing.Color.White;
-            this.lblLeftUser.Location = new System.Drawing.Point(58, 372);
+            this.lblLeftUser.Location = new System.Drawing.Point(58, 433);
             this.lblLeftUser.Name = "lblLeftUser";
             this.lblLeftUser.Size = new System.Drawing.Size(208, 30);
             this.lblLeftUser.TabIndex = 5;
@@ -229,7 +262,7 @@
             this.mnuSetting.Cursor = System.Windows.Forms.Cursors.Default;
             this.mnuSetting.ItemBgColor = System.Drawing.Color.Transparent;
             this.mnuSetting.ItemImage = global::WR.Client.UI.Properties.Resources.settings;
-            this.mnuSetting.Location = new System.Drawing.Point(4, 247);
+            this.mnuSetting.Location = new System.Drawing.Point(4, 308);
             this.mnuSetting.Name = "mnuSetting";
             this.mnuSetting.Size = new System.Drawing.Size(255, 57);
             this.mnuSetting.TabIndex = 4;
@@ -387,22 +420,6 @@
             this.label4.TabIndex = 0;
             this.label4.Text = "2015/08/12 09:30:23";
             // 
-            // tlsConn
-            // 
-            this.tlsConn.Image = global::WR.Client.UI.Properties.Resources.connection;
-            this.tlsConn.Name = "tlsConn";
-            this.tlsConn.Size = new System.Drawing.Size(190, 22);
-            this.tlsConn.Text = "Connection settings";
-            this.tlsConn.Click += new System.EventHandler(this.tlsConn_Click);
-            // 
-            // tlsAbout
-            // 
-            this.tlsAbout.Image = global::WR.Client.UI.Properties.Resources.about;
-            this.tlsAbout.Name = "tlsAbout";
-            this.tlsAbout.Size = new System.Drawing.Size(190, 22);
-            this.tlsAbout.Text = "About me";
-            this.tlsAbout.Click += new System.EventHandler(this.tlsAbout_Click);
-            // 
             // frm_main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -459,5 +476,6 @@
         private System.Windows.Forms.ToolStripMenuItem tlsAbout;
         private System.Windows.Forms.Label lblLeftPwd;
         private System.Windows.Forms.Label lblConnction;
+        public Controls.WrMenuItem mnuArchive;
     }
 }

@@ -35,5 +35,9 @@ namespace WR.WCF.DataContract
         [DataMember]
         public Int64? NumCnt
         { get; set; }
+
+        [DataMember]
+        public string RESULTID
+        { get; set; }
     }
 }

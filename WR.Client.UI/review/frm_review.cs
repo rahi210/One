@@ -1227,7 +1227,8 @@ namespace WR.Client.UI
                     if (sd.ShowDialog() == DialogResult.OK)
                     {
                         var ent = grdData.SelectedRows[0].DataBoundItem as WmwaferResultEntity;
-                        DownloadXml(ent.RESULTID + "\\WaferResults.xml", sd.FileName);
+                        //DownloadXml(ent.RESULTID + "\\WaferResults.xml", sd.FileName);
+                        DownloadXml(ent.RESULTID, sd.FileName);
 
                         MsgBoxEx.Info("XML file is complete.");
                     }
@@ -1288,7 +1289,8 @@ namespace WR.Client.UI
                 sd.Filter = "XML文件(*.xml)|*.xml";
                 if (sd.ShowDialog() == DialogResult.OK)
                 {
-                    DownloadXml(node.Tag.ToString() + "\\WaferResults.xml", sd.FileName);
+                    //DownloadXml(node.Tag.ToString() + "\\WaferResults.xml", sd.FileName);
+                    DownloadXml(node.Tag.ToString(), sd.FileName);
 
                     MsgBoxEx.Info("XML file is complete.");
                 }

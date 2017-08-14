@@ -10,6 +10,8 @@ namespace WR.DAL.EF
     {
         public static string providerName = "";
 
+        public List<DbParameter> DbParameters { get { return _pList; } }
+
         private List<DbParameter> _pList = new List<DbParameter>();
 
         public void Add(string parameterName, object value)
@@ -51,6 +53,27 @@ namespace WR.DAL.EF
             return new BFParameters();
         }
 
+        ///// <summary>
+        ///// 获取执行的sql
+        ///// </summary>
+        ///// <param name="proBuilder"></param>
+        ///// <returns></returns>
+        //public DbParameter[] GetDbParameters(ref string proBuilder)
+        //{
+        //    StringBuilder proc = new StringBuilder("EXEC ");
+        //    proc.AppendFormat("{0}", proBuilder);
+
+        //    _pList.ForEach((p) =>
+        //    {
+        //        if (ParameterDirection.Input == p.Direction)
+        //            proc.AppendFormat(" {0},", p.ParameterName);
+        //        else
+        //            proc.AppendFormat(" {0} OUTPUT,", p.ParameterName);
+        //    });
+
+        //    proBuilder = proc.ToString().TrimEnd(new char[] { ',' });
+        //    return _pList.ToArray();
+        //}
         /// <summary>
         /// 获取执行的sql
         /// </summary>
@@ -58,18 +81,15 @@ namespace WR.DAL.EF
         /// <returns></returns>
         public DbParameter[] GetDbParameters(ref string proBuilder)
         {
-            StringBuilder proc = new StringBuilder("EXEC ");
-            proc.AppendFormat("{0}", proBuilder);
-
+            StringBuilder proc = new StringBuilder("begin sp_date_archive( ");
+           
             _pList.ForEach((p) =>
             {
-                if (ParameterDirection.Input == p.Direction)
-                    proc.AppendFormat(" {0},", p.ParameterName);
-                else
-                    proc.AppendFormat(" {0} OUTPUT,", p.ParameterName);
+                proc.AppendFormat(" {0},", p.ParameterName);
             });
 
-            proBuilder = proc.ToString().TrimEnd(new char[] { ',' });
+            proBuilder = string.Format("{0});end;", proc.ToString().TrimEnd(new char[] { ',' }));
+
             return _pList.ToArray();
         }
 

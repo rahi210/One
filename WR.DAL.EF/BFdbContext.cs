@@ -133,8 +133,10 @@ namespace WR.DAL.EF
             string proc = proName;
             var ps = parms.GetDbParameters(ref proc);
 
-            var res = Database.SqlQuery<int>(proc, ps);
-            return res.FirstOrDefault();
+            //var res = Database.SqlQuery<int>(proc, ps);
+            //return res.FirstOrDefault();
+            var res = Database.ExecuteSqlCommand(proc, ps);
+            return res;
         }
 
         public List<T> ExecuteProcedure<T>(string proName, BFParameters parms)

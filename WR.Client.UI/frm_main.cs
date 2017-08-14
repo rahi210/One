@@ -81,6 +81,36 @@ namespace WR.Client.UI
             ShowForm("");
         }
 
+        private void ArchiveDate()
+        {
+            if (mnuArchive.Visible)
+            {
+                var lastDate = DataCache.CmnDict.Where(s => s.DICTID == "3021" && s.CODE == "0").Select(s => s.VALUE).FirstOrDefault();
+
+                if (string.IsNullOrEmpty(lastDate))
+                {
+                    if (this.InvokeRequired)
+                        this.Invoke(new Action(() => { MsgBoxEx.Info("Data not yet archived, please archive now."); }));
+                    else
+                        MsgBoxEx.Info("Data not yet archived, please archive now.");
+                }
+                else
+                {
+                    var intervalDay = (DateTime.Now - DateTime.ParseExact(lastDate,
+                                  "yyyyMMdd",
+                                   System.Globalization.CultureInfo.InvariantCulture)).Days;
+
+                    if (intervalDay > 7)
+                    {
+                        if (this.InvokeRequired)
+                            this.Invoke(new Action(() => { MsgBoxEx.Info("It's been over seven days since the last archive, please archive now."); }));
+                        else
+                            MsgBoxEx.Info("It's been over seven days since the last archive, please archive now.");
+                    }
+                }
+            }
+        }
+
         public void SetForm()
         {
             LogService.InitializeService(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Start.exe.config"));
@@ -105,6 +135,8 @@ namespace WR.Client.UI
             mnuReview.Visible = false;
             mnuSelect.Visible = false;
             mnuSetting.Visible = false;
+            mnuArchive.Visible = false;
+
             lblLeftPwd.Visible = false;
             lblLeftOptions.Visible = false;
             lblLeftRole.Visible = false;
@@ -142,6 +174,13 @@ namespace WR.Client.UI
                 mnuSelect.Location = new Point(4, y);
                 y += 63;
             }
+
+            if (mnuArchive.Visible)
+            {
+                mnuArchive.Location = new Point(4, y);
+                y += 63;
+            }
+
             if (lblLeftPwd.Visible || lblLeftOptions.Visible || lblLeftRole.Visible || lblLeftUser.Visible)
             {
                 mnuSetting.Visible = true;
@@ -171,6 +210,8 @@ namespace WR.Client.UI
                 y += 5;
             }
             mnuLogout.Location = new Point(4, y);
+
+            ArchiveDate();
         }
 
         /// <summary>
@@ -235,6 +276,11 @@ namespace WR.Client.UI
                 case "Defect Report":
                     frm = new frm_report();
                     ((frm_report)frm).Oparams = Oparams;
+                    frm.frmMain = this;
+                    break;
+                case "Data Manage":
+                    frm = new frm_Archive();
+                    //((frm_Archive)frm).Oparams = Oparams;
                     frm.frmMain = this;
                     break;
                 case "- Change Password":

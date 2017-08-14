@@ -56,11 +56,15 @@
             this.txtSinfPath = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.nudWaferYield = new System.Windows.Forms.NumericUpDown();
             this.nudLotYield = new System.Windows.Forms.NumericUpDown();
             this.btnWaferYield = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.nudWaferYield = new System.Windows.Forms.NumericUpDown();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.nudDisk = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.btnSystem = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -72,8 +76,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudDay)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudLotYield)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudWaferYield)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLotYield)).BeginInit();
+            this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudDisk)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -172,6 +178,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -391,6 +398,13 @@
             this.tabPage3.Text = "Wafer Options";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // nudWaferYield
+            // 
+            this.nudWaferYield.Location = new System.Drawing.Point(100, 43);
+            this.nudWaferYield.Name = "nudWaferYield";
+            this.nudWaferYield.Size = new System.Drawing.Size(94, 21);
+            this.nudWaferYield.TabIndex = 17;
+            // 
             // nudLotYield
             // 
             this.nudLotYield.Location = new System.Drawing.Point(100, 16);
@@ -429,12 +443,47 @@
             this.label5.TabIndex = 0;
             this.label5.Text = "Lot Yield:";
             // 
-            // nudWaferYield
+            // tabPage4
             // 
-            this.nudWaferYield.Location = new System.Drawing.Point(100, 43);
-            this.nudWaferYield.Name = "nudWaferYield";
-            this.nudWaferYield.Size = new System.Drawing.Size(94, 21);
-            this.nudWaferYield.TabIndex = 17;
+            this.tabPage4.Controls.Add(this.btnSystem);
+            this.tabPage4.Controls.Add(this.nudDisk);
+            this.tabPage4.Controls.Add(this.label7);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(322, 253);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "System Options";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // nudDisk
+            // 
+            this.nudDisk.Location = new System.Drawing.Point(154, 27);
+            this.nudDisk.Name = "nudDisk";
+            this.nudDisk.Size = new System.Drawing.Size(70, 21);
+            this.nudDisk.TabIndex = 18;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(23, 29);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(125, 12);
+            this.label7.TabIndex = 17;
+            this.label7.Text = "Disk Alert Value(%):";
+            // 
+            // btnSystem
+            // 
+            this.btnSystem.BackgroundImage = global::WR.Client.UI.Properties.Resources.button;
+            this.btnSystem.Image = global::WR.Client.UI.Properties.Resources.move24;
+            this.btnSystem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSystem.Location = new System.Drawing.Point(200, 205);
+            this.btnSystem.Name = "btnSystem";
+            this.btnSystem.Size = new System.Drawing.Size(80, 33);
+            this.btnSystem.TabIndex = 19;
+            this.btnSystem.Text = "    Save";
+            this.btnSystem.UseVisualStyleBackColor = true;
+            this.btnSystem.Click += new System.EventHandler(this.btnSystem_Click);
             // 
             // frm_config
             // 
@@ -460,8 +509,11 @@
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudLotYield)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudWaferYield)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLotYield)).EndInit();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudDisk)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -501,6 +553,10 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown nudLotYield;
         private System.Windows.Forms.NumericUpDown nudWaferYield;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.Button btnSystem;
+        private System.Windows.Forms.NumericUpDown nudDisk;
+        private System.Windows.Forms.Label label7;
 
     }
 }

@@ -70,6 +70,8 @@ namespace WR.Client.UI
             txtSinfPath.Text = DataCache.SinfPath;
 
             InitWaferOption(service);
+
+            InitSystemOption(service);
         }
 
         private void InitWaferOption(IsysService service)
@@ -88,6 +90,27 @@ namespace WR.Client.UI
                             break;
                         case "1":
                             nudWaferYield.Value = decimal.Parse(l.VALUE);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
+        private void InitSystemOption(IsysService service)
+        {
+            //yield
+            var list = service.GetCmn("3022");
+
+            if (list.Count > 0)
+            {
+                foreach (var l in list)
+                {
+                    switch (l.CODE)
+                    {
+                        case "0":
+                            nudDisk.Value = decimal.Parse(l.VALUE);
                             break;
                         default:
                             break;
@@ -353,6 +376,32 @@ namespace WR.Client.UI
                             break;
                         case "1":
                             l.VALUE = nudWaferYield.Value.ToString();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            service.UpdateDict(list);
+
+            MsgBoxEx.Info("Save success, please refresh the data.");
+        }
+
+        private void btnSystem_Click(object sender, EventArgs e)
+        {
+            IsysService service = sysService.GetService();
+
+            var list = service.GetCmn("3022");
+
+            if (list.Count > 0)
+            {
+                foreach (var l in list)
+                {
+                    switch (l.CODE)
+                    {
+                        case "0":
+                            l.VALUE = nudDisk.Value.ToString();
                             break;
                         default:
                             break;

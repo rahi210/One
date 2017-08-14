@@ -136,6 +136,9 @@
   <data name="save" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="archive_c" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\archive_c.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="goback" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\goback.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -160,9 +163,6 @@
   <data name="zoom_in" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\zoom_in.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="user24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\user24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="filterImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\filterImage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -178,6 +178,9 @@
   <data name="left" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\left.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="re-classify1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\re-classify.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="copy24" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\copy24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -189,6 +192,9 @@
   </data>
   <data name="selection" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\selection.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="database-delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\database-delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="EditUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\EditUser.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -220,9 +226,6 @@
   <data name="help" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\help.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="export24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\export24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="login_bg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\login_bg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -253,6 +256,9 @@
   <data name="merge32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\merge32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="smeelogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\smeelogo.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="select" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\select.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -261,9 +267,6 @@
   </data>
   <data name="logo32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\logo32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="top2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\top2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Minimized" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Minimized.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -289,23 +292,29 @@
   <data name="right1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\right1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Physical recovery" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Physical recovery.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="round" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\round.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="smeelogo1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\smeelogo1.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Restore32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Restore32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="login_bg2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\login_bg2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="smeelogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\smeelogo.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="top2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\top2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="review" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\review.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="logo64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\logo64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="user24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\user24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="right2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\right2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -313,16 +322,28 @@
   <data name="pright" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\pright.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Restore32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Restore32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="export24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\export24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="capture32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\capture32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="logo64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Archive" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Archive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="export" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\export.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="top1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\top1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="re-classify1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\re-classify.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="database-download" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\database-download.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="database-upload" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\database-upload.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

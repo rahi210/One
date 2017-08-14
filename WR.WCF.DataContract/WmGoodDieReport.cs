@@ -53,5 +53,9 @@ namespace WR.WCF.DataContract
         [DataMember]
         public double? PERCENT
         { get; set; }
+
+        [DataMember]
+        public string RESULTID
+        { get; set; }
     }
 }

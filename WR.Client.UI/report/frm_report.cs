@@ -262,7 +262,8 @@ namespace WR.Client.UI
                     ShowDefectiveList();
                     break;
                 case "tabGood":
-                    ShowGoodDie();
+                    //ShowGoodDie();
+                    ShowGoodDieNew();
                     break;
                 case "tabYield":
                     ShowYield();
@@ -384,7 +385,7 @@ namespace WR.Client.UI
             {
                 decimal area = 0;
                 if (decimal.TryParse(p.AREA_, out area))
-                    p.AREA_ = string.Format("{0:#.000}", area);
+                    p.AREA_ = string.Format("{0:0.000}", area);
 
                 var sz = p.SIZE_.Split(new char[] { ',' });
                 p.SIZE_ = string.Format("{0},{1}", Math.Round(decimal.Parse(sz[0]), 3), Math.Round(decimal.Parse(sz[1]), 3));
@@ -528,7 +529,7 @@ namespace WR.Client.UI
             lst.ForEach((p) =>
             {
                 p.GOODCNT = p.INSPCNT - p.DEFECTNUM;
-                p.PERCENT = double.Parse(string.Format("{0:#.###}", (double.Parse(p.GOODCNT.Value.ToString()) * 100) / p.INSPCNT.Value));
+                p.PERCENT = double.Parse(string.Format("{0:0.###}", (double.Parse(p.GOODCNT.Value.ToString()) * 100) / p.INSPCNT.Value));
 
                 DateTime indt;
                 DateTime.TryParseExact(p.COMPLETIONTIME.ToString(), "yyyyMMddHHmmss", null, System.Globalization.DateTimeStyles.None, out indt);
@@ -559,11 +560,153 @@ namespace WR.Client.UI
             }
         }
 
+        private void ShowGoodDieNew()
+        {
+            IwrService service = wrService.GetService();
+            var lst = service.GetGoodDieReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
+            lst.ForEach((p) =>
+            {
+                p.GOODCNT = p.INSPCNT - p.DEFECTNUM;
+                p.PERCENT = double.Parse(string.Format("{0:0.###}", (double.Parse(p.GOODCNT.Value.ToString()) * 100) / p.INSPCNT.Value));
+
+                DateTime indt;
+                DateTime.TryParseExact(p.COMPLETIONTIME.ToString(), "yyyyMMddHHmmss", null, System.Globalization.DateTimeStyles.None, out indt);
+                p.INSPECTIONDATE = indt;
+            });
+
+            DataTable dtGood = new DataTable();
+
+            DataColumn col = new DataColumn();
+            col.ColumnName = "LOT";
+            col.Caption = "LotId";
+            dtGood.Columns.Add(col);
+
+            col = new DataColumn();
+            col.ColumnName = "SUBSTRATE_ID";
+            col.Caption = "WaferId";
+            dtGood.Columns.Add(col);
+
+            col = new DataColumn();
+            col.ColumnName = "INSPECTIONDATE";
+            col.Caption = "Inspection Date";
+            dtGood.Columns.Add(col);
+
+            col = new DataColumn();
+            col.ColumnName = "INSPCNT";
+            col.Caption = "Inspection Die";
+            dtGood.Columns.Add(col);
+
+            col = new DataColumn();
+            col.ColumnName = "GOODCNT";
+            col.Caption = "Good Die";
+            dtGood.Columns.Add(col);
+
+            col = new DataColumn();
+            col.ColumnName = "DEFECTNUM";
+            col.Caption = "Defect Die";
+            dtGood.Columns.Add(col);
+
+            col = new DataColumn();
+            col.ColumnName = "PERCENT";
+            col.Caption = "Percent Of Good Die(%)";
+            dtGood.Columns.Add(col);
+
+            var items = service.GetClassificationItemsByLayer(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
+            var itemsBy = items.Where(s => s.ID != 0).OrderBy(p => p.ID);
+
+            foreach (var item in itemsBy)
+            {
+                col = dtGood.Columns.Add(item.NAME, typeof(Int64));
+                col.ColumnName = item.NAME;
+                col.Caption = item.ITEMID;
+                col.DefaultValue = 0;
+            }
+
+            var itemsSum = service.GetItemsSummaryByLot(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
+
+            foreach (var item in lst)
+            {
+                var dr = dtGood.NewRow();
+
+                dr["LOT"] = item.LOT;
+                dr["SUBSTRATE_ID"] = item.SUBSTRATE_ID;
+
+                dr["INSPECTIONDATE"] = item.INSPECTIONDATE;
+                dr["INSPCNT"] = item.INSPCNT;
+                dr["GOODCNT"] = item.GOODCNT;
+                dr["DEFECTNUM"] = item.DEFECTNUM;
+                dr["PERCENT"] = item.PERCENT;
+
+                var tt = itemsSum.Where(p => p.RESULTID == item.RESULTID && p.Substrate_id == item.SUBSTRATE_ID);
+
+                foreach (var t in tt)
+                {
+                    //if (dt.Columns.Contains(t.Inspclassifiid))
+                    //    dr[t.Inspclassifiid] = t.NumCnt;
+                    foreach (DataColumn c in dtGood.Columns)
+                    {
+                        if (c.Caption == t.Inspclassifiid)
+                        {
+                            Int64 tcnt = Int64.Parse(dr[c.Ordinal].ToString() == "" ? "0" : dr[c.Ordinal].ToString());
+                            if (t.NumCnt.HasValue)
+                                dr[c.Ordinal] = tcnt + t.NumCnt;
+                            else
+                                dr[c.Ordinal] = tcnt;
+
+                            continue;
+                        }
+                    }
+                }
+
+                dtGood.Rows.Add(dr);
+            }
+
+            List<string> listColumn = new List<string>();
+            listColumn.AddRange(new string[] { "LOT", "SUBSTRATE_ID", "INSPECTIONDATE", "INSPCNT", "GOODCNT", "DEFECTNUM", "PERCENT" });
+
+            for (int i = 7; i < dtGood.Columns.Count; i++)
+            {
+                object data = dtGood.Compute(string.Format("SUM([{0}])", dtGood.Columns[i].ColumnName), "");
+                //if (data == DBNull.Value)
+                //    drTotal[i] = 0;
+                //else
+                //    drTotal[i] = data;
+
+                if (data != DBNull.Value && Convert.ToInt32(data) != 0)
+                    listColumn.Add(dtGood.Columns[i].ColumnName);
+            }
+
+            DataTable dtNew = dtGood.DefaultView.ToTable(false, listColumn.ToArray());
+
+            grdGoodDie.DataSource = dtNew;
+
+            int[] total = service.GetCountInspected(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
+            lblGoodDieTotal.Text = total[0].ToString("N0");
+
+            if (lst != null && lst.Count > 0)
+            {
+                lblGoodDieDefective.Text = lst.Sum((p) => { return p.DEFECTNUM; }).Value.ToString("N0");
+
+                int good = total[0] - lst.Sum((p) => { return p.DEFECTNUM; }).Value;
+                lblGoodDieGood.Text = good < 0 ? "0" : good.ToString("N0");
+
+                lblGoodDieRepNum.Text = lst.DistinctBy((p) => { return p.SUBSTRATE_ID + p.DEVICE + p.LAYER + p.LOT; }).Count().ToString("N0");
+                lblGoodDieListNum.Text = lblGoodDieRepNum.Text;
+            }
+            else
+            {
+                lblGoodDieDefective.Text = "0";
+                lblGoodDieGood.Text = lblGoodDieTotal.Text;
+                lblGoodDieRepNum.Text = total[1].ToString("N0");
+                lblGoodDieListNum.Text = lblGoodDieRepNum.Text;
+            }
+        }
+
         private void ShowYield()
         {
             IwrService service = wrService.GetService();
             var items = service.GetClassificationItemsByLayer(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
-            var itemsBy = items.OrderBy(p => p.ID);
+            var itemsBy = items.Where(s => s.ID != 0).OrderBy(p => p.ID);
 
             DataTable dt = new DataTable();
             var col = dt.Columns.Add("Layer", typeof(string));
@@ -650,7 +793,7 @@ namespace WR.Client.UI
         {
             IwrService service = wrService.GetService();
             var items = service.GetClassificationItemsByLot(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
-            var itemsBy = items.OrderBy(p => p.ID);
+            var itemsBy = items.Where(s => s.ID != 0).OrderBy(p => p.ID);
 
             DataTable dt = new DataTable();
             var col = dt.Columns.Add("Lot_Wafer", typeof(string));
@@ -668,6 +811,7 @@ namespace WR.Client.UI
                 col.Caption = item.ITEMID;
                 col.DefaultValue = 0;
             }
+
             //添加汇总列
             col = dt.Columns.Add("Inspected Die_Y2", typeof(Int64));
             col.ColumnName = "Inspected Die_Y2";
@@ -706,13 +850,21 @@ namespace WR.Client.UI
                 dt.Rows.Add(dr);
             }
 
+            var tmpDt = dt.Copy();
+            for (int i = 1; i < tmpDt.Columns.Count; i++)
+            {
+                object data = tmpDt.Compute(string.Format("SUM([{0}])", tmpDt.Columns[i].ColumnName), "");
+                if (data == DBNull.Value || Convert.ToInt32(data) == 0)
+                    dt.Columns.Remove(tmpDt.Columns[i].ColumnName);
+            }
+
             //汇总列
             DataRow drTotal = dt.NewRow();
             drTotal["Lot_Wafer"] = "Total";
             for (int i = 1; i < dt.Columns.Count; i++)
             {
                 object data = dt.Compute(string.Format("SUM([{0}])", dt.Columns[i].ColumnName), "");
-                if (data == DBNull.Value)
+                if (data == DBNull.Value || Convert.ToInt32(data) == 0)
                     drTotal[i] = 0;
                 else
                     drTotal[i] = data;
@@ -1177,6 +1329,13 @@ namespace WR.Client.UI
                 DataTable tmpDt = dt.Copy();
                 tmpDt.Rows.RemoveAt(tmpDt.Rows.Count - 1);
 
+                List<string> colNames = new List<string>();
+
+                foreach (DataColumn col in dt.Columns)
+                {
+                    colNames.Add(col.ColumnName);
+                }
+
                 DataRow totalRow = dt.Rows[dt.Rows.Count - 1];
                 foreach (DataColumn col in dt.Columns)
                 {
@@ -1194,6 +1353,9 @@ namespace WR.Client.UI
                     }
                     else
                         ser.ChartType = SeriesChartType.Column;
+
+                    tmpDt.DefaultView.Sort = col.ColumnName;
+
                     ser.ChartArea = "ChartArea1";
                     ser.LegendText = col.ColumnName;
                     ser.Points.DataBindXY(tmpDt.DefaultView, "Lot_Wafer", tmpDt.DefaultView, col.ColumnName);
