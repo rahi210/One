@@ -34,113 +34,120 @@ namespace WR.Client.UI
         //合并SINF文件
         private void btnMerge_Click(object sender, EventArgs e)
         {
-            if (clbSinfs.CheckedItems.Count < 2)
+            try
             {
-                MsgBoxEx.Info("Please select the merged file.");
-                return;
-            }
-
-            //权限判断
-            if (clbSinfs.CheckedItems.Count > 2)
-            {
-                var hasMerge = DataCache.Tbmenus.Count(s => s.MENUCODE == "40002") > 0;
-
-                if (!hasMerge)
+                if (clbSinfs.CheckedItems.Count < 2)
                 {
-                    MsgBoxEx.Info("Up to two files can be merged.");
+                    MsgBoxEx.Info("Please select the merged file.");
                     return;
                 }
-            }
 
-            List<SINFModel> sinfList = new List<SINFModel>();
-            int count = 0;
-
-            for (int i = 0; i < clbSinfs.CheckedItems.Count; i++)
-            {
-                var model = new SINFModel();
-
-                model.DieArray = File.ReadAllLines(clbSinfs.CheckedItems[i].ToString());
-                model.Path = clbSinfs.CheckedItems[i].ToString();
-                model.Name = model.Path.Substring(model.Path.LastIndexOf("\\") + 1);
-
-                if (model.DieArray.Length > 0)
+                //权限判断
+                if (clbSinfs.CheckedItems.Count > 2)
                 {
-                    if (!string.IsNullOrEmpty(model.DieArray[2]))
-                        model.Wafer = model.DieArray[2].Split(':')[1];
+                    var hasMerge = DataCache.Tbmenus.Count(s => s.MENUCODE == "40002") > 0;
 
-                    if (!string.IsNullOrEmpty(model.DieArray[4]))
-                        model.Rows = int.Parse(model.DieArray[4].Split(':')[1]);
-
-                    if (!string.IsNullOrEmpty(model.DieArray[5]))
-                        model.Cols = int.Parse(model.DieArray[5].Split(':')[1]);
-
-                    //7,8
-                    model.RefDie = string.Format("{0},{1}", model.DieArray[7].Split(':')[1], model.DieArray[8].Split(':')[1]);
-                }
-
-                sinfList.Add(model);
-            }
-
-
-            //判断wafer是否相同
-            count = sinfList.Select(s => s.Wafer).Distinct().Count();
-
-            if (count != 1)
-            {
-                MsgBoxEx.Info("Wafer name is not equal.");
-                return;
-            }
-
-            //判断layout是否一致
-            count = sinfList.Select(s => new { s.Wafer, s.Rows, s.Cols }).Distinct().Count();
-
-            if (count != 1)
-            {
-                MsgBoxEx.Info("The number of rows or columns is not equal.");
-                return;
-            }
-
-            //ref die
-            count = sinfList.Select(s => new { s.Wafer, s.Rows, s.Cols, s.RefDie }).Distinct().Count();
-
-            if (count != 1)
-            {
-                MsgBoxEx.Info("The reference die is not equal.");
-                return;
-            }
-
-            var newSINF = new List<string>();
-
-            //合并
-            foreach (var sinf in sinfList)
-            {
-                if (newSINF.Count == 0)
-                    newSINF.AddRange(sinf.DieArray);
-                else
-                {
-                    for (int i = 12; i < sinf.DieArray.Length; i++)
+                    if (!hasMerge)
                     {
-                        if (sinf.DieArray[i].Length == 0)
-                            continue;
-
-                        var newValue = MergeRow(newSINF[i], sinf.DieArray[i]);
-
-                        if (newValue.Contains("error"))
-                        {
-                            MsgBoxEx.Info(string.Format("Numbers cannot be merged with non-numbers(--,@@),In line:{0},File Name:{1}.", i, sinf.Name));
-                            return;
-                        }
-
-                        newSINF[i] = newValue;
+                        MsgBoxEx.Info("Up to two files can be merged.");
+                        return;
                     }
                 }
+
+                List<SINFModel> sinfList = new List<SINFModel>();
+                int count = 0;
+
+                for (int i = 0; i < clbSinfs.CheckedItems.Count; i++)
+                {
+                    var model = new SINFModel();
+
+                    model.DieArray = File.ReadAllLines(clbSinfs.CheckedItems[i].ToString());
+                    model.Path = clbSinfs.CheckedItems[i].ToString();
+                    model.Name = model.Path.Substring(model.Path.LastIndexOf("\\") + 1);
+
+                    if (model.DieArray.Length > 0)
+                    {
+                        if (!string.IsNullOrEmpty(model.DieArray[2]))
+                            model.Wafer = model.DieArray[2].Split(':')[1];
+
+                        if (!string.IsNullOrEmpty(model.DieArray[4]))
+                            model.Rows = int.Parse(model.DieArray[4].Split(':')[1]);
+
+                        if (!string.IsNullOrEmpty(model.DieArray[5]))
+                            model.Cols = int.Parse(model.DieArray[5].Split(':')[1]);
+
+                        //7,8
+                        model.RefDie = string.Format("{0},{1}", model.DieArray[7].Split(':')[1], model.DieArray[8].Split(':')[1]);
+                    }
+
+                    sinfList.Add(model);
+                }
+
+
+                //判断wafer是否相同
+                count = sinfList.Select(s => s.Wafer).Distinct().Count();
+
+                if (count != 1)
+                {
+                    MsgBoxEx.Info("Wafer name is not equal.");
+                    return;
+                }
+
+                //判断layout是否一致
+                count = sinfList.Select(s => new { s.Wafer, s.Rows, s.Cols }).Distinct().Count();
+
+                if (count != 1)
+                {
+                    MsgBoxEx.Info("The number of rows or columns is not equal.");
+                    return;
+                }
+
+                //ref die
+                count = sinfList.Select(s => new { s.Wafer, s.Rows, s.Cols, s.RefDie }).Distinct().Count();
+
+                if (count != 1)
+                {
+                    MsgBoxEx.Info("The reference die is not equal.");
+                    return;
+                }
+
+                var newSINF = new List<string>();
+
+                //合并
+                foreach (var sinf in sinfList)
+                {
+                    if (newSINF.Count == 0)
+                        newSINF.AddRange(sinf.DieArray);
+                    else
+                    {
+                        for (int i = 12; i < sinf.DieArray.Length; i++)
+                        {
+                            if (sinf.DieArray[i].Length == 0)
+                                continue;
+
+                            var newValue = MergeRow(newSINF[i], sinf.DieArray[i]);
+
+                            if (newValue.Contains("error"))
+                            {
+                                MsgBoxEx.Info(string.Format("Numbers cannot be merged with non-numbers(--,@@),In line:{0},File Name:{1}.", i, sinf.Name));
+                                return;
+                            }
+
+                            newSINF[i] = newValue;
+                        }
+                    }
+                }
+
+                if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    File.WriteAllLines(saveFileDialog1.FileName, newSINF.ToArray());
+
+                    MsgBoxEx.Info("Merge SINF file is complete.");
+                }
             }
-
-            if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            catch (Exception ex)
             {
-                File.WriteAllLines(saveFileDialog1.FileName, newSINF.ToArray());
-
-                MsgBoxEx.Info("Merge SINF file is complete.");
+                MsgBoxEx.Error(ex.Message);
             }
         }
 

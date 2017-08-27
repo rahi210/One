@@ -54,6 +54,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Combobox\CheckBoxComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Combobox\CheckBoxComboBox.designer.cs">
+      <DependentUpon>CheckBoxComboBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Combobox\GripBounds.cs" />
+    <Compile Include="Combobox\NativeMethods.cs" />
+    <Compile Include="Combobox\Popup.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Combobox\Popup.designer.cs">
+      <DependentUpon>Popup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Combobox\PopupComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Combobox\PopupComboBox.designer.cs">
+      <DependentUpon>PopupComboBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Combobox\Selection Wrappers\ListSelectionWrapper.cs" />
+    <Compile Include="Combobox\Selection Wrappers\ObjectSelectionWrapper.cs" />
     <Compile Include="frm_rule.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -108,6 +130,9 @@
     <Compile Include="WrRule.Designer.cs">
       <DependentUpon>WrRule.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Combobox\PopupComboBox.resx">
+      <DependentUpon>PopupComboBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frm_rule.resx">
       <DependentUpon>frm_rule.cs</DependentUpon>
     </EmbeddedResource>

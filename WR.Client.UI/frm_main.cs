@@ -20,6 +20,7 @@ namespace WR.Client.UI
         /// </summary>
         private Control _focusedWrMenuItem;
         private FormBase frm;
+        private FormBase frmReport;
 
         public frm_main()
         {
@@ -89,10 +90,11 @@ namespace WR.Client.UI
 
                 if (string.IsNullOrEmpty(lastDate))
                 {
-                    if (this.InvokeRequired)
-                        this.Invoke(new Action(() => { MsgBoxEx.Info("Data not yet archived, please archive now."); }));
-                    else
-                        MsgBoxEx.Info("Data not yet archived, please archive now.");
+                    //if (this.InvokeRequired)
+                    //    this.Invoke(new Action(() => { MsgBoxEx.Info("Data not yet archived, please archive now."); }));
+                    //else
+                    //    MsgBoxEx.Info("Data not yet archived, please archive now.");
+                    MsgBoxEx.Info("Data not yet archived, please archive now.");
                 }
                 else
                 {
@@ -102,10 +104,11 @@ namespace WR.Client.UI
 
                     if (intervalDay > 7)
                     {
-                        if (this.InvokeRequired)
-                            this.Invoke(new Action(() => { MsgBoxEx.Info("It's been over seven days since the last archive, please archive now."); }));
-                        else
-                            MsgBoxEx.Info("It's been over seven days since the last archive, please archive now.");
+                        //if (this.InvokeRequired)
+                        //    this.Invoke(new Action(() => { MsgBoxEx.Info("It's been over seven days since the last archive, please archive now."); }));
+                        //else
+                        //    MsgBoxEx.Info("It's been over seven days since the last archive, please archive now.");
+                        MsgBoxEx.Info("It's been over seven days since the last archive, please archive now.");
                     }
                 }
             }
@@ -251,11 +254,17 @@ namespace WR.Client.UI
             {
                 foreach (Control item in pnlContext.Controls)
                 {
-                    if (item is Form)
+                    if (item is Form && item.Name != "frm_report")
+                    {
                         ((Form)item).Close();
+
+                        pnlContext.Controls.Remove(item);
+                    }
+                    else
+                        item.Hide();
                 }
 
-                pnlContext.Controls.Clear();
+                //pnlContext.Controls.Clear();
             }
 
             switch (text)
@@ -274,7 +283,17 @@ namespace WR.Client.UI
                     frm.frmMain = this;
                     break;
                 case "Defect Report":
-                    frm = new frm_report();
+                    if (frmReport == null)
+                    {
+                        frm = new frm_report();
+                        frmReport = frm;
+                    }
+                    else
+                    {
+                        frm = frmReport;
+                        frm.Visible = true;
+                    }
+
                     ((frm_report)frm).Oparams = Oparams;
                     frm.frmMain = this;
                     break;

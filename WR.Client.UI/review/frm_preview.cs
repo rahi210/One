@@ -74,10 +74,23 @@ namespace WR.Client.UI
 
         private DateTime lastRunTime;
         //private LoggerEx log = null;
+        private CheckBoxComboBox tlsNewClass;
 
         public frm_preview()
         {
+            tlsNewClass = new CheckBoxComboBox();
+            tlsNewClass.FlatStyle = FlatStyle.Popup;
+            tlsNewClass.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            tlsNewClass.Size = new System.Drawing.Size(100, 25);
+            tlsNewClass.CheckBoxCheckedChanged += new System.EventHandler(this.tlsNewClass_CheckBoxCheckedChanged);
+            tlsNewClass.DropDownStyle = ComboBoxStyle.DropDownList;
+
             InitializeComponent();
+
+            ToolStripControlHost host = new ToolStripControlHost(tlsNewClass);
+            toolStrip1.Items.Add(host);
+
+
             grdData.AutoGenerateColumns = false;
             PicShow.WrImage = null;
 
@@ -187,13 +200,25 @@ namespace WR.Client.UI
                              group c by new { c.Cclassid, c.Description } into g
                              select new ClassDropDownModel { Cclassid = g.Key.Cclassid, Description = g.Key.Description }).ToList();
 
-            classList.Insert(0, new ClassDropDownModel { Cclassid = -1, Description = "All" });
+            //classList.Insert(0, new ClassDropDownModel { Cclassid = -1, Description = "All" });
 
             tlsClass.ComboBox.DisplayMember = "Description";
             tlsClass.ComboBox.ValueMember = "Cclassid";
             tlsClass.ComboBox.DataSource = classList;
 
             tlsClass.SelectedIndexChanged += new System.EventHandler(this.tlsClass_SelectedIndexChanged);
+
+            tlsClass.Visible = false;
+
+            //多选
+            //tlsNewClass.SelectedIndexChanged -= new System.EventHandler(this.tlsNewClass_SelectedIndexChanged);
+
+            tlsNewClass.DataSource = new ListSelectionWrapper<ClassDropDownModel>(classList, "Description");
+            tlsNewClass.DisplayMemberSingleItem = "Name";
+            tlsNewClass.DisplayMember = "NameConcatenated";
+            tlsNewClass.ValueMember = "Selected";
+
+            //tlsNewClass.SelectedIndexChanged += new System.EventHandler(this.tlsNewClass_SelectedIndexChanged);
         }
 
         /// <summary>
@@ -682,10 +707,18 @@ namespace WR.Client.UI
             //var classId = Convert.ToInt32(tlsClass.ComboBox.SelectedValue);
             var classId = -1;
 
-            if (tlsClass.ComboBox.SelectedValue != null)
-                classId = Convert.ToInt32(tlsClass.ComboBox.SelectedValue);
+            if (tlsClass.Visible)
+            {
+                if (tlsClass.ComboBox.SelectedValue != null)
+                    classId = Convert.ToInt32(tlsClass.ComboBox.SelectedValue);
 
-            if (classId != -1)
+                if (classId != -1)
+                    defectlist = grdData.DataSource as List<WmdefectlistEntity>;
+                else
+                    defectlist = _defectlist;
+            }
+
+            if (!string.IsNullOrEmpty(tlsNewClass.Text))
                 defectlist = grdData.DataSource as List<WmdefectlistEntity>;
             else
                 defectlist = _defectlist;
@@ -715,8 +748,21 @@ namespace WR.Client.UI
                 //picWafer.DefectList.Add(defectModel);
             }
 
-            picWafer.DefectList = defectlist.Select(s => new { Location = s.DieAddress, FillColor = s.Color }).Distinct()
-                .Select(s => new DefectCoordinate { Location = s.Location, FillColor = s.FillColor }).ToList();
+            //picWafer.DefectList = defectlist.Select(s => new { Location = s.DieAddress, FillColor = s.Color }).Distinct()
+            //    .Select(s => new DefectCoordinate { Location = s.Location, FillColor = s.FillColor }).ToList();
+
+            var dlist = (from d in defectlist
+                         group d by d.DieAddress into g
+                         select new { Location = g.Key, Cclassid = g.Max(s => s.Cclassid), FillColor = g.Max(s => s.Color) })
+                         .Select(s =>
+                          new DefectCoordinate
+                          {
+                              Location = s.Location,
+                              FillColor = s.FillColor
+                          })
+                         .ToList();
+
+            picWafer.DefectList = dlist;
             picWafer.DieLayoutList = listDieLayout;
             picWafer.RowCnt = row;
             picWafer.ColCnt = col;
@@ -1301,7 +1347,8 @@ namespace WR.Client.UI
                           on c.ITEMID equals t.Key
                           select new WmClassificationItemEntity
                           {
-                              DESCRIPTION = c.DESCRIPTION,
+                              //DESCRIPTION = c.DESCRIPTION,
+                              DESCRIPTION = c.NAME,
                               ID = c.ID,
                               InspectionType = "Front",
                               ITEMID = c.ITEMID,
@@ -1364,7 +1411,7 @@ namespace WR.Client.UI
                     xValue = list[i].DESCRIPTION;
                 p.SetValueXY(xValue, list[i].Points);
                 p.Label = list[i].Points.ToString();
-                
+
                 serie.Points.Add(p);
             }
         }
@@ -1373,6 +1420,8 @@ namespace WR.Client.UI
         {
             //picWafer.ZoomOut(10);
             picWafer.ZoomMultiple++;
+
+            lblReclass.BorderStyle = BorderStyle.None;
         }
 
         private void lbl_P_In_MouseEnter(object sender, EventArgs e)
@@ -1561,6 +1610,7 @@ namespace WR.Client.UI
         {
             //picWafer.ZoomIn(10);
             picWafer.ZoomMultiple--;
+            lblReclass.BorderStyle = BorderStyle.None;
         }
 
         private void mnFront_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -2093,7 +2143,8 @@ namespace WR.Client.UI
         /// <returns></returns>
         private string GetModifyDefect()
         {
-            var defs = grdData.DataSource as List<WmdefectlistEntity>;
+            //var defs = grdData.DataSource as List<WmdefectlistEntity>;
+            var defs = _defectlist;
             if (defs == null)
                 return "";
 
@@ -2254,6 +2305,11 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void picWafer_Paint(object sender, PaintEventArgs e)
         {
+            if (string.IsNullOrEmpty(picWafer.Status))
+            {
+                lblReclass.BorderStyle = BorderStyle.None;
+            }
+
             //if (_dieWidth < 0 || _dieHeight < 0)
             //    return;
 
@@ -2552,6 +2608,7 @@ namespace WR.Client.UI
             //    picWafer.ZoomOut(Math.Abs(picWafer.ZoomMultiple));
 
             picWafer.ZoomMultiple = 1;
+            lblReclass.BorderStyle = BorderStyle.None;
         }
 
         /// <summary>
@@ -2639,6 +2696,36 @@ namespace WR.Client.UI
                 DrawDefect(list[0].DieAddress);
         }
 
+        //private void tlsNewClass_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    var select = tlsNewClass.SelectedItem as ObjectSelectionWrapper<ClassDropDownModel>;
+        //    var classArray = select.NameConcatenated;
+
+        //    var list = _defectlist;
+
+        //    if (!string.IsNullOrEmpty(classArray))
+        //        list = _defectlist.Where(s => classArray.Contains(s.Description)).ToList();
+
+        //    //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(list);
+        //    grdData.DataSource = list;
+
+        //    if (list.Count > 0)
+        //        DrawDefect(list[0].DieAddress);
+        //}
+
+        private void tlsNewClass_CheckBoxCheckedChanged(object sender, EventArgs e)
+        {
+            var list = _defectlist;
+
+            if (!string.IsNullOrEmpty(tlsNewClass.Text))
+                list = _defectlist.Where(s => tlsNewClass.Text.Contains(s.Description)).ToList();
+
+            grdData.DataSource = list;
+
+            if (list.Count > 0)
+                DrawDefect(list[0].DieAddress);
+        }
+
         /// <summary>
         /// 保存界面布局
         /// </summary>
@@ -2712,7 +2799,16 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void lblReclass_Click(object sender, EventArgs e)
         {
-            picWafer.Status = "Reclass";
+            if (lblReclass.BorderStyle == BorderStyle.None)
+            {
+                picWafer.Status = "Reclass";
+                lblReclass.BorderStyle = BorderStyle.Fixed3D;
+            }
+            else
+            {
+                picWafer.Status = "";
+                lblReclass.BorderStyle = BorderStyle.None;
+            }
         }
 
         private void timer3_Tick(object sender, EventArgs e)

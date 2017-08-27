@@ -73,6 +73,9 @@ namespace WR.Client.UI
 
         private void frm_report_Load(object sender, EventArgs e)
         {
+            //tabPolat.Hide();
+            tabPolat.Parent = null;
+
             SetChtDefect();
             SetChtPolat();
             SetChtYield();
