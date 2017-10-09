@@ -19,7 +19,7 @@ using System.Collections;
 
 namespace WR.Client.UI
 {
-    public partial class frm_preview : FormBase
+    public partial class frm_paper : FormBase
     {
         //private Brush _bgColor = new SolidBrush(Color.DarkBlue);
         private Brush _bgColor = new SolidBrush(SystemColors.ControlDarkDark);
@@ -60,14 +60,20 @@ namespace WR.Client.UI
             set { _resultid = value; }
         }
 
+        public bool IsFinished { get; set; }
+
         /// <summary>
         /// 缺陷列表
         /// </summary>
-        private List<WmdefectlistEntity> _defectlist;
+        private List<EmdefectlistEntity> _defectlist;
         /// <summary>
         /// Layout信息
         /// </summary>
         private List<WmdielayoutlistEntitiy> _dielayoutlist;
+
+        private EmExamResultEntity examResult;
+        private EMPLAN emPlan;
+        private string showMode;
 
         public bool IsLayoutRole { get; set; }
         public bool IsSave { get; set; }
@@ -76,7 +82,7 @@ namespace WR.Client.UI
         //private LoggerEx log = null;
         private CheckBoxComboBox tlsNewClass;
 
-        public frm_preview()
+        public frm_paper()
         {
             tlsNewClass = new CheckBoxComboBox();
             tlsNewClass.FlatStyle = FlatStyle.Popup;
@@ -109,7 +115,8 @@ namespace WR.Client.UI
             if (Oparams != null && Oparams.Length > 2)
             {
                 Resultid = Oparams[0];
-                lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", Oparams[1], Oparams[2], Oparams[3], Oparams[4]);
+                showMode = Oparams[1];
+                //lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", Oparams[1], Oparams[2], Oparams[3], Oparams[4]);
             }
 
             //InitData();
@@ -125,7 +132,7 @@ namespace WR.Client.UI
             if (!IsLayoutRole)
             {
                 splitter1.Enabled = false;
-                splitter2.Enabled = false;
+                //splitter2.Enabled = false;
                 splitter3.Enabled = false;
             }
 
@@ -258,13 +265,92 @@ namespace WR.Client.UI
                     //获取缺陷列表
                     IwrService service = wrService.GetService();
 
+                    if (showMode == "0")
+                    {
+                        if (this.InvokeRequired)
+                        {
+                            this.Invoke(new Action(() =>
+                            {
+                                //tlsSaveResult.Enabled = true;
+                                grdData.Columns["CorrectAnswer"].Visible = true;
+                            }));
+                        }
+                        else
+                        {
+                            //tlsSaveResult.Enabled = true;
+                            grdData.Columns["CorrectAnswer"].Visible = true;
+                        }
+                    }
+                    else
+                    {
+                        var userid = string.IsNullOrEmpty(Resultid) ? DataCache.UserInfo.ID : string.Empty;
+
+                        var emResultList = service.GetExamResult(userid, Resultid);
+
+                        examResult = emResultList.FirstOrDefault(s => s.ENDDATE == null);
+
+                        if (examResult == null)
+                        {
+                            examResult = emResultList.FirstOrDefault();
+
+                            if (examResult == null)
+                                return;
+                        }
+
+                        Resultid = examResult.EID;
+
+                        if (this.InvokeRequired)
+                        {
+                            this.Invoke(new Action(() =>
+                            {
+                                if (examResult.ENDDATE == null)
+                                {
+                                    if (showMode != "1")
+                                    {
+                                        tlsSaveResult.Enabled = true;
+                                        tlsFinish.Enabled = true;
+                                        tlsReclass.Enabled = true;
+
+                                        timer4.Enabled = true;
+                                    }
+                                }
+                                else
+                                {
+                                    grdData.Columns["CorrectAnswer"].Visible = true;
+
+                                    lblWaferID.Text = string.Format("Score:{0}  Right Number:{1} Defect Number:{2}", examResult.TOTALSCORE, examResult.RIGHTNUM, examResult.NUMDEFECT);
+                                }
+                            }));
+                        }
+                        else
+                        {
+                            if (examResult.ENDDATE == null)
+                            {
+                                if (showMode != "1")
+                                {
+                                    tlsSaveResult.Enabled = true;
+                                    tlsFinish.Enabled = true;
+                                    tlsReclass.Enabled = true;
+
+                                    timer4.Enabled = true;
+                                }
+                            }
+                            else
+                            {
+                                grdData.Columns["CorrectAnswer"].Visible = true;
+                                lblWaferID.Text = string.Format("Score:{0}  Right Number:{1} Defect Number:{2}", examResult.TOTALSCORE, examResult.RIGHTNUM, examResult.NUMDEFECT);
+                            }
+                        }
+
+                    }
+
                     string sts = "";
                     if (this.InvokeRequired)
                         this.Invoke(new Action(() => { sts = GetStatus(); }));
                     else
                         sts = GetStatus();
 
-                    var defList = service.GetDefectList(Resultid, sts).OrderBy(s => s.ImageName).ToList();
+                    var defList = service.GetPaperDefectList(Resultid, sts).OrderBy(s => s.ImageName).ToList();
                     //var defList = service.GetDefectList(Resultid, sts).ToList();
                     _defectlist = defList;
 
@@ -273,11 +359,11 @@ namespace WR.Client.UI
                     else
                         InitClassList();
 
-                    var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
-                    if (wf == null)
-                        return;
+                    //var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
+                    //if (wf == null)
+                    //    return;
 
-                    _dielayoutlist = service.GetDielayoutListById(wf.DIELAYOUTID);
+                    //_dielayoutlist = service.GetDielayoutListById(wf.DIELAYOUTID);
 
                     List<CMNDICT> hotkey = DataCache.CmnDict.Where(p => p.DICTID == "2010").ToList();
                     hotkey.Add(new CMNDICT() { DICTID = "2010", CODE = null, NAME = "-" });
@@ -297,7 +383,13 @@ namespace WR.Client.UI
                     }
 
                     //查询缺陷分类
-                    Schemeid = wf.CLASSIFICATIONINFOID;
+                    //Schemeid = "151936ae-ce1f-4950-9e5f-2a9a687fd1ca";
+                    var schemeList = service.GetClassificationItemByResultId(Resultid);
+
+                    if (schemeList.Count <= 0)
+                        return;
+
+                    Schemeid = schemeList[0].SCHEMEID;
                     var clst = service.GetClassificationItem(Schemeid, DataCache.UserInfo.ID).OrderBy(p => p.ID).ToList();
 
                     //过滤没有权限的缺陷分类
@@ -338,19 +430,19 @@ namespace WR.Client.UI
                     if (this.InvokeRequired)
                         this.Invoke(new Action(() =>
                         {
-                            //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(defList);
+                            //grdData.DataSource = new BindingCollection<EmdefectlistEntity>(defList);
                             grdData.DataSource = defList;
                             lstView.VirtualMode = true;
                             lstView.VirtualListSize = defList.Count;
 
                             //tabControl1_SelectedIndexChanged(null, null);
 
-                            if (wf.ISCHECKED != "2")
-                            {
-                                tlsSaveResult.Enabled = true;
-                                tlsFinish.Enabled = true;
-                                tlsReclass.Enabled = true;
-                            }
+                            //if (wf.ISCHECKED != "2")
+                            //{
+                            //    tlsSaveResult.Enabled = true;
+                            //    tlsFinish.Enabled = true;
+                            //    tlsReclass.Enabled = true;
+                            //}
 
                             if (!grdData.Visible)
                             {
@@ -366,19 +458,19 @@ namespace WR.Client.UI
                         }));
                     else
                     {
-                        //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(defList);
+                        //grdData.DataSource = new BindingCollection<EmdefectlistEntity>(defList);
                         grdData.DataSource = defList;
                         lstView.VirtualMode = true;
                         lstView.VirtualListSize = defList.Count;
 
                         //tabControl1_SelectedIndexChanged(null, null);
 
-                        if (wf.ISCHECKED != "2")
-                        {
-                            tlsSaveResult.Enabled = true;
-                            tlsFinish.Enabled = true;
-                            tlsReclass.Enabled = true;
-                        }
+                        //if (wf.ISCHECKED != "2")
+                        //{
+                        //    tlsSaveResult.Enabled = true;
+                        //    tlsFinish.Enabled = true;
+                        //    tlsReclass.Enabled = true;
+                        //}
 
                         if (!grdData.Visible && defList.Count > 1)
                         {
@@ -473,7 +565,7 @@ namespace WR.Client.UI
 
                     if (cnmReclass.Tag.ToString() == "2")
                     {
-                        var list = grdData.DataSource as List<WmdefectlistEntity>;
+                        var list = grdData.DataSource as List<EmdefectlistEntity>;
                         foreach (var def in picWafer.SelectDefect)
                         {
                             var ent = list.FirstOrDefault(s => s.DieAddress == def.ToString() && s.Cclassid != itm.ID);
@@ -499,7 +591,7 @@ namespace WR.Client.UI
                     }
                     else
                     {
-                        var ent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
+                        var ent = grdData.SelectedRows[0].DataBoundItem as EmdefectlistEntity;
                         if (ent == null)
                             return;
 
@@ -521,7 +613,7 @@ namespace WR.Client.UI
 
                     if (cnmReclass.Tag.ToString() == "2")
                     {
-                        var list = grdData.DataSource as List<WmdefectlistEntity>;
+                        var list = grdData.DataSource as List<EmdefectlistEntity>;
                         foreach (var def in picWafer.SelectDefect)
                         {
                             var ent = list.FirstOrDefault(s => s.DieAddress == def.ToString() && s.Cclassid != itm.ID);
@@ -542,7 +634,7 @@ namespace WR.Client.UI
                     }
                     else
                     {
-                        List<WmdefectlistEntity> list = grdData.DataSource as List<WmdefectlistEntity>;
+                        List<EmdefectlistEntity> list = grdData.DataSource as List<EmdefectlistEntity>;
                         var ent = list[lstView.SelectedIndices[0]];
                         ent.Cclassid = itm.ID;
                         ent.InspclassifiId = itm.ITEMID;
@@ -578,7 +670,8 @@ namespace WR.Client.UI
                 else
                 {
                     IwrService service = wrService.GetService();
-                    Stream st = service.GetPic(Resultid + "\\" + filename);
+                    //Stream st = service.GetPic(Resultid + "\\" + filename);
+                    Stream st = service.GetPic(filename);
                     Image pic = Image.FromStream(st, true);
                     PicShow.WrImage = pic;
                     PicShow.Tag = filename;
@@ -616,14 +709,7 @@ namespace WR.Client.UI
             if (tlsFilter.Checked)
                 tlsFilter.Checked = false;
 
-            if (_defectlist == null)
-            {
-                InitData();
-            }
-            else
-            {
-                GetDefectData();
-            }
+            InitData();
 
             //if (lstView.Visible && lstView.SelectedIndices != null && lstView.SelectedIndices.Count > 0)
             //{
@@ -650,7 +736,7 @@ namespace WR.Client.UI
                 GetImage(grdData.SelectedRows[0].Cells["ColImageName"].Value as string);
                 //picWafer.Invalidate();
                 //log.Debug("GetImage End...............");
-                var ent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
+                var ent = grdData.SelectedRows[0].DataBoundItem as EmdefectlistEntity;
 
                 stopWatch.Stop();
                 //int seconds = (DateTime.Now - lastRunTime).Milliseconds;
@@ -699,524 +785,85 @@ namespace WR.Client.UI
         /// </summary>
         private void DrawDefect(string loction)
         {
-            if (_dielayoutlist == null || _dielayoutlist.Count < 1)
-                return;
-
-            int col = _dielayoutlist[0].COLUMNS_;
-            int row = _dielayoutlist[0].ROWS_;
-
-            var listDieLayout = _dielayoutlist.Select(s => new DieLayout { X = s.DIEADDRESSX, Y = s.DIEADDRESSY, FillColor = s.DISPOSITION.Trim() == "NotProcess" ? Color.Gray.Name : "" })
-            .ToList<DieLayout>(); ;
-
-            var items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
-
-            var defectlist = new List<WmdefectlistEntity>();
-            //var classId = Convert.ToInt32(tlsClass.ComboBox.SelectedValue);
-            var classId = -1;
-
-            if (tlsClass.Visible)
-            {
-                if (tlsClass.ComboBox.SelectedValue != null)
-                    classId = Convert.ToInt32(tlsClass.ComboBox.SelectedValue);
-
-                if (classId != -1)
-                    defectlist = grdData.DataSource as List<WmdefectlistEntity>;
-                else
-                    defectlist = _defectlist;
-            }
-
-            if (!string.IsNullOrEmpty(tlsNewClass.Text))
-                defectlist = grdData.DataSource as List<WmdefectlistEntity>;
-            else
-                defectlist = _defectlist;
-
-            //画出defect
-            foreach (WmdefectlistEntity def in defectlist)
-            {
-                if (string.IsNullOrEmpty(def.DieAddress))
-                    continue;
-
-                if (items != null)
-                {
-                    //显示定义的颜色
-                    var clr = items.FirstOrDefault(p => p.ITEMID == def.InspclassifiId);
-                    if (clr != null && string.IsNullOrEmpty(clr.USERID))
-                    {
-                        def.Color = clr.COLOR;
-                    }
-                }
-
-                ////die坐标信息集合
-                //WR.Client.Controls.DefectCoordinate defectModel = new Controls.DefectCoordinate();
-
-                //defectModel.Location = def.DieAddress;
-                //defectModel.FillColor = def.Color;
-
-                //picWafer.DefectList.Add(defectModel);
-            }
-
-            //picWafer.DefectList = defectlist.Select(s => new { Location = s.DieAddress, FillColor = s.Color }).Distinct()
-            //    .Select(s => new DefectCoordinate { Location = s.Location, FillColor = s.FillColor }).ToList();
-
-            var dlist = (from d in defectlist
-                         group d by d.DieAddress into g
-                         select new { Location = g.Key, Cclassid = g.Max(s => s.Cclassid), FillColor = g.Max(s => s.Color) })
-                         .Select(s =>
-                          new DefectCoordinate
-                          {
-                              Location = s.Location,
-                              FillColor = s.FillColor
-                          })
-                         .ToList();
-
-            picWafer.DefectList = dlist;
-            picWafer.DieLayoutList = listDieLayout;
-            picWafer.RowCnt = row;
-            picWafer.ColCnt = col;
-            picWafer.CurrentDefect = loction;
-            picWafer.HasDraw = true;
-
-            //picWafer.ReDraw(col, row, loction, listDieLayout, picWafer.DefectList);
-            picWafer.ReDraw();
-        }
-
-        // <summary>
-        /// 画图
-        /// </summary>
-        private void DrawDefect_0627(string loction)
-        {
-            if (_dielayoutlist == null || _dielayoutlist.Count < 1)
-                return;
-
-            //if (!hasDraw)
+            //if (_dielayoutlist == null || _dielayoutlist.Count < 1)
             //    return;
 
-            int col = _dielayoutlist[0].COLUMNS_;
-            int row = _dielayoutlist[0].ROWS_;
-
-            //die宽、高
-            int ww = 5;
-            int wh = 4;
-            int wd = col * ww + 40;
-            int hg = row * wh + 40;
-
-            if (col == row)
-            {
-                ww = 5;
-                wh = 5;
-                hg = row * wh + 20;
-            }
-            else if (col < row)
-            {
-                ww = 4;
-                wh = 5;
-
-                wd = col * ww + 40;
-                hg = row * wh + 20;
-            }
-            else if ((col - row) > 30)
-            {
-                wh = 6;
-                hg = row * wh + 20;
-            }
-            else if ((col - row) < 10)
-            {
-                wd = col * ww + 60;
-                hg = row * wh + 60;
-            }
-
-            //计算偏移量
-            int offsetX = (wd - col * ww) / 2;
-            int offsetY = (hg - row * wh) / 2;
-
-            //背景图
-            Bitmap btp = new Bitmap(wd, hg);
-            Graphics gc = Graphics.FromImage(btp);
-            gc.Clear(Color.White);
-            gc.SmoothingMode = SmoothingMode.HighSpeed;
-
-            GraphicsPath ep = new GraphicsPath();
-            ep.AddEllipse(0, 0, btp.Width, btp.Height);
-            gc.FillPath(_bgColor, ep);
-
-            //背景颜色
-            GraphicsPath bp = new GraphicsPath();
-            //晶片颜色
-            GraphicsPath wp = new GraphicsPath();
-            //缺陷晶片颜色
-            GraphicsPath rp = new GraphicsPath();
-
-            //画出die
-            foreach (WmdielayoutlistEntitiy die in _dielayoutlist)
-            {
-                bp.AddRectangle(new Rectangle(die.DIEADDRESSX * ww + offsetX, (row - die.DIEADDRESSY) * wh + offsetY, ww, wh));
-                wp.AddRectangle(new Rectangle(die.DIEADDRESSX * ww + offsetX, (row - die.DIEADDRESSY) * wh + offsetY, ww - 1, wh - 1));
-            }
-
-            gc.FillPath(_dPen, bp);
-            gc.FillPath(_lPen, wp);
-
-            var items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
-
-            bool lineg = false;
-            int lx = 0;
-            int ly = 0;
-
-            double scaleX = Math.Round(Convert.ToDouble(picWafer.Width) / wd, 8);
-            double scaleY = Math.Round(Convert.ToDouble(picWafer.Height) / hg, 8);
-
-            //画出defect
-            foreach (WmdefectlistEntity def in _defectlist)
-            {
-                if (string.IsNullOrEmpty(def.DieAddress))
-                    continue;
-
-                string[] adr = def.DieAddress.Split(new char[] { ',' });
-                int ax = int.Parse(adr[0]);
-                int ay = int.Parse(adr[1]);
-
-                if (items != null)
-                {
-                    //显示定义的颜色
-                    var clr = items.FirstOrDefault(p => p.ITEMID == def.InspclassifiId);
-                    if (clr != null && string.IsNullOrEmpty(clr.USERID))
-                    {
-                        def.Color = clr.COLOR;
-                    }
-                }
-
-                ////NotProcess属于没有被检测的die，这种die显示灰色
-                //var dieNotProcessCnt = _dielayoutlist.Count(s => s.DIEADDRESSX == ax && s.DIEADDRESSY == ay && s.DISPOSITION.Trim() == "NotProcess");
-                //if (dieNotProcessCnt > 0)
-                //    def.Color = Color.Gray.Name;
-
-                gc.FillRectangle(new SolidBrush(ConvterColor(def.Color)), ax * ww + offsetX, (row - ay) * wh + offsetY, ww - 1, wh - 1);
-
-                //die坐标信息集合
-                WR.Client.Controls.DefectCoordinate defectModel = new Controls.DefectCoordinate();
-
-                defectModel.Location = def.DieAddress;
-                defectModel.Points = new List<Point>() { new Point(Convert.ToInt32((ax * ww + offsetX) * scaleX),Convert.ToInt32(((row - ay) * wh + offsetY) * scaleY))
-                    ,new Point(Convert.ToInt32((ax * ww + offsetX+ww-1) * scaleX),Convert.ToInt32(((row - ay) * wh + offsetY) * scaleY))
-                    ,new Point(Convert.ToInt32((ax * ww + offsetX+ww-1) * scaleX),Convert.ToInt32(((row - ay) * wh + offsetY+wh-1) * scaleY))
-                    ,new Point(Convert.ToInt32((ax * ww + offsetX) * scaleX),Convert.ToInt32(((row - ay) * wh + offsetY+wh-1) * scaleY))};
-
-                picWafer.DefectList.Add(defectModel);
-
-                //判断定位画线
-                if (def.DieAddress == loction)
-                {
-                    lineg = true;
-                    lx = ax;
-                    ly = row - ay;
-                    //gc.DrawLine(_linePen, 0, ay * wh + 11, btp.Width, ay * wh + 11);
-                    //gc.DrawLine(_linePen, ax * ww + 21, 0, ax * ww + 21, btp.Height);
-                }
-            }
-
-            //NotProcess属于没有被检测的die，这种die显示灰色
-            var notProcessLayoutList = _dielayoutlist.Where(s => s.DISPOSITION.Trim() == "NotProcess").Select(s => new { s.DIEADDRESSX, s.DIEADDRESSY }).ToList();
-
-            foreach (var n in notProcessLayoutList)
-            {
-                gc.FillRectangle(new SolidBrush(ConvterColor(Color.Gray.Name)), n.DIEADDRESSX * ww + offsetX, (row - n.DIEADDRESSY) * wh + offsetY, ww - 1, wh - 1);
-            }
-            //定位画线
-            if (lineg)
-            {
-                gc.DrawLine(_linePen, 0, ly * wh + offsetY + 1, btp.Width, ly * wh + offsetY + 1);
-                gc.DrawLine(_linePen, lx * ww + offsetX + 1, 0, lx * ww + offsetX + 1, btp.Height);
-            }
-
-            //画出定位三角
-            Point p1 = new Point(btp.Width / 2, btp.Height - 10);
-            Point p2 = new Point(btp.Width / 2 - 6, btp.Height);
-            Point p3 = new Point(btp.Width / 2 + 6, btp.Height);
-            gc.FillPolygon(_egPen, new Point[] { p1, p2, p3 }, System.Drawing.Drawing2D.FillMode.Alternate);
-            gc.Dispose();
-
-            //缩略图片
-            Bitmap outBmp = new Bitmap(picWafer.Width, picWafer.Height);
-
-            Graphics g = Graphics.FromImage(outBmp);
-            g.Clear(Color.Transparent);
-
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            g.CompositingQuality = CompositingQuality.HighQuality;
-            g.SmoothingMode = SmoothingMode.HighQuality;
-
-            g.DrawImage(btp, new Rectangle(0, 0, outBmp.Width, outBmp.Height), new Rectangle(0, 0, btp.Width, btp.Height), GraphicsUnit.Pixel);
-            g.Dispose();
-
-            //绑定图片
-            picWafer.WrImage = outBmp;
-            hasDraw = false;
-        }
-
-        /// <summary>
-        /// 画图
-        /// </summary>
-        private void DrawDefect1(string loction)
-        {
-            if (_dielayoutlist == null || _dielayoutlist.Count < 1)
-                return;
-
-            int col = _dielayoutlist[0].COLUMNS_;
-            int row = _dielayoutlist[0].ROWS_;
-
-            //die宽、高
-            int ww = 5;
-            int wh = 4;
-            int wd = col * ww + 40;
-            int hg = row * wh + 40;
-
-            if (col == row)
-            {
-                ww = 5;
-                wh = 5;
-                hg = row * wh + 20;
-            }
-            else if (col < row)
-            {
-                ww = 4;
-                wh = 5;
-
-                wd = col * ww + 40;
-                hg = row * wh + 20;
-            }
-            else if ((col - row) > 30)
-            {
-                wh = 6;
-                hg = row * wh + 20;
-            }
-
-            //背景图
-            Bitmap btp = new Bitmap(wd, hg);
-            Graphics gc = Graphics.FromImage(btp);
-            gc.Clear(Color.White);
-            gc.SmoothingMode = SmoothingMode.HighSpeed;
-
-            GraphicsPath ep = new GraphicsPath();
-            ep.AddEllipse(0, 0, btp.Width, btp.Height);
-            gc.FillPath(_bgColor, ep);
-
-            //背景颜色
-            GraphicsPath bp = new GraphicsPath();
-            //晶片颜色
-            GraphicsPath wp = new GraphicsPath();
-            //缺陷晶片颜色
-            GraphicsPath rp = new GraphicsPath();
-
-            //画出die
-            foreach (WmdielayoutlistEntitiy die in _dielayoutlist)
-            {
-                bp.AddRectangle(new Rectangle(die.DIEADDRESSX * ww + 20, (row - die.DIEADDRESSY + 4) * wh + 10, ww, wh));
-                wp.AddRectangle(new Rectangle(die.DIEADDRESSX * ww + 20, (row - die.DIEADDRESSY + 4) * wh + 10, ww - 1, wh - 1));
-            }
-
-            gc.FillPath(_dPen, bp);
-            gc.FillPath(_lPen, wp);
-
-            var items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
-
-            bool lineg = false;
-            int lx = 0;
-            int ly = 0;
-
-            //画出defect
-            foreach (WmdefectlistEntity def in _defectlist)
-            {
-                if (string.IsNullOrEmpty(def.DieAddress))
-                    continue;
-
-                string[] adr = def.DieAddress.Split(new char[] { ',' });
-                int ax = int.Parse(adr[0]);
-                int ay = int.Parse(adr[1]);
-
-                if (items != null)
-                {
-                    //显示定义的颜色
-                    var clr = items.FirstOrDefault(p => p.ITEMID == def.InspclassifiId);
-                    if (clr != null && string.IsNullOrEmpty(clr.USERID))
-                    {
-                        def.Color = clr.COLOR;
-                    }
-                }
-                gc.FillRectangle(new SolidBrush(ConvterColor(def.Color)), ax * ww + 20, (row - ay + 4) * wh + 10, ww - 1, wh - 1);
-
-                //判断定位画线
-                if (def.DieAddress == loction)
-                {
-                    lineg = true;
-                    lx = ax;
-                    ly = row - ay + 4;
-                    //gc.DrawLine(_linePen, 0, ay * wh + 11, btp.Width, ay * wh + 11);
-                    //gc.DrawLine(_linePen, ax * ww + 21, 0, ax * ww + 21, btp.Height);
-                }
-            }
-
-            //定位画线
-            if (lineg)
-            {
-                gc.DrawLine(_linePen, 0, ly * wh + 11, btp.Width, ly * wh + 11);
-                gc.DrawLine(_linePen, lx * ww + 21, 0, lx * ww + 21, btp.Height);
-            }
-
-            //画出定位三角
-            Point p1 = new Point(btp.Width / 2, btp.Height - 10);
-            Point p2 = new Point(btp.Width / 2 - 6, btp.Height);
-            Point p3 = new Point(btp.Width / 2 + 6, btp.Height);
-            gc.FillPolygon(_egPen, new Point[] { p1, p2, p3 }, System.Drawing.Drawing2D.FillMode.Alternate);
-            gc.Dispose();
-
-            //缩略图片
-            Bitmap outBmp = new Bitmap(picWafer.Width, picWafer.Width);
-            Graphics g = Graphics.FromImage(outBmp);
-            g.Clear(Color.Transparent);
-
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            g.CompositingQuality = CompositingQuality.HighQuality;
-            g.SmoothingMode = SmoothingMode.HighQuality;
-
-            g.DrawImage(btp, new Rectangle(0, 0, outBmp.Width, outBmp.Height), new Rectangle(0, 0, btp.Width, btp.Height), GraphicsUnit.Pixel);
-            g.Dispose();
-
-            //绑定图片
-            picWafer.WrImage = outBmp;
-        }
-
-        /// <summary>
-        /// 画图 old
-        /// </summary>
-        [Obsolete("y轴向下的画图，已废弃")]
-        private void DrawDefect_old(string loction)
-        {
-            if (_dielayoutlist == null || _dielayoutlist.Count < 1)
-                return;
-
-            int col = _dielayoutlist[0].COLUMNS_;
-            int row = _dielayoutlist[0].ROWS_;
-
-            //die宽、高
-            int ww = 5;
-            int wh = 4;
-            int wd = col * ww + 40;
-            int hg = row * wh + 40;
-
-            if (col == row)
-            {
-                ww = 5;
-                wh = 5;
-                hg = row * wh + 20;
-            }
-            else if (col < row)
-            {
-                ww = 4;
-                wh = 5;
-
-                wd = col * ww + 40;
-                hg = row * wh + 20;
-            }
-            else if ((col - row) > 30)
-            {
-                wh = 6;
-                hg = row * wh + 20;
-            }
-
-
-            //背景图
-            Bitmap btp = new Bitmap(wd, hg);
-            Graphics gc = Graphics.FromImage(btp);
-            gc.Clear(Color.White);
-            gc.SmoothingMode = SmoothingMode.HighSpeed;
-
-            GraphicsPath ep = new GraphicsPath();
-            ep.AddEllipse(0, 0, btp.Width, btp.Height);
-            gc.FillPath(_bgColor, ep);
-
-            //背景颜色
-            GraphicsPath bp = new GraphicsPath();
-            //晶片颜色
-            GraphicsPath wp = new GraphicsPath();
-            //缺陷晶片颜色
-            GraphicsPath rp = new GraphicsPath();
-
-            //画出die
-            foreach (WmdielayoutlistEntitiy die in _dielayoutlist)
-            {
-                bp.AddRectangle(new Rectangle(die.DIEADDRESSX * ww + 20, die.DIEADDRESSY * wh + 10, ww, wh));
-                wp.AddRectangle(new Rectangle(die.DIEADDRESSX * ww + 20, die.DIEADDRESSY * wh + 10, ww - 1, wh - 1));
-            }
-
-            gc.FillPath(_dPen, bp);
-            gc.FillPath(_lPen, wp);
-
-            var items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
-
-            bool lineg = false;
-            int lx = 0;
-            int ly = 0;
-
-            //画出defect
-            foreach (WmdefectlistEntity def in _defectlist)
-            {
-                if (string.IsNullOrEmpty(def.DieAddress))
-                    continue;
-
-                string[] adr = def.DieAddress.Split(new char[] { ',' });
-                int ax = int.Parse(adr[0]);
-                int ay = int.Parse(adr[1]);
-
-                if (items != null)
-                {
-                    //显示定义的颜色
-                    var clr = items.FirstOrDefault(p => p.ITEMID == def.InspclassifiId);
-                    if (clr != null && string.IsNullOrEmpty(clr.USERID))
-                    {
-                        def.Color = clr.COLOR;
-                    }
-                }
-                gc.FillRectangle(new SolidBrush(ConvterColor(def.Color)), ax * ww + 20, ay * wh + 10, ww - 1, wh - 1);
-
-                //判断定位画线
-                if (def.DieAddress == loction)
-                {
-                    lineg = true;
-                    lx = ax;
-                    ly = ay;
-                    //gc.DrawLine(_linePen, 0, ay * wh + 11, btp.Width, ay * wh + 11);
-                    //gc.DrawLine(_linePen, ax * ww + 21, 0, ax * ww + 21, btp.Height);
-                }
-            }
-
-            //定位画线
-            if (lineg)
-            {
-                gc.DrawLine(_linePen, 0, ly * wh + 11, btp.Width, ly * wh + 11);
-                gc.DrawLine(_linePen, lx * ww + 21, 0, lx * ww + 21, btp.Height);
-            }
-
-            //画出定位三角
-            Point p1 = new Point(btp.Width / 2, btp.Height - 10);
-            Point p2 = new Point(btp.Width / 2 - 6, btp.Height);
-            Point p3 = new Point(btp.Width / 2 + 6, btp.Height);
-            gc.FillPolygon(_egPen, new Point[] { p1, p2, p3 }, System.Drawing.Drawing2D.FillMode.Alternate);
-            gc.Dispose();
-
-            //缩略图片
-            Bitmap outBmp = new Bitmap(picWafer.Width, picWafer.Width);
-            Graphics g = Graphics.FromImage(outBmp);
-            g.Clear(Color.Transparent);
-
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            g.CompositingQuality = CompositingQuality.HighQuality;
-            g.SmoothingMode = SmoothingMode.HighQuality;
-
-            g.DrawImage(btp, new Rectangle(0, 0, outBmp.Width, outBmp.Height), new Rectangle(0, 0, btp.Width, btp.Height), GraphicsUnit.Pixel);
-            g.Dispose();
-
-            //绑定图片
-            picWafer.WrImage = outBmp;
+            //int col = _dielayoutlist[0].COLUMNS_;
+            //int row = _dielayoutlist[0].ROWS_;
+
+            //var listDieLayout = _dielayoutlist.Select(s => new DieLayout { X = s.DIEADDRESSX, Y = s.DIEADDRESSY, FillColor = s.DISPOSITION.Trim() == "NotProcess" ? Color.Gray.Name : "" })
+            //.ToList<DieLayout>(); ;
+
+            //var items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
+
+            //var defectlist = new List<EmdefectlistEntity>();
+            ////var classId = Convert.ToInt32(tlsClass.ComboBox.SelectedValue);
+            //var classId = -1;
+
+            //if (tlsClass.Visible)
+            //{
+            //    if (tlsClass.ComboBox.SelectedValue != null)
+            //        classId = Convert.ToInt32(tlsClass.ComboBox.SelectedValue);
+
+            //    if (classId != -1)
+            //        defectlist = grdData.DataSource as List<EmdefectlistEntity>;
+            //    else
+            //        defectlist = _defectlist;
+            //}
+
+            //if (!string.IsNullOrEmpty(tlsNewClass.Text))
+            //    defectlist = grdData.DataSource as List<EmdefectlistEntity>;
+            //else
+            //    defectlist = _defectlist;
+
+            ////画出defect
+            //foreach (EmdefectlistEntity def in defectlist)
+            //{
+            //    if (string.IsNullOrEmpty(def.DieAddress))
+            //        continue;
+
+            //    if (items != null)
+            //    {
+            //        //显示定义的颜色
+            //        var clr = items.FirstOrDefault(p => p.ITEMID == def.InspclassifiId);
+            //        if (clr != null && string.IsNullOrEmpty(clr.USERID))
+            //        {
+            //            def.Color = clr.COLOR;
+            //        }
+            //    }
+
+            //    ////die坐标信息集合
+            //    //WR.Client.Controls.DefectCoordinate defectModel = new Controls.DefectCoordinate();
+
+            //    //defectModel.Location = def.DieAddress;
+            //    //defectModel.FillColor = def.Color;
+
+            //    //picWafer.DefectList.Add(defectModel);
+            //}
+
+            ////picWafer.DefectList = defectlist.Select(s => new { Location = s.DieAddress, FillColor = s.Color }).Distinct()
+            ////    .Select(s => new DefectCoordinate { Location = s.Location, FillColor = s.FillColor }).ToList();
+
+            //var dlist = (from d in defectlist
+            //             group d by d.DieAddress into g
+            //             select new { Location = g.Key, Cclassid = g.Max(s => s.Cclassid), FillColor = g.Max(s => s.Color) })
+            //             .Select(s =>
+            //              new DefectCoordinate
+            //              {
+            //                  Location = s.Location,
+            //                  FillColor = s.FillColor
+            //              })
+            //             .ToList();
+
+            //picWafer.DefectList = dlist;
+            //picWafer.DieLayoutList = listDieLayout;
+            //picWafer.RowCnt = row;
+            //picWafer.ColCnt = col;
+            //picWafer.CurrentDefect = loction;
+            //picWafer.HasDraw = true;
+
+            ////picWafer.ReDraw(col, row, loction, listDieLayout, picWafer.DefectList);
+            //picWafer.ReDraw();
         }
 
         /// <summary>
@@ -1261,6 +908,15 @@ namespace WR.Client.UI
                     case "ColUpdated":
                         string md = grdData["ColModifiedDefect", e.RowIndex].Value as string;
                         e.Value = (!string.IsNullOrEmpty(md) ? "√" : "");
+                        break;
+                    case "Cclassid":
+                        if (!tlsFinish.Enabled)
+                        {
+                            var answerValue = grdData["CorrectAnswer", e.RowIndex].Value;
+
+                            if (!e.Value.Equals(answerValue))
+                                e.CellStyle.ForeColor = Color.Red;
+                        }
                         break;
                     default:
                         break;
@@ -1331,14 +987,14 @@ namespace WR.Client.UI
         /// <returns></returns>
         private List<WmClassificationItemEntity> GetItemSum()
         {
-            var lst = _defectlist;//grdData.DataSource as List<WmdefectlistEntity>;
+            var lst = _defectlist;//grdData.DataSource as List<EmdefectlistEntity>;
             var cl = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
 
             if (cl == null)
                 return new List<WmClassificationItemEntity>();
 
             if (lst == null)
-                lst = new List<WmdefectlistEntity>();
+                lst = new List<EmdefectlistEntity>();
 
             //汇总defect数
             var k = (from s in lst
@@ -1718,7 +1374,7 @@ namespace WR.Client.UI
                 return true;
             }
 
-            var ent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
+            var ent = grdData.SelectedRows[0].DataBoundItem as EmdefectlistEntity;
             DrawDefect(ent.DieAddress);
 
             return true;
@@ -1760,9 +1416,9 @@ namespace WR.Client.UI
         {
             if (!grdData.Visible)
             {
-                var list = grdData.DataSource as List<WmdefectlistEntity>;
+                var list = grdData.DataSource as List<EmdefectlistEntity>;
                 grdData.Visible = true;
-                //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(list);
+                //grdData.DataSource = new BindingCollection<EmdefectlistEntity>(list);
                 grdData.DataSource = list;
 
                 lstView.Visible = false;
@@ -1775,7 +1431,7 @@ namespace WR.Client.UI
                     int? id = list[lstView.SelectedIndices[0]].Id;
                     foreach (DataGridViewRow row in grdData.Rows)
                     {
-                        WmdefectlistEntity ent = row.DataBoundItem as WmdefectlistEntity;
+                        EmdefectlistEntity ent = row.DataBoundItem as EmdefectlistEntity;
                         if (ent != null && ent.Id == id)
                         {
                             row.Selected = true;
@@ -1807,8 +1463,8 @@ namespace WR.Client.UI
 
                 if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0)
                 {
-                    WmdefectlistEntity selectedent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
-                    List<WmdefectlistEntity> data = grdData.DataSource as List<WmdefectlistEntity>;
+                    EmdefectlistEntity selectedent = grdData.SelectedRows[0].DataBoundItem as EmdefectlistEntity;
+                    List<EmdefectlistEntity> data = grdData.DataSource as List<EmdefectlistEntity>;
                     int idx = data.FindIndex(p => p.Id == selectedent.Id);
                     lstView.Items[idx].EnsureVisible();
                     lstView.Items[idx].Selected = true;
@@ -1824,7 +1480,7 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void lstView_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-            var list = grdData.DataSource as List<WmdefectlistEntity>;
+            var list = grdData.DataSource as List<EmdefectlistEntity>;
             if (list == null)
                 return;
 
@@ -1840,7 +1496,8 @@ namespace WR.Client.UI
                 if (!imgsView.Images.ContainsKey(ent.ImageName))
                 {
                     IwrService service = wrService.GetService();
-                    Stream st = service.GetPic(Resultid + "\\" + ent.ImageName);
+                    //Stream st = service.GetPic(Resultid + "\\" + ent.ImageName);
+                    Stream st = service.GetPic(ent.ImageName);
                     Image pic = Image.FromStream(st, true);
                     imgsView.Images.Add(ent.ImageName, pic);
                 }
@@ -1859,7 +1516,7 @@ namespace WR.Client.UI
             if (lstView.SelectedIndices != null && lstView.SelectedIndices.Count > 0)
             {
                 ResetTck();
-                var list = grdData.DataSource as List<WmdefectlistEntity>;
+                var list = grdData.DataSource as List<EmdefectlistEntity>;
                 if (list == null)
                     return;
                 var ent = list[lstView.SelectedIndices[0]];
@@ -1981,7 +1638,7 @@ namespace WR.Client.UI
                 tlsFilter.Checked = true;
                 var tlst = _defectlist.Where(p => !string.IsNullOrEmpty(p.ImageName)).ToList();
 
-                //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(tlst);
+                //grdData.DataSource = new BindingCollection<EmdefectlistEntity>(tlst);
                 grdData.DataSource = tlst;
                 lstView.VirtualListSize = tlst.Count;
 
@@ -2032,7 +1689,7 @@ namespace WR.Client.UI
                     }
                 }
 
-                //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(_defectlist);
+                //grdData.DataSource = new BindingCollection<EmdefectlistEntity>(_defectlist);
                 grdData.DataSource = _defectlist;
                 lstView.VirtualListSize = _defectlist.Count;
             }
@@ -2150,7 +1807,7 @@ namespace WR.Client.UI
         /// <returns></returns>
         private string GetModifyDefect()
         {
-            //var defs = grdData.DataSource as List<WmdefectlistEntity>;
+            //var defs = grdData.DataSource as List<EmdefectlistEntity>;
             var defs = _defectlist;
             if (defs == null)
                 return "";
@@ -2187,39 +1844,26 @@ namespace WR.Client.UI
             ShowLoading(ToopEnum.saving);
 
             IwrService service = wrService.GetService();
-            int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
+            int res = service.UpdateExamResult(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
             if (res >= 0)
             {
-                var ent = service.GetWaferResultById(Resultid);
-                var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
-                wf.ISCHECKED = ent.ISCHECKED;
-                wf.CHECKEDDATE = ent.CHECKEDDATE;
-                wf.NUMDEFECT = ent.NUMDEFECT;
-                wf.SFIELD = ent.SFIELD;
+                //var ent = service.GetWaferResultById(Resultid);
+                //var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
+                //wf.ISCHECKED = ent.ISCHECKED;
+                //wf.CHECKEDDATE = ent.CHECKEDDATE;
+                //wf.NUMDEFECT = ent.NUMDEFECT;
+                //wf.SFIELD = ent.SFIELD;
 
-                var lotList = ((from w in DataCache.WaferResultInfo
-                                group w by new { w.DEVICE, w.LAYER, w.LOT } into l
-                                select new { DEVICE = l.Key.DEVICE, LAYER = l.Key.LAYER, LOT = l.Key.LOT, LFIELD = l.Average(s => s.SFIELD) }))
-                                    .ToList();
-
-                DataCache.WaferResultInfo.ForEach(s => s.LFIELD = lotList.FirstOrDefault(l => l.DEVICE == s.DEVICE && l.LAYER == s.LAYER && l.LOT == s.LOT).LFIELD);
-
-                lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", wf.LOT, wf.SUBSTRATE_ID, wf.NUMDEFECT, wf.SFIELD);
-                //if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0)
-                //{
-                //    var dent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
-                //    DrawDefect(dent.DieAddress);
-                //}
 
                 //更新坐标图
                 if (grdData.Visible && grdData.SelectedRows != null && grdData.SelectedRows.Count > 0)
                 {
-                    var dent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
+                    var dent = grdData.SelectedRows[0].DataBoundItem as EmdefectlistEntity;
                     DrawDefect(dent.DieAddress);
                 }
                 else if (lstView.Visible && lstView.SelectedIndices != null && lstView.SelectedIndices.Count > 0)
                 {
-                    var list = grdData.DataSource as List<WmdefectlistEntity>;
+                    var list = grdData.DataSource as List<EmdefectlistEntity>;
                     DrawDefect(list[lstView.SelectedIndices[0]].DieAddress);
                 }
 
@@ -2250,33 +1894,37 @@ namespace WR.Client.UI
             try
             {
                 IwrService service = wrService.GetService();
-                int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "2");
+                int res = service.UpdateExamResult(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "2");
 
                 if (res >= 0)
                 {
-                    var ent = service.GetWaferResultById(Resultid);
-                    var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
-                    wf.ISCHECKED = ent.ISCHECKED;
-                    wf.CHECKEDDATE = ent.CHECKEDDATE;
-                    wf.NUMDEFECT = ent.NUMDEFECT;
-                    wf.SFIELD = ent.SFIELD;
+                    tlsSaveResult.Enabled = false;
+                    tlsFinish.Enabled = false;
+                    tlsReclass.Enabled = false;
 
-                    if (wf.ISCHECKED == "2")
-                    {
-                        tlsSaveResult.Enabled = false;
-                        tlsFinish.Enabled = false;
-                        tlsReclass.Enabled = false;
-                    }
-                    else
-                    {
-                        tlsSaveResult.Enabled = true;
-                        tlsFinish.Enabled = true;
-                        tlsReclass.Enabled = true;
-                    }
+                    //var ent = service.GetWaferResultById(Resultid);
+                    //var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
+                    //wf.ISCHECKED = ent.ISCHECKED;
+                    //wf.CHECKEDDATE = ent.CHECKEDDATE;
+                    //wf.NUMDEFECT = ent.NUMDEFECT;
+                    //wf.SFIELD = ent.SFIELD;
+
+                    //if (wf.ISCHECKED == "2")
+                    //{
+                    //    tlsSaveResult.Enabled = false;
+                    //    tlsFinish.Enabled = false;
+                    //    tlsReclass.Enabled = false;
+                    //}
+                    //else
+                    //{
+                    //    tlsSaveResult.Enabled = true;
+                    //    tlsFinish.Enabled = true;
+                    //    tlsReclass.Enabled = true;
+                    //}
 
                     if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0)
                     {
-                        var dent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
+                        var dent = grdData.SelectedRows[0].DataBoundItem as EmdefectlistEntity;
                         DrawDefect(dent.DieAddress);
                     }
 
@@ -2323,7 +1971,7 @@ namespace WR.Client.UI
             //if (grdData.SelectedRows == null || grdData.SelectedRows.Count < 1)
             //    return;
 
-            //var ent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
+            //var ent = grdData.SelectedRows[0].DataBoundItem as EmdefectlistEntity;
             //if (string.IsNullOrEmpty(ent.DieAddress))
             //    return;
 
@@ -2370,7 +2018,7 @@ namespace WR.Client.UI
                             {
                                 if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0)
                                 {
-                                    var ent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
+                                    var ent = grdData.SelectedRows[0].DataBoundItem as EmdefectlistEntity;
                                     if (ent != null)
                                     {
                                         ent.Cclassid = clf.ID;
@@ -2391,7 +2039,7 @@ namespace WR.Client.UI
                             {
                                 if (lstView.SelectedIndices != null && lstView.SelectedIndices.Count > 0)
                                 {
-                                    List<WmdefectlistEntity> list = grdData.DataSource as List<WmdefectlistEntity>;
+                                    List<EmdefectlistEntity> list = grdData.DataSource as List<EmdefectlistEntity>;
                                     var ent = list[lstView.SelectedIndices[0]];
                                     ent.Cclassid = clf.ID;
                                     ent.InspclassifiId = clf.ITEMID;
@@ -2469,12 +2117,12 @@ namespace WR.Client.UI
         /// <summary>
         /// 
         /// </summary>
-        private void UpdateDefectClassification(WmdefectlistEntity model)
+        private void UpdateDefectClassification(EmdefectlistEntity model)
         {
             var count = grdData.CurrentCell.RowIndex;
             IsSave = false;
 
-            List<WmdefectlistEntity> list = grdData.DataSource as List<WmdefectlistEntity>;
+            List<EmdefectlistEntity> list = grdData.DataSource as List<EmdefectlistEntity>;
 
             if ((cnmReclass.Tag != null && cnmReclass.Tag.ToString() == "2") || model.Cclassid != 0)
             {
@@ -2494,7 +2142,7 @@ namespace WR.Client.UI
                         list[index].ModifiedDefect = model.ModifiedDefect;
                         list[index].Description = model.Description;
 
-                        UpdateDieLayout(list[index].DieAddress, (int)model.Cclassid);
+                        //UpdateDieLayout(list[index].DieAddress, (int)model.Cclassid);
 
                         if (grdData.Visible)
                             grdData.InvalidateRow(index);
@@ -2535,7 +2183,7 @@ namespace WR.Client.UI
                     count = (int)model.Id;
             }
 
-            UpdateDieLayout(model.DieAddress, (int)model.Cclassid);
+            //UpdateDieLayout(model.DieAddress, (int)model.Cclassid);
 
             if (cnmReclass.Tag == null || cnmReclass.Tag.ToString() != "2")
             {
@@ -2550,13 +2198,13 @@ namespace WR.Client.UI
 
             }
             //重新计算良率 
-            decimal goodCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID == 0);
-            decimal defectCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID != 0);
+            //decimal goodCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID == 0);
+            //decimal defectCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID != 0);
 
-            Oparams[3] = defectCnt.ToString();
-            Oparams[4] = (goodCnt / _dielayoutlist.Count * 100).ToString("0.00");
+            //Oparams[3] = defectCnt.ToString();
+            //Oparams[4] = (goodCnt / _dielayoutlist.Count * 100).ToString("0.00");
 
-            lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", Oparams[1], Oparams[2], Oparams[3], Oparams[4]);
+            //lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", Oparams[1], Oparams[2], Oparams[3], Oparams[4]);
         }
 
         /// <summary>
@@ -2586,7 +2234,7 @@ namespace WR.Client.UI
             {
                 var selectDefectList = _defectlist.Where(s => picWafer.SelectDefect.Contains(s.DieAddress)).ToList();
 
-                //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(selectDefectList);
+                //grdData.DataSource = new BindingCollection<EmdefectlistEntity>(selectDefectList);
                 grdData.DataSource = selectDefectList;
 
                 lstView.VirtualListSize = selectDefectList.Count;
@@ -2637,29 +2285,11 @@ namespace WR.Client.UI
                     //log.Debug("SaveResult Start...............");
                     IwrService service = wrService.GetService();
 
-                    //log.Debug("UpdateDefect Start...............");
-                    int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
-                    //log.Debug("UpdateDefect End...............");
+                    //log.Debug("UpdateExamResult Start...............");
+                    int res = service.UpdateExamResult(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
+                    //log.Debug("UpdateExamResult End...............");
                     if (res >= 0)
                     {
-                        //log.Debug("GetWaferResultById Start...............");
-                        var ent = service.GetWaferResultById(Resultid);
-                        //log.Debug("GetWaferResultById End...............");
-                        var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
-                        wf.ISCHECKED = ent.ISCHECKED;
-                        wf.CHECKEDDATE = ent.CHECKEDDATE;
-                        wf.NUMDEFECT = ent.NUMDEFECT;
-                        wf.SFIELD = ent.SFIELD;
-
-                        var lotList = ((from w in DataCache.WaferResultInfo
-                                        group w by new { w.DEVICE, w.LAYER, w.LOT } into l
-                                        select new { DEVICE = l.Key.DEVICE, LAYER = l.Key.LAYER, LOT = l.Key.LOT, LFIELD = l.Average(s => s.SFIELD) }))
-                                       .ToList();
-
-                        DataCache.WaferResultInfo.ForEach(s => s.LFIELD = lotList.FirstOrDefault(l => l.DEVICE == s.DEVICE && l.LAYER == s.LAYER && l.LOT == s.LOT).LFIELD);
-
-                        lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", Oparams[1], Oparams[2], wf.NUMDEFECT, wf.SFIELD);
-
                         IsSave = true;
                     }
 
@@ -2696,7 +2326,7 @@ namespace WR.Client.UI
             if (classId != -1)
                 list = _defectlist.Where(s => s.Cclassid == Convert.ToInt32(classId)).ToList();
 
-            //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(list);
+            //grdData.DataSource = new BindingCollection<EmdefectlistEntity>(list);
             grdData.DataSource = list;
 
             if (list.Count > 0)
@@ -2713,7 +2343,7 @@ namespace WR.Client.UI
         //    if (!string.IsNullOrEmpty(classArray))
         //        list = _defectlist.Where(s => classArray.Contains(s.Description)).ToList();
 
-        //    //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(list);
+        //    //grdData.DataSource = new BindingCollection<EmdefectlistEntity>(list);
         //    grdData.DataSource = list;
 
         //    if (list.Count > 0)
@@ -2722,31 +2352,15 @@ namespace WR.Client.UI
 
         private void tlsNewClass_CheckBoxCheckedChanged(object sender, EventArgs e)
         {
-            //var list = _defectlist;
-
-            //if (!string.IsNullOrEmpty(tlsNewClass.Text))
-            //    list = _defectlist.Where(s => tlsNewClass.Text.Contains(s.Description)).ToList();
-
-            //grdData.DataSource = list;
-
-            //if (list.Count > 0)
-            //    DrawDefect(list[0].DieAddress);
-            GetDefectData();
-        }
-
-        private void GetDefectData()
-        {
             var list = _defectlist;
 
             if (!string.IsNullOrEmpty(tlsNewClass.Text))
-                list = list.Where(s => tlsNewClass.Text.Contains(s.Description)).ToList();
-
-            if (tlsStatus.SelectedIndex == 1)
-                list = list.Where(s => !string.IsNullOrEmpty(s.ModifiedDefect)).ToList();
-            else if (tlsStatus.SelectedIndex == 2)
-                list = list.Where(s => string.IsNullOrEmpty(s.ModifiedDefect)).ToList();
+                list = _defectlist.Where(s => tlsNewClass.Text.Contains(s.Description)).ToList();
 
             grdData.DataSource = list;
+
+            if (list.Count > 0)
+                DrawDefect(list[0].DieAddress);
         }
 
         /// <summary>
@@ -2759,31 +2373,31 @@ namespace WR.Client.UI
             if (IsSave == false && MsgBoxEx.ConfirmYesNo("Are you sure to save the changes") == DialogResult.Yes)
                 timer2_Tick(sender, e);
 
-            if (IsLayoutRole)
-            {
-                var layout = string.Empty;
+            //if (IsLayoutRole)
+            //{
+            //    var layout = string.Empty;
 
-                foreach (var item in this.Controls)
-                {
-                    if (item is Panel)
-                    {
-                        var control = item as Panel;
+            //    foreach (var item in this.Controls)
+            //    {
+            //        if (item is Panel)
+            //        {
+            //            var control = item as Panel;
 
-                        layout += string.Format("{0}:{1},{2};", control.Name, control.Width, control.Height);
-                    }
-                }
+            //            layout += string.Format("{0}:{1},{2};", control.Name, control.Width, control.Height);
+            //        }
+            //    }
 
-                layout += string.Format("{0}:{1},{2};", panel4.Name, panel4.Width, panel4.Height);
-                layout += string.Format("{0}:{1},{2};", tabControl1.Name, tabControl1.Width, tabControl1.Height);
+            //    layout += string.Format("{0}:{1},{2};", panel4.Name, panel4.Width, panel4.Height);
+            //    layout += string.Format("{0}:{1},{2};", tabControl1.Name, tabControl1.Width, tabControl1.Height);
 
-                System.Configuration.Configuration config = WR.Utils.Config.GetConfig();
-                config.AppSettings.Settings.Remove("previewLayout");
-                config.AppSettings.Settings.Add("previewLayout", layout);
+            //    System.Configuration.Configuration config = WR.Utils.Config.GetConfig();
+            //    config.AppSettings.Settings.Remove("previewLayout");
+            //    config.AppSettings.Settings.Add("previewLayout", layout);
 
-                config.Save();
+            //    config.Save();
 
-                WR.Utils.Config.Refresh();
-            }
+            //    WR.Utils.Config.Refresh();
+            //}
         }
 
         private void splitter1_SplitterMoved(object sender, SplitterEventArgs e)
@@ -2843,8 +2457,8 @@ namespace WR.Client.UI
 
         private void frm_preview_Shown(object sender, EventArgs e)
         {
-            GetLayout();
-            panel2.Width = Convert.ToInt32(panel4.Height * 1.25);
+            //GetLayout();
+            //panel2.Width = Convert.ToInt32(panel4.Height * 1.25);
         }
 
         private bool GetDataArchiveStatus()
@@ -2853,14 +2467,26 @@ namespace WR.Client.UI
 
             return service.GetCmn("3020").Count(s => s.CODE == "1") > 0;
         }
-    }
 
-    public class ClassDropDownModel
-    {
-        public string Description
-        { get; set; }
+        private void timer4_Tick(object sender, EventArgs e)
+        {
+            if (examResult != null)
+            {
+                var span = (examResult.PLANENDDATE - DateTime.Now);
 
-        public int? Cclassid
-        { get; set; }
+                var seconds = span.TotalSeconds;
+
+                if (seconds <= 0)
+                {
+                    timer4.Enabled = false;
+
+                    tlsFinish_Click(sender, e);
+
+                    lblWaferID.Text = "Remaining Time:00:00:00";
+                }
+                else
+                    lblWaferID.Text = string.Format("Remaining Time:{0}", span.ToString(@"hh\:mm\:ss"));
+            }
+        }
     }
 }

@@ -20,6 +20,7 @@ namespace WR.Client.Start
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(AppDomain_UnhandledException);
 
             LogService.InitializeService(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Start.exe.config"));
             log = LogService.Getlog(typeof(Program));
@@ -66,6 +67,15 @@ namespace WR.Client.Start
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
             log.Error(e.Exception);
+            MessageBox.Show("操作中出现错误！", "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        static void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            //可以记录日志并转向错误bug窗口友好提示用户
+            Exception ex = e.ExceptionObject as Exception;
+
+            log.Error(ex.Message);
             MessageBox.Show("操作中出现错误！", "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }

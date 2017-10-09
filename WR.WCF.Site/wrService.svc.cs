@@ -1163,5 +1163,713 @@ namespace WR.WCF.Site
 
             return list;
         }
+
+        public bool AddTableSpace(string name)
+        {
+            using (BFdbContext db = new BFdbContext())
+            {
+                try
+                {
+                    var sql = string.Empty;
+
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        sql = string.Format("select file_name from dba_data_files t where t.TABLESPACE_NAME='{0}' order by t.FILE_ID desc", name);
+                    }
+                    else
+                    {
+                        name = "USERS";
+                        sql = "select file_name from dba_data_files t where t.TABLESPACE_NAME='USERS' order by t.FILE_ID desc";
+                    }
+
+                    var filePath = db.SqlQuery<string>(sql).FirstOrDefault();
+
+
+                    if (!string.IsNullOrEmpty(filePath))
+                    {
+                        var array = filePath.Split(new char[] { '\\' });
+
+                        var fileName = array[array.Length - 1];
+                        var fileNameArray = fileName.Split('.');
+
+                        var index = Convert.ToInt32(fileNameArray[0].Substring(name.Length)) + 1;
+
+                        var newFileName = string.Format("{0}0{1}.DBF", name.ToUpper(), index);
+
+                        var newFilePath = string.Format("{0}{1}", filePath.Substring(0, filePath.LastIndexOf("\\") + 1), newFileName);
+
+                        sql = string.Format("alter tablespace {0} add datafile '{1}' size 50M autoextend on next 50M maxsize UNLIMITED", name.ToUpper(), newFilePath);
+
+                        return db.ExecuteSqlCommand(sql) > 0;
+                    }
+
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                    throw GetFault(ex);
+                }
+            }
+        }
+
+        #region 考试系统
+
+        public List<EMCLASSIFICATIONMARK> GetCLASSIFICATIONMARK(string filter)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    string sql = string.Empty;
+
+                    if (string.IsNullOrEmpty(filter))
+                        sql = @"select to_char(c.id) cid, c.name, nvl(e.mark, 0) mark
+                                from (select t.id, t.name
+                                        from wm_classificationitem t
+                                        group by t.id, t.name) c
+                                left join em_classificationmark e
+                                on e.cid = c.id order by c.id";
+                    else
+                        sql = string.Format(@"select to_char(c.id) cid, c.name, nvl(e.mark, 0) mark
+                                          from (select t.id, t.name
+                                                   from wm_classificationitem t
+                                                  group by t.id, t.name) c
+                                          left join em_classificationmark e
+                                            on e.cid = c.id
+                                         where c.id like '{0}%'
+                                            or c.name like '{0}%' order by c.id", filter);
+
+                    return db.SqlQuery<EMCLASSIFICATIONMARK>(sql).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public string EditCLASSIFICATIONMARK(string id, string name, int mark)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    var ent = db.EMCLASSIFICATIONMARK.FirstOrDefault(p => p.CID == id);
+
+                    if (ent != null)
+                    {
+                        ent.NAME = name;
+                        ent.MARK = mark;
+
+                        return db.Update<EMCLASSIFICATIONMARK>(ent).ToString();
+                    }
+                    else
+                    {
+                        var model = new EMCLASSIFICATIONMARK();
+                        model.CID = id;
+                        model.NAME = name;
+                        model.MARK = mark;
+
+                        return db.Insert<EMCLASSIFICATIONMARK>(model).ToString();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取需要Review的Lot信息
+        /// </summary>
+        /// <param name="operatorid"></param>
+        /// <returns></returns>
+        public List<WmwaferResultEntity> GetWaferResultHis(string stDate, string edDate, string lot)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    var sql = new StringBuilder();
+
+                    //                    sql.AppendFormat(@"select rownum Id,a.device,a.layer,a.lot,a.substrate_slot,a.substrate_id,a.substrate_notchlocation,t.SFIELD,
+                    //                                                    decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
+                    //                                                    t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
+                    //                                                    t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id from wm_waferresult t,wm_identification a,wm_inspectioninfo b
+                    //                                                    where t.identificationid=a.identificationid and t.resultid=b.resultid
+                    //                                                       and t.delflag = '0' and t.ischecked='2' and t.completiontime between {0} and {1}", stDate, edDate);
+
+                    sql.AppendFormat(@"select 0 Id,a.device,a.layer,a.lot,a.substrate_slot,a.substrate_id,a.substrate_notchlocation,t.SFIELD,
+                                                    decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
+                                                    t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
+                                                    t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id from wm_waferresult t,wm_identification a,wm_inspectioninfo b
+                                                    where t.identificationid=a.identificationid and t.resultid=b.resultid
+                                                       and t.delflag = '0' and t.completiontime between {0} and {1}", stDate, edDate);
+
+                    if (lot.EndsWith("|||"))
+                        sql.AppendFormat("and instr(a.device||'|||','{0}')>0 ", lot);
+                    else if (lot.EndsWith("||"))
+                        sql.AppendFormat("and instr(a.device||'|'||a.layer||'||','{0}')>0 ", lot);
+                    else
+                        sql.AppendFormat("and instr(a.device||'|'||a.layer||'|'||a.lot||'|','{0}')>0", lot);
+
+                    sql.Append("order by a.device,a.layer,a.lot,a.substrate_id");
+
+                    return db.SqlQuery<WmwaferResultEntity>(sql.ToString()).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public List<EMLIBRARY> GetLIBRARY(string filter)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    string sql = string.Empty;
+
+                    if (string.IsNullOrEmpty(filter))
+                        sql = @"select * from em_library t where t.delflag = '0' order by t.createdate";
+                    else
+                        sql = string.Format(@"select * from em_library t
+                                         where t.delflag = '0' and t.papername like '{0}%' order by t.createdate", filter);
+
+                    return db.SqlQuery<EMLIBRARY>(sql).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public int AddLibray(string resultId, string papername, string remark, string by, string status)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    var cnt = 0;
+                    var model = new EMLIBRARY();
+
+                    model.LID = Guid.NewGuid().ToString();
+                    model.PAPERNAME = papername;
+                    model.REMARK = remark;
+                    model.RESULTID = resultId;
+                    model.STATUS = status;
+                    model.DELFLAG = "0";
+
+                    model.CREATEID = by;
+                    model.CREATEDATE = DateTime.Now;
+                    model.UPDATEID = by;
+                    model.UPDATEDATE = DateTime.Now;
+
+                    if (!string.IsNullOrEmpty(resultId))
+                    {
+                        var newResultId = string.Join("','", resultId.Split(','));
+
+                        string sql = string.Format(@"insert into em_defectlist
+                                              (id, passid, inspid, inspectiontype, swcscoordinates, inspclassifiid,
+                                               size_, majoraxissize, majorminoraxisaspectratio, area_, dieaddress,
+                                               imagename, style, pixelsize, resultid, oldresultid,omodifieddefect)
+                                              select rownum id, passid, '{0}' inspid, inspectiontype, swcscoordinates, nvl(modifieddefect, inspclassifiid) inspclassifiid,
+                                                     size_, majoraxissize, majorminoraxisaspectratio, area_, dieaddress,
+                                                     imagename, style, pixelsize, '{0}',resultid,inspclassifiid omodifieddefect
+                                                from wm_defectlist t
+                                               where t.resultid in('{1}')", model.LID, newResultId);
+
+                        cnt = db.ExecuteSqlCommand(sql);
+
+                    }
+
+                    model.NUMDEFECT = cnt;
+
+                    //if (cnt > 0)
+                    cnt = db.Insert<EMLIBRARY>(model);
+
+                    return cnt;
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public int UpdateLibray(string id, string name, string remark, string status, string by)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    EMLIBRARY model = db.EMLIBRARY.Find(id);
+
+                    if (model != null)
+                    {
+                        model.PAPERNAME = name;
+                        model.REMARK = remark;
+                        model.STATUS = status;
+
+                        model.UPDATEID = by;
+                        model.UPDATEDATE = DateTime.Now;
+                    }
+
+                    return db.Update<EMLIBRARY>(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public int DeleteLibray(string id, string by)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    EMLIBRARY model = db.EMLIBRARY.Find(id);
+
+                    model.DELFLAG = "1";
+                    model.UPDATEID = by;
+                    model.UPDATEDATE = DateTime.Now;
+
+                    return db.Update<EMLIBRARY>(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public List<EMPLAN> GetEmPlan(string lid)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    string sql = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lid))
+                        sql = string.Format("select * from em_plan t where t.lid='{0}' and t.delflag = '0'", lid);
+                    else
+                        sql = string.Format("select * from em_plan t where t.delflag = '0'");
+
+                    return db.SqlQuery<EMPLAN>(sql).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public int AddPlan(string lid, string name, string stDate, string edDate, int usernum, int defectnum, string remark, string by)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    var model = new EMPLAN();
+
+                    model.PID = Guid.NewGuid().ToString();
+                    model.LID = lid;
+                    model.PLANNAME = name;
+                    model.REMARK = remark;
+                    model.STARTDATE = Convert.ToDateTime(stDate);
+                    model.ENDDATE = Convert.ToDateTime(edDate);
+                    model.USERNUM = usernum;
+
+                    model.NUMDEFECT = defectnum;
+
+                    model.UPDATEID = by;
+                    model.UPDATEDATE = DateTime.Now;
+                    model.CREATEID = by;
+                    model.CREATEDATE = DateTime.Now;
+
+                    model.DELFLAG = "0";
+
+                    return db.Insert<EMPLAN>(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public int UpdatePlan(string id, string name, string stDate, string edDate, int usernum, int defectnum, string remark, string by)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    EMPLAN model = db.EMPLAN.Find(id);
+
+                    if (model != null)
+                    {
+                        model.PLANNAME = name;
+                        model.REMARK = remark;
+                        model.STARTDATE = Convert.ToDateTime(stDate);
+                        model.ENDDATE = Convert.ToDateTime(edDate);
+                        model.USERNUM = usernum;
+
+                        model.UPDATEID = by;
+                        model.UPDATEDATE = DateTime.Now;
+                    }
+
+                    return db.Update<EMPLAN>(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public int DeletePlan(string id, string by)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    EMPLAN model = db.EMPLAN.Find(id);
+
+                    model.DELFLAG = "1";
+                    model.UPDATEID = by;
+                    model.UPDATEDATE = DateTime.Now;
+
+                    return db.Update<EMPLAN>(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public int AddExamResult(string userid, string pid)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    var model = new EMEXAMRESULT();
+
+                    model.EID = Guid.NewGuid().ToString();
+                    model.PLANID = pid;
+                    model.USERID = userid;
+                    //model.RESULTID = Guid.NewGuid().ToString();
+
+                    model.CREATEID = userid;
+                    model.CREATEDATE = DateTime.Now;
+                    model.UPDATEID = userid;
+                    model.UPDATEDATE = DateTime.Now;
+                    model.STARTDATE = DateTime.Now;
+                    model.DELFLAG = "0";
+
+                    string sql = string.Format(@"insert into em_defectlist
+                                            (id, passid, inspid, inspectiontype, swcscoordinates, inspclassifiid,
+                                               size_, majoraxissize, majorminoraxisaspectratio, area_, dieaddress,
+                                               imagename, style, pixelsize, resultid, oldresultid, omodifieddefect)
+                                             select rownum id, passid, inspid, inspectiontype, swcscoordinates, inspclassifiid,
+                                             size_, majoraxissize, majorminoraxisaspectratio, area_, dieaddress,
+                                             imagename, style, pixelsize, resultid, oldresultid, omodifieddefect
+                                              from (select id, passid, '{0}' inspid, inspectiontype, swcscoordinates, inspclassifiid,
+                                                     size_, majoraxissize, majorminoraxisaspectratio, area_, dieaddress,
+                                                     imagename, style, pixelsize,'{0}' resultid,oldresultid, omodifieddefect
+                                                    from em_defectlist order by dbms_random.random)
+                                             where rownum <= (select case  p.numdefect when 0 then 200 else p.numdefect end from em_plan p where p.pid='{1}')", model.EID, model.PLANID);
+
+                    var cnt = db.ExecuteSqlCommand(sql);
+
+
+                    if (cnt > 0)
+                    {
+                        cnt = db.Insert<EMEXAMRESULT>(model);
+
+                        db.ExecuteSqlCommand(string.Format(@"update em_examresult t
+                                                           set t.numdefect =
+                                                               (select count(1) from em_defectlist d where d.resultid = t.eid)
+                                                         where t.eid = '{0}'", model.EID));
+                    }
+
+                    return cnt;
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public int UpdateExamResult(string resultid, string checkedby, string mclassid, string finish)
+        {
+            StringBuilder sbt = new StringBuilder();
+            using (BFdbContext db = new BFdbContext())
+            {
+                var tran = db.BeginTransaction();
+
+                try
+                {
+                    sbt.Clear();
+                    //更新defect表
+                    sbt.AppendFormat(@"update em_defectlist set ischecked='1',checkeddate={0:yyyyMMddHHmmss},checkedby='{1}'
+                                     where resultid='{2}'",
+                                     DateTime.Now, checkedby, resultid);
+
+                    db.ExecuteSqlCommand(sbt.ToString());
+
+                    //修改后的defect
+                    if (!string.IsNullOrEmpty(mclassid))
+                    {
+                        var modf = mclassid.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (modf.Length > 0)
+                        {
+                            foreach (var item in modf)
+                            {
+                                var ids = item.Split(new char[] { ',' });
+
+                                sbt.Clear();
+                                sbt.AppendFormat("update em_defectlist set inspclassifiid='{3}',modifieddefect=inspclassifiid where id={0} and passid={1} and inspid='{2}'", ids);
+                                db.ExecuteSqlCommand(sbt.ToString());
+                            }
+                        }
+                    }
+
+                    if (finish == "2")
+                    {
+                        sbt.Clear();
+                        sbt.AppendFormat("update em_examresult t set t.enddate = sysdate where t.eid ='{0}'", resultid);
+
+                        db.ExecuteSqlCommand(sbt.ToString());
+
+                        //totalscore
+                        db.ExecuteSqlCommand(string.Format(@"update em_examresult t
+                                                           set t.totalscore =
+                                                               (select sum(case
+                                                                             when d.inspclassifiid = d.omodifieddefect then
+                                                                              m.mark
+                                                                             else
+                                                                              0
+                                                                           end)
+                                                                  from em_defectlist d
+                                                                 inner join wm_classificationitem c
+                                                                    on c.itemid = d.inspclassifiid
+                                                                 inner join em_classificationmark m
+                                                                    on m.cid = c.id
+                                                                 where d.resultid = t.eid)
+                                                         where t.eid = '{0}'", resultid));
+
+                        //rightnum
+                        db.ExecuteSqlCommand(string.Format(@"update em_examresult t
+                                                           set t.rightnum =
+                                                               (select count(1)
+                                                                  from em_defectlist d
+                                                                 where d.resultid = t.eid
+                                                                   and d.inspclassifiid = d.omodifieddefect)
+                                                         where t.eid = '{0}'", resultid));
+
+                        //errornum
+                        db.ExecuteSqlCommand(string.Format(@"update em_examresult t
+                                                           set t.errornum =
+                                                               (select count(1)
+                                                                  from em_defectlist d
+                                                                 where d.resultid = t.eid
+                                                                   and d.inspclassifiid <> d.omodifieddefect)
+                                                         where t.eid = '{0}'", resultid));
+                    }
+
+                    tran.Commit();
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    log.Error(ex);
+                    throw GetFault(ex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取缺陷列表
+        /// </summary>
+        /// <param name="resultid"></param>
+        /// <returns></returns>
+        public List<EmdefectlistEntity> GetPaperDefectList(string resultid, string ischecked)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    string ischk = "";
+                    if (!string.IsNullOrEmpty(ischecked) && ischecked == "0")
+                        ischk = "and a.modifieddefect is not null";
+                    else if (!string.IsNullOrEmpty(ischecked) && ischecked == "1")
+                        ischk = "and a.modifieddefect is null";
+
+                    string sql = string.Format(@"select a.id, a.passid, a.inspid, a.modifieddefect, a.inspclassifiid,
+                                                       a.oldresultid || '\' ||a.imagename imagename, a.area_, d.color, a.ischecked, a.checkeddate,
+                                                       d.name as description, a.dieaddress, 'Front' inspectedsurface,
+                                                       '0' adc, d.schemeid, d.id cclassid, a.size_,o.id occlassid
+                                                  from em_defectlist a, wm_classificationitem d,wm_classificationitem o
+                                                 where a.inspclassifiid = d.itemid and a.omodifieddefect = o.itemid
+                                                    and a.resultid='{0}' {1} order by a.id", resultid, ischk);
+
+                    return db.SqlQuery<EmdefectlistEntity>(sql).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public List<EmExamResultEntity> GetExamResultReport(string sdate, string edate, string pname)
+        {
+            using (BFdbContext db = new BFdbContext())
+            {
+                string sql = string.Empty;
+
+                if (string.IsNullOrEmpty(pname))
+                {
+                    sql = string.Format(@"select p.planname, u.userid, t.totalscore, t.startdate, t.enddate,
+                                               t.numdefect, t.rightnum, t.errornum, t.eid
+                                          from em_examresult t
+                                         inner join em_plan p
+                                            on p.pid = t.planid
+                                        inner join tb_user u
+                                            on u.id = t.userid
+                                         where 1 = 1
+                                           and t.delflag = '0'
+                                           and t.startdate>=to_date('{0}','yyyyMMdd')
+                                           and t.startdate <=to_date('{1}235959','yyyyMMddhh24miss')", sdate, edate);
+                }
+                else
+                {
+                    sql = string.Format(@"select p.planname, u.userid, t.totalscore, t.startdate, t.enddate,
+                                               t.numdefect, t.rightnum, t.errornum, t.eid
+                                          from em_examresult t
+                                         inner join em_plan p
+                                            on p.pid = t.planid
+                                        inner join tb_user u
+                                            on u.id = t.userid
+                                         where 1 = 1
+                                           and t.delflag = '0'
+                                           and t.startdate>=to_date('{0}','yyyyMMdd')
+                                           and t.startdate <=to_date('{1}235959','yyyyMMddhh24miss') and t.planid ='{2}'", sdate, edate, pname);
+                }
+
+                return db.SqlQuery<EmExamResultEntity>(sql).ToList();
+            }
+        }
+
+        public int GetPaper(string by)
+        {
+            using (BFdbContext db = new BFdbContext())
+            {
+                var sql = @"select * from em_plan t where sysdate between t.startdate and t.enddate order by t.startdate desc";
+
+                var listPlan = db.SqlQuery<EMPLAN>(sql).ToList();
+
+                if (listPlan.Count <= 0)
+                    return -1;
+
+                var rs = -2;
+
+                foreach (var p in listPlan)
+                {
+                    sql = string.Format(@"select t.*
+                              from em_examresult t
+                             inner join em_plan p
+                                on p.pid = t.planid
+                             where t.userid = '{0}'
+                               and p.pid='{1}'
+                               and sysdate between p.startdate and p.enddate", by, p.PID);
+
+                    var listExamResult = db.SqlQuery<EMEXAMRESULT>(sql).FirstOrDefault();
+
+                    if (listExamResult == null)
+                    {
+                        AddExamResult(by, p.PID);
+
+                        rs = 0;
+                    }
+                    else
+                    {
+                        if (listExamResult.ENDDATE == null)
+                            rs = 0;
+                    }
+                }
+
+                return rs;
+            }
+        }
+
+        public List<EmExamResultEntity> GetExamResult(string by, string eid)
+        {
+            using (BFdbContext db = new BFdbContext())
+            {
+                var sql = string.Empty;
+
+                if (!string.IsNullOrEmpty(by))
+                {
+                    sql = string.Format(@"select t.*,p.enddate planenddate
+                              from em_examresult t
+                             inner join em_plan p
+                                on p.pid = t.planid
+                             where t.userid = '{0}'
+                               and sysdate between p.startdate and p.enddate", by);
+                }
+                else
+                {
+                    sql = string.Format(@"select t.*,p.enddate planenddate
+                              from em_examresult t
+                            inner join em_plan p
+                                on p.pid = t.planid
+                             where t.eid = '{0}'", eid);
+
+                }
+
+                return db.SqlQuery<EmExamResultEntity>(sql).ToList();
+            }
+        }
+
+        public List<WMCLASSIFICATIONITEM> GetClassificationItemByResultId(string resultid)
+        {
+            using (BFdbContext db = new BFdbContext())
+            {
+                var sql = string.Format(@"select c.*
+                                      from wm_classificationitem c
+                                     inner join em_defectlist t
+                                        on c.itemid = t.inspclassifiid
+                                     where t.resultid = '{0}'
+                                       and rownum < 2", resultid);
+                return db.SqlQuery<WMCLASSIFICATIONITEM>(sql).ToList();
+            }
+        }
+        #endregion
     }
 }

@@ -72,7 +72,17 @@ namespace WR.Client.UI
                                     select new { DEVICE = l.Key.DEVICE, LAYER = l.Key.LAYER, LOT = l.Key.LOT, LFIELD = l.Average(s => s.SFIELD) }))
                                     .ToList();
 
+                    var newWaferList = ((from w in _waferResultInfo
+                                         group w by new { w.DEVICE, w.LAYER, w.LOT, w.SUBSTRATE_ID } into l
+                                         select new { DEVICE = l.Key.DEVICE, LAYER = l.Key.LAYER, LOT = l.Key.LOT, SUBSTRATE_ID = l.Key.SUBSTRATE_ID, CREATEDDATE = l.Max(s => s.CREATEDDATE) }))
+                                   .ToList();
+
                     _waferResultInfo.ForEach(s => s.LFIELD = lotList.FirstOrDefault(l => l.DEVICE == s.DEVICE && l.LAYER == s.LAYER && l.LOT == s.LOT).LFIELD);
+
+                    _waferResultInfo = (from w in _waferResultInfo
+                                        join n in newWaferList
+                                        on new { w.DEVICE, w.LAYER, w.LOT, w.SUBSTRATE_ID, w.CREATEDDATE } equals new { n.DEVICE, n.LAYER, n.LOT, n.SUBSTRATE_ID, n.CREATEDDATE }
+                                        select w).ToList();
                 }
 
                 return _waferResultInfo;
@@ -135,5 +145,7 @@ namespace WR.Client.UI
         {
             get { return _hotKeyDict; }
         }
+
+        public static bool HasExam { get; set; }
     }
 }

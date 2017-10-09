@@ -39,10 +39,11 @@
             this.cbxDisk = new System.Windows.Forms.ComboBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.btnDbExp = new System.Windows.Forms.Button();
             this.cbxFiles = new System.Windows.Forms.ComboBox();
             this.btnDbImp = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.btnDbExp = new System.Windows.Forms.Button();
+            this.btnTableSpaceAdd = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label8 = new System.Windows.Forms.Label();
             this.dtpDless = new System.Windows.Forms.DateTimePicker();
@@ -74,6 +75,7 @@
             this.btnArchive = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.dtpAto = new System.Windows.Forms.DateTimePicker();
+            this.label11 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -160,6 +162,7 @@
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.label7);
+            this.groupBox5.Controls.Add(this.btnDbExp);
             this.groupBox5.Controls.Add(this.cbxFiles);
             this.groupBox5.Controls.Add(this.btnDbImp);
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Top;
@@ -179,6 +182,17 @@
             this.label7.Size = new System.Drawing.Size(89, 12);
             this.label7.TabIndex = 4;
             this.label7.Text = "Backup Files：";
+            // 
+            // btnDbExp
+            // 
+            this.btnDbExp.Image = global::WR.Client.UI.Properties.Resources.database_download;
+            this.btnDbExp.Location = new System.Drawing.Point(527, 29);
+            this.btnDbExp.Name = "btnDbExp";
+            this.btnDbExp.Size = new System.Drawing.Size(75, 55);
+            this.btnDbExp.TabIndex = 2;
+            this.btnDbExp.UseVisualStyleBackColor = true;
+            this.btnDbExp.Visible = false;
+            this.btnDbExp.Click += new System.EventHandler(this.btnDbExp_Click);
             // 
             // cbxFiles
             // 
@@ -200,25 +214,25 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.btnDbExp);
+            this.groupBox4.Controls.Add(this.label11);
+            this.groupBox4.Controls.Add(this.btnTableSpaceAdd);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox4.Location = new System.Drawing.Point(0, 390);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(984, 100);
             this.groupBox4.TabIndex = 5;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Database Backup";
-            this.groupBox4.Visible = false;
+            this.groupBox4.Text = "Database Manage";
             // 
-            // btnDbExp
+            // btnTableSpaceAdd
             // 
-            this.btnDbExp.Image = global::WR.Client.UI.Properties.Resources.database_download;
-            this.btnDbExp.Location = new System.Drawing.Point(29, 34);
-            this.btnDbExp.Name = "btnDbExp";
-            this.btnDbExp.Size = new System.Drawing.Size(75, 55);
-            this.btnDbExp.TabIndex = 2;
-            this.btnDbExp.UseVisualStyleBackColor = true;
-            this.btnDbExp.Click += new System.EventHandler(this.btnDbExp_Click);
+            this.btnTableSpaceAdd.Image = global::WR.Client.UI.Properties.Resources.tablespace;
+            this.btnTableSpaceAdd.Location = new System.Drawing.Point(29, 30);
+            this.btnTableSpaceAdd.Name = "btnTableSpaceAdd";
+            this.btnTableSpaceAdd.Size = new System.Drawing.Size(75, 55);
+            this.btnTableSpaceAdd.TabIndex = 3;
+            this.btnTableSpaceAdd.UseVisualStyleBackColor = true;
+            this.btnTableSpaceAdd.Click += new System.EventHandler(this.btnTableSpaceAdd_Click);
             // 
             // groupBox3
             // 
@@ -536,6 +550,16 @@
             this.dtpAto.Size = new System.Drawing.Size(114, 21);
             this.dtpAto.TabIndex = 16;
             // 
+            // label11
+            // 
+            this.label11.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label11.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label11.Location = new System.Drawing.Point(160, 30);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(300, 55);
+            this.label11.TabIndex = 29;
+            this.label11.Text = "Description: Create a tablespace file. Notes:This action cannot be rolled back.";
+            // 
             // frm_Archive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -608,5 +632,7 @@
         private System.Windows.Forms.TextBox txtArchiveDate;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button btnTableSpaceAdd;
+        private System.Windows.Forms.Label label11;
     }
 }

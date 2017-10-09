@@ -1182,7 +1182,7 @@ namespace WR.Client.UI
 
                     tasks[i] = Task.Factory.StartNew(() =>
                     {
-                        var path = Path.Combine(sinfPath, string.Format("{0}_{1}", result.LOT, result.DEVICE));
+                        var path = Path.Combine(sinfPath, string.Format("{0}-{1}", result.LOT, result.DEVICE));
                         var filename = Path.Combine(path, string.Format("{0}.sinf", result.SUBSTRATE_ID.Replace(".", "").Replace(" ", "")));
 
                         if (!Directory.Exists(path))

@@ -62,6 +62,42 @@
     </Compile>
     <Compile Include="code\DataCache.cs" />
     <Compile Include="code\CHGSinf.cs" />
+    <Compile Include="em\frm_exam.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="em\frm_exam.Designer.cs">
+      <DependentUpon>frm_exam.cs</DependentUpon>
+    </Compile>
+    <Compile Include="em\frm_examedit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="em\frm_examedit.Designer.cs">
+      <DependentUpon>frm_examedit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="em\frm_markedit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="em\frm_markedit.Designer.cs">
+      <DependentUpon>frm_markedit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="em\frm_paper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="em\frm_paper.Designer.cs">
+      <DependentUpon>frm_paper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="em\frm_resultlist.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="em\frm_resultlist.Designer.cs">
+      <DependentUpon>frm_resultlist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="em\frm_planedit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="em\frm_planedit.Designer.cs">
+      <DependentUpon>frm_planedit.cs</DependentUpon>
+    </Compile>
     <Compile Include="review\frm_merge.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -178,6 +214,24 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="em\frm_exam.resx">
+      <DependentUpon>frm_exam.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="em\frm_examedit.resx">
+      <DependentUpon>frm_examedit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="em\frm_markedit.resx">
+      <DependentUpon>frm_markedit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="em\frm_paper.resx">
+      <DependentUpon>frm_paper.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="em\frm_resultlist.resx">
+      <DependentUpon>frm_resultlist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="em\frm_planedit.resx">
+      <DependentUpon>frm_planedit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="review\frm_merge.resx">
       <DependentUpon>frm_merge.cs</DependentUpon>
     </EmbeddedResource>
@@ -488,6 +542,8 @@
     <Content Include="Resources\database-delete.png" />
     <Content Include="Resources\database-download.png" />
     <Content Include="Resources\database-upload.png" />
+    <None Include="Resources\tablespace.png" />
+    <None Include="Resources\examination.png" />
     <Content Include="Resources\export.png" />
     <Content Include="Resources\Physical recovery.png" />
     <Content Include="Resources\re-classify.png" />

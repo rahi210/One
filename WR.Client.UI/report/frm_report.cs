@@ -247,6 +247,8 @@ namespace WR.Client.UI
                 return;
             }
 
+            ShowLoading(ToopEnum.loading);
+
             switch (tabReport.SelectedTab.Name)
             {
                 case "tabDensity":
@@ -277,6 +279,8 @@ namespace WR.Client.UI
                 default:
                     break;
             }
+
+            CloseLoading();
         }
 
         private string GetLot()

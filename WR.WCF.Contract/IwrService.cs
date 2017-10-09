@@ -110,5 +110,58 @@ namespace WR.WCF.Contract
 
         [OperationContract]
         List<DiskInfoEntity> GetDiskList();
+
+        [OperationContract]
+        bool AddTableSpace(string name);
+
+        [OperationContract]
+        List<EMCLASSIFICATIONMARK> GetCLASSIFICATIONMARK(string filter);
+
+        [OperationContract]
+        string EditCLASSIFICATIONMARK(string id, string name, int mark);
+
+        [OperationContract]
+        //List<WmwaferResultEntity> GetWaferResultHis(string device, string layer, string lot, string wafer);
+        List<WmwaferResultEntity> GetWaferResultHis(string stDate, string edDate, string lot);
+
+        [OperationContract]
+        List<EMLIBRARY> GetLIBRARY(string filter);
+
+        [OperationContract]
+        int AddLibray(string resultId, string papername, string remark, string by, string status);
+
+        [OperationContract]
+        int UpdateLibray(string id, string name, string remark, string status, string by);
+
+        [OperationContract]
+        int DeleteLibray(string id, string by);
+
+        [OperationContract]
+        List<EMPLAN> GetEmPlan(string lid);
+
+        [OperationContract]
+        int AddPlan(string lid, string name, string stDate, string edDate, int usernum,int defectnum, string remark, string by);
+        [OperationContract]
+        int UpdatePlan(string id, string name, string stDate, string edDate, int usernum, int defectnum, string remark, string by);
+        [OperationContract]
+        int DeletePlan(string id, string by);
+
+        [OperationContract]
+        int AddExamResult(string userid, string pid);
+        [OperationContract]
+        int UpdateExamResult(string resultid, string checkedby, string mclassid, string finish);
+
+        [OperationContract]
+        List<EmdefectlistEntity> GetPaperDefectList(string resultid, string ischecked);
+
+        [OperationContract]
+        List<EmExamResultEntity> GetExamResultReport(string sdate, string edate, string pname);
+
+        [OperationContract]
+        List<EmExamResultEntity> GetExamResult(string by, string eid);
+        [OperationContract]
+        int GetPaper(string by);
+        [OperationContract]
+        List<WMCLASSIFICATIONITEM> GetClassificationItemByResultId(string resultid);
     }
 }

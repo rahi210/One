@@ -6,6 +6,8 @@ using WR.Client.WCF;
 using WR.WCF.Contract;
 using WR.WCF.DataContract;
 
+using System.Linq;
+
 namespace WR.Client.UI
 {
     public partial class frm_login : FormBase
@@ -58,6 +60,14 @@ namespace WR.Client.UI
 
                 DataCache.CmnDict = service.GetCmn("");
                 DataCache.Tbmenus = service.GetMenuByUserId(userid);
+
+                var msg = GetExamInfo();
+
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    MsgBoxEx.Info(msg);
+                    return;
+                }
 
                 //加载数据
                 DataCache.RefreshCache();
@@ -216,6 +226,41 @@ namespace WR.Client.UI
                 txtPwd.Focus();
             else
                 txtUser.Focus();
+        }
+
+        /// <summary>
+        /// 0：正常 -1：没有考试计划 -2:考试已结束
+        /// </summary>
+        /// <returns></returns>
+        private string GetExamInfo()
+        {
+            var msg = string.Empty;
+
+            var hasExamRole = DataCache.Tbmenus.Count(s => s.MENUCODE == "50003") > 0;
+
+            if (hasExamRole)
+            {
+                IwrService service = wrService.GetService();
+
+                var rs = service.GetPaper(DataCache.UserInfo.ID);
+
+                switch (rs)
+                {
+                    case 0:
+                        DataCache.HasExam = true;
+                        break;
+                    case -1:
+                        msg = "The exam hasn't started yet.";
+                        break;
+                    case -2:
+                        msg = "The exam is over.";
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return "";
         }
     }
 }

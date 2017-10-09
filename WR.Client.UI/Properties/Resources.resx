@@ -205,6 +205,9 @@
   <data name="preview24" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\preview24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="database-upload" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\database-upload.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="settings" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\settings.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -322,6 +325,9 @@
   <data name="pright" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\pright.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="examination" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\examination.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="export24" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\export24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -343,7 +349,7 @@
   <data name="database-download" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\database-download.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="database-upload" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\database-upload.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="tablespace" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tablespace.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

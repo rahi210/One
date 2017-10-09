@@ -330,5 +330,11 @@ namespace WR.DAL.EF
         public DbSet<CMNDICT> CMNDICT { get; set; }
         public DbSet<CMNRULE> CMNRULE { get; set; }
         public DbSet<CMNRELATION> CMNRELATION { get; set; }
+
+        public DbSet<EMCLASSIFICATIONMARK> EMCLASSIFICATIONMARK { get; set; }
+        public DbSet<EMLIBRARY> EMLIBRARY { get; set; }
+        //public DbSet<EMITEMRESULT> EMITEMRESULT { get; set; }
+        public DbSet<EMEXAMRESULT> EMEXAMRESULT { get; set; }
+        public DbSet<EMPLAN> EMPLAN { get; set; }
     }
 }

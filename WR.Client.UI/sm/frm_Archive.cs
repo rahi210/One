@@ -200,7 +200,7 @@ namespace WR.Client.UI
 
         private void btnDbImp_Click(object sender, EventArgs e)
         {
-            if (MsgBoxEx.ConfirmYesNo("Are you sure  to import the file") == DialogResult.No)
+            if (MsgBoxEx.ConfirmYesNo("Are you sure to import the file") == DialogResult.No)
                 return;
 
             if (string.IsNullOrEmpty(cbxFiles.Text))
@@ -244,6 +244,39 @@ namespace WR.Client.UI
                         MsgBoxEx.Warn("Disk remaining space is less than alert value, please clean up");
 
                 }
+            }
+        }
+
+        /// <summary>
+        /// 表空间扩容
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnTableSpaceAdd_Click(object sender, EventArgs e)
+        {
+            if (MsgBoxEx.ConfirmYesNo("Are you sure to add the tablespace") == DialogResult.No)
+                return;
+
+            ShowLoading(ToopEnum.loading);
+
+            try
+            {
+                IwrService service = wrService.GetService();
+                var rs = service.AddTableSpace("");
+
+                if (rs)
+                {
+                    MsgBoxEx.Info("Please restart the program.");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                CloseLoading();
             }
         }
     }

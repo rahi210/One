@@ -90,11 +90,8 @@ namespace WR.Client.UI
 
                 if (string.IsNullOrEmpty(lastDate))
                 {
-                    //if (this.InvokeRequired)
-                    //    this.Invoke(new Action(() => { MsgBoxEx.Info("Data not yet archived, please archive now."); }));
-                    //else
-                    //    MsgBoxEx.Info("Data not yet archived, please archive now.");
-                    MsgBoxEx.Info("Data not yet archived, please archive now.");
+                    //MsgBoxEx.Info("Data not yet archived, please archive now.");
+                    MessageBox.Show("Data not yet archived, please archive now.");
                 }
                 else
                 {
@@ -104,11 +101,8 @@ namespace WR.Client.UI
 
                     if (intervalDay > 7)
                     {
-                        //if (this.InvokeRequired)
-                        //    this.Invoke(new Action(() => { MsgBoxEx.Info("It's been over seven days since the last archive, please archive now."); }));
-                        //else
-                        //    MsgBoxEx.Info("It's been over seven days since the last archive, please archive now.");
-                        MsgBoxEx.Info("It's been over seven days since the last archive, please archive now.");
+                        //MsgBoxEx.Info("It's been over seven days since the last archive, please archive now.");
+                        MessageBox.Show("It's been over seven days since the last archive, please archive now.");
                     }
                 }
             }
@@ -127,8 +121,19 @@ namespace WR.Client.UI
             {
                 foreach (Control item in pnlContext.Controls)
                 {
-                    if (item is Form)
+                    //if (item is Form)
+                    //    ((Form)item).Close();
+                    if (item is Form && item.Name != "frm_report")
+                    {
                         ((Form)item).Close();
+
+                        pnlContext.Controls.Remove(item);
+                    }
+                    else
+                    {
+                        if (item is Form)
+                            item.Hide();
+                    }
                 }
 
                 pnlContext.Controls.Clear();
@@ -139,6 +144,7 @@ namespace WR.Client.UI
             mnuSelect.Visible = false;
             mnuSetting.Visible = false;
             mnuArchive.Visible = false;
+            mnuExam.Visible = false;
 
             lblLeftPwd.Visible = false;
             lblLeftOptions.Visible = false;
@@ -161,6 +167,13 @@ namespace WR.Client.UI
                     item.Visible = true;
             }
 
+            //若有考试权限 其他菜单权限不显示
+            if (DataCache.HasExam)
+            {
+                mnuSelection.Visible = false;
+                mnuReview.Visible = true;
+            }
+
             //调整位置
             int y = 58;
             if (mnuSelection.Visible)
@@ -181,6 +194,12 @@ namespace WR.Client.UI
             if (mnuArchive.Visible)
             {
                 mnuArchive.Location = new Point(4, y);
+                y += 63;
+            }
+
+            if (mnuExam.Visible)
+            {
+                mnuExam.Location = new Point(4, y);
                 y += 63;
             }
 
@@ -278,8 +297,16 @@ namespace WR.Client.UI
                     frm.frmMain = this;
                     break;
                 case "Wafer Review":
-                    frm = new frm_preview();
-                    ((frm_preview)frm).Oparams = Oparams;
+                    if (DataCache.HasExam)
+                    {
+                        frm = new frm_paper();
+                        ((frm_paper)frm).Oparams = Oparams;
+                    }
+                    else
+                    {
+                        frm = new frm_preview();
+                        ((frm_preview)frm).Oparams = Oparams;
+                    }
                     frm.frmMain = this;
                     break;
                 case "Defect Report":
@@ -300,6 +327,10 @@ namespace WR.Client.UI
                 case "Data Manage":
                     frm = new frm_Archive();
                     //((frm_Archive)frm).Oparams = Oparams;
+                    frm.frmMain = this;
+                    break;
+                case "Exam Manage":
+                    frm = new frm_exam();
                     frm.frmMain = this;
                     break;
                 case "- Change Password":
