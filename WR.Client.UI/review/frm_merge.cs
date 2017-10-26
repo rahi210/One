@@ -125,15 +125,22 @@ namespace WR.Client.UI
                             if (sinf.DieArray[i].Length == 0)
                                 continue;
 
-                            var newValue = MergeRow(newSINF[i], sinf.DieArray[i]);
-
-                            if (newValue.Contains("error"))
+                            try
                             {
-                                MsgBoxEx.Info(string.Format("Numbers cannot be merged with non-numbers(--,@@),In line:{0},File Name:{1}.", i, sinf.Name));
-                                return;
-                            }
+                                var newValue = MergeRow(newSINF[i], sinf.DieArray[i]);
 
-                            newSINF[i] = newValue;
+                                if (newValue.Contains("error"))
+                                {
+                                    MsgBoxEx.Info(string.Format("Numbers cannot be merged with non-numbers(--,@@),In line:{0},File Name:{1}.", i + 1, sinf.Name));
+                                    return;
+                                }
+
+                                newSINF[i] = newValue;
+                            }
+                            catch (Exception ex)
+                            {
+                                MsgBoxEx.Error(string.Format("{0},In line:{1},File Name:{2}", ex.Message, i + 1, sinf.Name));
+                            }
                         }
                     }
                 }

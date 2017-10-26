@@ -65,6 +65,9 @@ namespace WR.Client.UI
             if (cbxInterval.Checked)
                 nudDay.Value = DataCache.UserInfo.IntervalDays;
 
+            //过滤重复数据
+            cbxFilter.Checked = DataCache.UserInfo.FilterData;
+
             InitClassificationRole(service);
 
             txtSinfPath.Text = DataCache.SinfPath;
@@ -206,6 +209,9 @@ namespace WR.Client.UI
             config.AppSettings.Settings.Remove("intervalDays");
             config.AppSettings.Settings.Add("intervalDays", cbxInterval.Checked ? nudDay.Value.ToString() : "0");
 
+            config.AppSettings.Settings.Remove("duplicate_data_visible");
+            config.AppSettings.Settings.Add("duplicate_data_visible", (cbxFilter.Checked ? "0" : "1"));
+
             config.Save();
 
             WR.Utils.Config.Refresh();
@@ -257,6 +263,12 @@ namespace WR.Client.UI
                 if (int.TryParse(intervalDays, out idays))
                     DataCache.UserInfo.IntervalDays = idays;
             }
+
+            string filterdata = WR.Utils.Config.GetAppSetting("duplicate_data_visible");
+            if (string.IsNullOrEmpty(filterdata) || filterdata != "1")
+                DataCache.UserInfo.theday = true;
+            else
+                DataCache.UserInfo.theday = false;
 
             MsgBoxEx.Info("Save success, please refresh the data.");
         }

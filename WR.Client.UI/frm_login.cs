@@ -199,6 +199,10 @@ namespace WR.Client.UI
                     ent.IntervalDays = idays;
             }
 
+            string filterdata = WR.Utils.Config.GetAppSetting("duplicate_data_visible");
+            if (string.IsNullOrEmpty(filterdata) || filterdata != "1")
+                DataCache.UserInfo.FilterData = true;
+
             //sinf输出路径
             string sinfPath = WR.Utils.Config.GetAppSetting("sinfPath");
             if (!string.IsNullOrEmpty(sinfPath))

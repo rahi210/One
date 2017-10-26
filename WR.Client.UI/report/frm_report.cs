@@ -366,6 +366,8 @@ namespace WR.Client.UI
         /// <param name="list"></param>
         private void ChtShow(List<WmCategoryReport> list)
         {
+            list = list.OrderByDescending(s => s.ID).ToList();
+
             var serie = chtDefect.Series[0];
             serie.Points.Clear();
 
@@ -793,7 +795,7 @@ namespace WR.Client.UI
             DataTable dtNew = dt.DefaultView.ToTable(false, listColumn.ToArray());
             grdYields.DataSource = dtNew;
 
-            ShowYieldChart(dtNew);
+            ShowYieldChart2(dtNew);
         }
 
         private void ShowPolat()
@@ -1320,6 +1322,47 @@ namespace WR.Client.UI
             public int GetHashCode(WmItemsSummaryEntity obj)
             {
                 return obj.ToString().GetHashCode();
+            }
+        }
+
+        private void ShowYieldChart2(DataTable dtSrc)
+        {
+            chartYield.Series.Clear();
+
+            if (dtSrc.Rows.Count > 0)
+            {
+                DataTable dtSum = new DataTable();
+                dtSum.Columns.Add("classify", typeof(string));
+                dtSum.Columns.Add("defectnum", typeof(Int64));
+                dtSum.Columns.Add("diecount", typeof(Int64));
+                dtSum.Columns.Add("defecttotal", typeof(Int64));
+                dtSum.Columns.Add("PPM", typeof(Int64));
+                dtSum.Columns.Add("Percentage", typeof(double));
+                dtSum.Columns.Add("CUM", typeof(double));
+
+                DataRow drSum = dtSrc.Rows[dtSrc.Rows.Count - 1];
+  
+                for (int i = 1; i < dtSrc.Columns.Count; i++)
+                {
+                    if ((Int64)drSum[i] <= 0)
+                        continue;
+                    if (dtSrc.Columns[i].ColumnName == "Inspected Die_Y2")
+                        continue;
+
+                    DataRow dr = dtSum.NewRow();
+                    dr["classify"] = dtSrc.Columns[i].ColumnName;
+                    dr["defectnum"] = drSum[i];
+                   
+                    dtSum.Rows.Add(dr);
+                }
+
+                dtSum.DefaultView.Sort = "defectnum desc";
+
+                Series ser = chartYield.Series.Add("seriePPM");
+                ser.ChartType = SeriesChartType.Column;
+                ser.ChartArea = "ChartArea1";
+                ser.LegendText = "Defect";
+                ser.Points.DataBindXY(dtSum.DefaultView, "classify", dtSum.DefaultView, "defectnum");
             }
         }
 

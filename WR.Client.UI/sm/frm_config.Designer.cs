@@ -62,9 +62,11 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.btnSystem = new System.Windows.Forms.Button();
             this.nudDisk = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
-            this.btnSystem = new System.Windows.Forms.Button();
+            this.cbxFilter = new System.Windows.Forms.CheckBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -80,6 +82,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudLotYield)).BeginInit();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudDisk)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -116,9 +119,9 @@
             // 
             this.groupBox3.Controls.Add(this.panel2);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(0, 279);
+            this.groupBox3.Location = new System.Drawing.Point(0, 290);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(330, 321);
+            this.groupBox3.Size = new System.Drawing.Size(330, 310);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Classification Item Role";
@@ -129,7 +132,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 17);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(324, 301);
+            this.panel2.Size = new System.Drawing.Size(324, 290);
             this.panel2.TabIndex = 1;
             // 
             // panel4
@@ -139,7 +142,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(324, 301);
+            this.panel4.Size = new System.Drawing.Size(324, 290);
             this.panel4.TabIndex = 1;
             // 
             // clbClass
@@ -148,14 +151,14 @@
             this.clbClass.FormattingEnabled = true;
             this.clbClass.Location = new System.Drawing.Point(0, 0);
             this.clbClass.Name = "clbClass";
-            this.clbClass.Size = new System.Drawing.Size(324, 252);
+            this.clbClass.Size = new System.Drawing.Size(324, 241);
             this.clbClass.TabIndex = 0;
             // 
             // panel3
             // 
             this.panel3.Controls.Add(this.BtnClassRole);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 252);
+            this.panel3.Location = new System.Drawing.Point(0, 241);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(324, 49);
             this.panel3.TabIndex = 2;
@@ -165,7 +168,7 @@
             this.BtnClassRole.BackgroundImage = global::WR.Client.UI.Properties.Resources.button;
             this.BtnClassRole.Image = global::WR.Client.UI.Properties.Resources.move24;
             this.BtnClassRole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BtnClassRole.Location = new System.Drawing.Point(201, 7);
+            this.BtnClassRole.Location = new System.Drawing.Point(224, 7);
             this.BtnClassRole.Name = "BtnClassRole";
             this.BtnClassRole.Size = new System.Drawing.Size(80, 33);
             this.BtnClassRole.TabIndex = 14;
@@ -183,34 +186,26 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(330, 279);
+            this.tabControl1.Size = new System.Drawing.Size(330, 290);
             this.tabControl1.TabIndex = 19;
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.nudDay);
+            this.tabPage1.Controls.Add(this.groupBox2);
+            this.tabPage1.Controls.Add(this.cbxFilter);
             this.tabPage1.Controls.Add(this.cbxNotdone);
-            this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Controls.Add(this.cbxDay);
-            this.tabPage1.Controls.Add(this.cbxInterval);
-            this.tabPage1.Controls.Add(this.cbxLast);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.cbxSpec);
             this.tabPage1.Controls.Add(this.btnOK);
-            this.tabPage1.Controls.Add(this.dtDate);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.dateTo);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(322, 253);
+            this.tabPage1.Size = new System.Drawing.Size(322, 264);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Load Wafer Options";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // nudDay
             // 
-            this.nudDay.Location = new System.Drawing.Point(81, 103);
+            this.nudDay.Location = new System.Drawing.Point(66, 66);
             this.nudDay.Maximum = new decimal(new int[] {
             90,
             0,
@@ -245,7 +240,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(141, 105);
+            this.label3.Location = new System.Drawing.Point(126, 68);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(23, 12);
             this.label3.TabIndex = 17;
@@ -256,7 +251,7 @@
             this.cbxDay.AutoSize = true;
             this.cbxDay.Checked = true;
             this.cbxDay.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbxDay.Location = new System.Drawing.Point(21, 41);
+            this.cbxDay.Location = new System.Drawing.Point(6, 20);
             this.cbxDay.Name = "cbxDay";
             this.cbxDay.Size = new System.Drawing.Size(114, 16);
             this.cbxDay.TabIndex = 0;
@@ -267,7 +262,7 @@
             // cbxInterval
             // 
             this.cbxInterval.AutoSize = true;
-            this.cbxInterval.Location = new System.Drawing.Point(21, 104);
+            this.cbxInterval.Location = new System.Drawing.Point(6, 67);
             this.cbxInterval.Name = "cbxInterval";
             this.cbxInterval.Size = new System.Drawing.Size(60, 16);
             this.cbxInterval.TabIndex = 15;
@@ -278,7 +273,7 @@
             // cbxLast
             // 
             this.cbxLast.AutoSize = true;
-            this.cbxLast.Location = new System.Drawing.Point(21, 71);
+            this.cbxLast.Location = new System.Drawing.Point(6, 43);
             this.cbxLast.Name = "cbxLast";
             this.cbxLast.Size = new System.Drawing.Size(108, 16);
             this.cbxLast.TabIndex = 0;
@@ -289,7 +284,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(19, 159);
+            this.label1.Location = new System.Drawing.Point(4, 115);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 12);
             this.label1.TabIndex = 14;
@@ -298,7 +293,7 @@
             // cbxSpec
             // 
             this.cbxSpec.AutoSize = true;
-            this.cbxSpec.Location = new System.Drawing.Point(21, 137);
+            this.cbxSpec.Location = new System.Drawing.Point(6, 93);
             this.cbxSpec.Name = "cbxSpec";
             this.cbxSpec.Size = new System.Drawing.Size(108, 16);
             this.cbxSpec.TabIndex = 0;
@@ -311,7 +306,7 @@
             this.btnOK.BackgroundImage = global::WR.Client.UI.Properties.Resources.button;
             this.btnOK.Image = global::WR.Client.UI.Properties.Resources.move24;
             this.btnOK.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnOK.Location = new System.Drawing.Point(200, 203);
+            this.btnOK.Location = new System.Drawing.Point(223, 223);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(80, 33);
             this.btnOK.TabIndex = 13;
@@ -322,7 +317,7 @@
             // dtDate
             // 
             this.dtDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtDate.Location = new System.Drawing.Point(60, 159);
+            this.dtDate.Location = new System.Drawing.Point(45, 115);
             this.dtDate.Name = "dtDate";
             this.dtDate.Size = new System.Drawing.Size(100, 21);
             this.dtDate.TabIndex = 11;
@@ -330,7 +325,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(170, 162);
+            this.label2.Location = new System.Drawing.Point(155, 118);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(23, 12);
             this.label2.TabIndex = 12;
@@ -339,7 +334,7 @@
             // dateTo
             // 
             this.dateTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTo.Location = new System.Drawing.Point(195, 159);
+            this.dateTo.Location = new System.Drawing.Point(180, 115);
             this.dateTo.Name = "dateTo";
             this.dateTo.Size = new System.Drawing.Size(85, 21);
             this.dateTo.TabIndex = 10;
@@ -456,6 +451,19 @@
             this.tabPage4.Text = "System Options";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // btnSystem
+            // 
+            this.btnSystem.BackgroundImage = global::WR.Client.UI.Properties.Resources.button;
+            this.btnSystem.Image = global::WR.Client.UI.Properties.Resources.move24;
+            this.btnSystem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSystem.Location = new System.Drawing.Point(200, 205);
+            this.btnSystem.Name = "btnSystem";
+            this.btnSystem.Size = new System.Drawing.Size(80, 33);
+            this.btnSystem.TabIndex = 19;
+            this.btnSystem.Text = "    Save";
+            this.btnSystem.UseVisualStyleBackColor = true;
+            this.btnSystem.Click += new System.EventHandler(this.btnSystem_Click);
+            // 
             // nudDisk
             // 
             this.nudDisk.Location = new System.Drawing.Point(154, 27);
@@ -472,18 +480,36 @@
             this.label7.TabIndex = 17;
             this.label7.Text = "Disk Alert Value(%):";
             // 
-            // btnSystem
+            // cbxFilter
             // 
-            this.btnSystem.BackgroundImage = global::WR.Client.UI.Properties.Resources.button;
-            this.btnSystem.Image = global::WR.Client.UI.Properties.Resources.move24;
-            this.btnSystem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSystem.Location = new System.Drawing.Point(200, 205);
-            this.btnSystem.Name = "btnSystem";
-            this.btnSystem.Size = new System.Drawing.Size(80, 33);
-            this.btnSystem.TabIndex = 19;
-            this.btnSystem.Text = "    Save";
-            this.btnSystem.UseVisualStyleBackColor = true;
-            this.btnSystem.Click += new System.EventHandler(this.btnSystem_Click);
+            this.cbxFilter.AutoSize = true;
+            this.cbxFilter.Checked = true;
+            this.cbxFilter.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbxFilter.Location = new System.Drawing.Point(21, 34);
+            this.cbxFilter.Name = "cbxFilter";
+            this.cbxFilter.Size = new System.Drawing.Size(168, 16);
+            this.cbxFilter.TabIndex = 19;
+            this.cbxFilter.Text = "Filtering Duplicate data";
+            this.cbxFilter.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.cbxDay);
+            this.groupBox2.Controls.Add(this.dateTo);
+            this.groupBox2.Controls.Add(this.nudDay);
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Controls.Add(this.dtDate);
+            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.cbxSpec);
+            this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.Controls.Add(this.cbxInterval);
+            this.groupBox2.Controls.Add(this.cbxLast);
+            this.groupBox2.Location = new System.Drawing.Point(21, 58);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(282, 155);
+            this.groupBox2.TabIndex = 20;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Date interval";
             // 
             // frm_config
             // 
@@ -514,6 +540,8 @@
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudDisk)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -557,6 +585,8 @@
         private System.Windows.Forms.Button btnSystem;
         private System.Windows.Forms.NumericUpDown nudDisk;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.CheckBox cbxFilter;
+        private System.Windows.Forms.GroupBox groupBox2;
 
     }
 }

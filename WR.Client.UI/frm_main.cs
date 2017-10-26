@@ -91,7 +91,6 @@ namespace WR.Client.UI
                 if (string.IsNullOrEmpty(lastDate))
                 {
                     //MsgBoxEx.Info("Data not yet archived, please archive now.");
-                    MessageBox.Show("Data not yet archived, please archive now.");
                 }
                 else
                 {
@@ -102,7 +101,6 @@ namespace WR.Client.UI
                     if (intervalDay > 7)
                     {
                         //MsgBoxEx.Info("It's been over seven days since the last archive, please archive now.");
-                        MessageBox.Show("It's been over seven days since the last archive, please archive now.");
                     }
                 }
             }

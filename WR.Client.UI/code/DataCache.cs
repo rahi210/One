@@ -72,17 +72,20 @@ namespace WR.Client.UI
                                     select new { DEVICE = l.Key.DEVICE, LAYER = l.Key.LAYER, LOT = l.Key.LOT, LFIELD = l.Average(s => s.SFIELD) }))
                                     .ToList();
 
-                    var newWaferList = ((from w in _waferResultInfo
-                                         group w by new { w.DEVICE, w.LAYER, w.LOT, w.SUBSTRATE_ID } into l
-                                         select new { DEVICE = l.Key.DEVICE, LAYER = l.Key.LAYER, LOT = l.Key.LOT, SUBSTRATE_ID = l.Key.SUBSTRATE_ID, CREATEDDATE = l.Max(s => s.CREATEDDATE) }))
-                                   .ToList();
-
                     _waferResultInfo.ForEach(s => s.LFIELD = lotList.FirstOrDefault(l => l.DEVICE == s.DEVICE && l.LAYER == s.LAYER && l.LOT == s.LOT).LFIELD);
 
-                    _waferResultInfo = (from w in _waferResultInfo
-                                        join n in newWaferList
-                                        on new { w.DEVICE, w.LAYER, w.LOT, w.SUBSTRATE_ID, w.CREATEDDATE } equals new { n.DEVICE, n.LAYER, n.LOT, n.SUBSTRATE_ID, n.CREATEDDATE }
-                                        select w).ToList();
+                    if (UserInfo.FilterData)
+                    {
+                        var newWaferList = ((from w in _waferResultInfo
+                                             group w by new { w.DEVICE, w.LAYER, w.LOT, w.SUBSTRATE_ID } into l
+                                             select new { DEVICE = l.Key.DEVICE, LAYER = l.Key.LAYER, LOT = l.Key.LOT, SUBSTRATE_ID = l.Key.SUBSTRATE_ID, CREATEDDATE = l.Max(s => s.CREATEDDATE) }))
+                                       .ToList();
+
+                        _waferResultInfo = (from w in _waferResultInfo
+                                            join n in newWaferList
+                                            on new { w.DEVICE, w.LAYER, w.LOT, w.SUBSTRATE_ID, w.CREATEDDATE } equals new { n.DEVICE, n.LAYER, n.LOT, n.SUBSTRATE_ID, n.CREATEDDATE }
+                                            select w).ToList();
+                    }
                 }
 
                 return _waferResultInfo;
@@ -147,5 +150,48 @@ namespace WR.Client.UI
         }
 
         public static bool HasExam { get; set; }
+
+        /// <summary>
+        /// 根据行、列生成全部的layout数据
+        /// 由于性能优化，xml中的layout数据不会全部保存到数据库，只会保存一下类型的数据（不存在、缺陷类型！=0）
+        /// </summary>
+        /// <param name="oldList"></param>
+        /// <returns></returns>
+        public static List<WmdielayoutlistEntitiy> GetAllDielayoutListById(List<WmdielayoutlistEntitiy> oldList)
+        {
+            var rows = oldList[0].ROWS_;
+            var cols = oldList[0].COLUMNS_;
+            var layoutId = oldList[0].LAYOUTID;
+
+            var newList = new List<WmdielayoutlistEntitiy>();
+
+            if (rows * cols == oldList.Count)
+                return oldList;
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int y = 0; y < cols; y++)
+                {
+                    newList.Add(new WmdielayoutlistEntitiy() { ID = System.Guid.NewGuid().ToString(), DIEADDRESSX = y, DIEADDRESSY = i, LAYOUTID = layoutId, COLUMNS_ = cols, ROWS_ = rows });
+                }
+            }
+
+            var list = (from n in newList
+                        join o in oldList
+                        on new { n.DIEADDRESSX, n.DIEADDRESSY } equals new { o.DIEADDRESSX, o.DIEADDRESSY }
+                        into tmp
+                        from t in tmp.DefaultIfEmpty()
+                        select new WmdielayoutlistEntitiy()
+                        {
+                            ID = t == null ? n.ID : t.ID,
+                            DIEADDRESSX = n.DIEADDRESSX,
+                            DIEADDRESSY = n.DIEADDRESSY,
+                            LAYOUTID = n.LAYOUTID,
+                            DISPOSITION = t == null ? n.DISPOSITION : t.DISPOSITION,
+                            INSPCLASSIFIID = t.INSPCLASSIFIID
+                        }).ToList();
+
+            return list;
+        }
     }
 }

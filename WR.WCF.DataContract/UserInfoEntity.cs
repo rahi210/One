@@ -89,5 +89,10 @@ namespace WR.WCF.DataContract
 
         [DataMember]
         public int IntervalDays { get; set; }
+
+        /// <summary>
+        /// 过滤重复数据
+        /// </summary>
+        public bool FilterData { get; set; }
     }
 }

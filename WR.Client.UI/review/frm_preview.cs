@@ -499,19 +499,41 @@ namespace WR.Client.UI
                     }
                     else
                     {
-                        var ent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
-                        if (ent == null)
-                            return;
+                        var hasReverse = false;
+                        var updateIndex = grdData.SelectedRows.Count - 1;
+                        var rowIndex = 0;
 
-                        ent.Cclassid = itm.ID;
-                        ent.InspclassifiId = itm.ITEMID;
-                        ent.ModifiedDefect = ent.INSPID;
-                        ent.Description = itm.NAME;
+                        if (grdData.SelectedRows.Count >= 2 && grdData.SelectedRows[0].Index > grdData.SelectedRows[1].Index)
+                        {
+                            hasReverse = true;
+                            updateIndex = 0;
+                        }
 
-                        UpdateDefectClassification(ent);
+                        for (int i = 0; i < grdData.SelectedRows.Count; i++)
+                        {
+                            if (hasReverse)
+                                rowIndex = grdData.SelectedRows.Count - 1 - i;
+                            else
+                                rowIndex = i;
+
+                            var ent = grdData.SelectedRows[rowIndex].DataBoundItem as WmdefectlistEntity;
+
+                            if (ent == null)
+                                return;
+
+                            ent.Cclassid = itm.ID;
+                            ent.InspclassifiId = itm.ITEMID;
+                            ent.ModifiedDefect = ent.INSPID;
+                            ent.Description = itm.NAME;
+
+                            if (rowIndex == updateIndex)
+                                UpdateDefectClassification(ent, i);
+
+                            grdData.InvalidateRow(grdData.SelectedRows[rowIndex].Index);
+                        }
                     }
 
-                    grdData.InvalidateRow(grdData.SelectedRows[0].Index);
+
                     //DrawDefect(ent.DieAddress);
                 }
                 else
@@ -2298,7 +2320,7 @@ namespace WR.Client.UI
         {
             if (e.RowIndex > -1 && e.ColumnIndex > -1 && e.Button == MouseButtons.Right)
             {
-                grdData.CurrentCell = grdData[e.ColumnIndex, e.RowIndex];
+                //grdData.CurrentCell = grdData[e.ColumnIndex, e.RowIndex];
                 cnmReclass.Show(MousePosition.X, MousePosition.Y);
 
                 cnmReclass.Tag = "1";
@@ -2368,22 +2390,71 @@ namespace WR.Client.UI
                         {
                             if (grdData.Visible)
                             {
-                                if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0)
+                                if (picWafer.SelectDefect.Count > 0 && picWafer.Status == "Reclass")
                                 {
-                                    var ent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
-                                    if (ent != null)
+                                    var list = grdData.DataSource as List<WmdefectlistEntity>;
+                                    foreach (var def in picWafer.SelectDefect)
                                     {
+                                        var ent = list.FirstOrDefault(s => s.DieAddress == def.ToString() && s.Cclassid != clf.ID);
+
+                                        if (ent == null)
+                                            continue;
+
                                         ent.Cclassid = clf.ID;
                                         ent.InspclassifiId = clf.ITEMID;
                                         ent.ModifiedDefect = ent.INSPID;
                                         ent.Description = clf.NAME;
-                                        grdData.InvalidateRow(grdData.SelectedRows[0].Index);
 
                                         UpdateDefectClassification(ent);
 
-                                        //DrawDefect(ent.DieAddress);
+                                        var index = list.FindIndex(s => s.Id == ent.Id);
+                                        grdData.InvalidateRow(index);
+                                    }
 
-                                        tabControl1_SelectedIndexChanged(null, null);
+                                    InitClassList();
+                                    picWafer.Status = "";
+                                    DrawDefect(picWafer.CurrentDefect);
+                                    //grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.CurrentCell.RowIndex + 1];
+                                }
+                                else
+                                {
+                                    if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0)
+                                    {
+                                        var hasReverse = false;
+                                        var updateIndex = grdData.SelectedRows.Count - 1;
+                                        var rowIndex = 0;
+
+                                        if (grdData.SelectedRows.Count >= 2 && grdData.SelectedRows[0].Index > grdData.SelectedRows[1].Index)
+                                        {
+                                            hasReverse = true;
+                                            updateIndex = 0;
+                                        }
+
+                                        for (int i = 0; i < grdData.SelectedRows.Count; i++)
+                                        {
+                                            if (hasReverse)
+                                                rowIndex = grdData.SelectedRows.Count - 1 - i;
+                                            else
+                                                rowIndex = i;
+
+                                            var ent = grdData.SelectedRows[rowIndex].DataBoundItem as WmdefectlistEntity;
+
+                                            if (ent != null)
+                                            {
+                                                ent.Cclassid = clf.ID;
+                                                ent.InspclassifiId = clf.ITEMID;
+                                                ent.ModifiedDefect = ent.INSPID;
+                                                ent.Description = clf.NAME;
+                                                grdData.InvalidateRow(grdData.SelectedRows[rowIndex].Index);
+
+                                                if (updateIndex == rowIndex)
+                                                    UpdateDefectClassification(ent, i);
+
+                                                //DrawDefect(ent.DieAddress);
+
+                                                tabControl1_SelectedIndexChanged(null, null);
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -2469,9 +2540,9 @@ namespace WR.Client.UI
         /// <summary>
         /// 
         /// </summary>
-        private void UpdateDefectClassification(WmdefectlistEntity model)
+        private void UpdateDefectClassification(WmdefectlistEntity model, int num = 0)
         {
-            var count = grdData.CurrentCell.RowIndex;
+            var count = grdData.CurrentCell.RowIndex + num;
             IsSave = false;
 
             List<WmdefectlistEntity> list = grdData.DataSource as List<WmdefectlistEntity>;
@@ -2489,12 +2560,14 @@ namespace WR.Client.UI
                     {
                         var index = list.FindIndex(s => s.Id == id);
 
-                        list[index].Cclassid = model.Cclassid;
-                        list[index].InspclassifiId = model.InspclassifiId;
-                        list[index].ModifiedDefect = model.ModifiedDefect;
-                        list[index].Description = model.Description;
+                        //将一个Die上的某一缺陷复判为某一缺陷类型或reject后，该相同Die上的其余缺陷不要自动复判，保留其原有的缺陷类型
+                        //（该功能待实施更新），但要自动跳过这些相同Die上的缺陷，减少复判次数（该功能目前已具备）。
+                        //list[index].Cclassid = model.Cclassid;
+                        //list[index].InspclassifiId = model.InspclassifiId;
+                        //list[index].ModifiedDefect = model.ModifiedDefect;
+                        //list[index].Description = model.Description;
 
-                        UpdateDieLayout(list[index].DieAddress, (int)model.Cclassid);
+                        //UpdateDieLayout(list[index].DieAddress, (int)model.Cclassid);
 
                         if (grdData.Visible)
                             grdData.InvalidateRow(index);
@@ -2521,10 +2594,12 @@ namespace WR.Client.UI
                 {
                     var index = list.FindIndex(s => s.Id == id);
 
-                    list[index].Cclassid = model.Cclassid;
-                    list[index].InspclassifiId = model.InspclassifiId;
-                    list[index].ModifiedDefect = model.ModifiedDefect;
-                    list[index].Description = model.Description;
+                    //将一个Die上的某一缺陷复判为某一缺陷类型或reject后，该相同Die上的其余缺陷不要自动复判，保留其原有的缺陷类型
+                    //（该功能待实施更新），但要自动跳过这些相同Die上的缺陷，减少复判次数（该功能目前已具备）。
+                    //list[index].Cclassid = model.Cclassid;
+                    //list[index].InspclassifiId = model.InspclassifiId;
+                    //list[index].ModifiedDefect = model.ModifiedDefect;
+                    //list[index].Description = model.Description;
 
                     count = index;
                     if (grdData.Visible)

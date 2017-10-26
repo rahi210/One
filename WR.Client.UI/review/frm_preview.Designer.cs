@@ -102,6 +102,7 @@
             this.lbl_P_Out = new System.Windows.Forms.Label();
             this.lbl_P_In = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.splitter2 = new System.Windows.Forms.Splitter();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
             this.picWafer = new WR.Client.Controls.WrPictureBox();
@@ -113,7 +114,6 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.pnlTitile = new System.Windows.Forms.Panel();
             this.lblWaferID = new System.Windows.Forms.Label();
-            this.splitter2 = new System.Windows.Forms.Splitter();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.grdClass = new CRD.WinUI.Editors.WrDataGridView();
@@ -285,7 +285,6 @@
             this.grdData.EnableHeadersVisualStyles = false;
             this.grdData.GridColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.grdData.Location = new System.Drawing.Point(-2, 84);
-            this.grdData.MultiSelect = false;
             this.grdData.Name = "grdData";
             this.grdData.ReadOnly = true;
             this.grdData.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
@@ -818,14 +817,26 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.panel4);
             this.panel2.Controls.Add(this.splitter2);
+            this.panel2.Controls.Add(this.panel4);
             this.panel2.Controls.Add(this.tabControl1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel2.Location = new System.Drawing.Point(806, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(460, 697);
             this.panel2.TabIndex = 1;
+            // 
+            // splitter2
+            // 
+            this.splitter2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.splitter2.Location = new System.Drawing.Point(0, 365);
+            this.splitter2.MinExtra = 329;
+            this.splitter2.MinSize = 329;
+            this.splitter2.Name = "splitter2";
+            this.splitter2.Size = new System.Drawing.Size(460, 3);
+            this.splitter2.TabIndex = 7;
+            this.splitter2.TabStop = false;
+            this.splitter2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitter2_SplitterMoved);
             // 
             // panel4
             // 
@@ -838,7 +849,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(460, 365);
+            this.panel4.Size = new System.Drawing.Size(460, 368);
             this.panel4.TabIndex = 2;
             this.panel4.Click += new System.EventHandler(this.panel5_Click);
             // 
@@ -848,7 +859,7 @@
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel7.Location = new System.Drawing.Point(76, 38);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(330, 327);
+            this.panel7.Size = new System.Drawing.Size(330, 330);
             this.panel7.TabIndex = 1;
             // 
             // picWafer
@@ -867,7 +878,7 @@
             this.picWafer.RowCnt = 0;
             this.picWafer.SelectDefect = ((System.Collections.ArrayList)(resources.GetObject("picWafer.SelectDefect")));
             this.picWafer.SelectRect = new System.Drawing.Rectangle(0, 0, 0, 0);
-            this.picWafer.Size = new System.Drawing.Size(330, 327);
+            this.picWafer.Size = new System.Drawing.Size(330, 330);
             this.picWafer.Status = "";
             this.picWafer.TabIndex = 2;
             this.picWafer.TabStop = false;
@@ -889,7 +900,7 @@
             this.panel6.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel6.Location = new System.Drawing.Point(406, 38);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(54, 327);
+            this.panel6.Size = new System.Drawing.Size(54, 330);
             this.panel6.TabIndex = 5;
             // 
             // lblReclass
@@ -897,7 +908,7 @@
             this.lblReclass.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblReclass.Image = global::WR.Client.UI.Properties.Resources.re_classify1;
             this.lblReclass.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.lblReclass.Location = new System.Drawing.Point(10, 138);
+            this.lblReclass.Location = new System.Drawing.Point(10, 141);
             this.lblReclass.Name = "lblReclass";
             this.lblReclass.Size = new System.Drawing.Size(36, 33);
             this.lblReclass.TabIndex = 4;
@@ -908,7 +919,7 @@
             // 
             this.lblReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblReset.Image = global::WR.Client.UI.Properties.Resources.Restore32;
-            this.lblReset.Location = new System.Drawing.Point(10, 182);
+            this.lblReset.Location = new System.Drawing.Point(10, 185);
             this.lblReset.Name = "lblReset";
             this.lblReset.Size = new System.Drawing.Size(36, 33);
             this.lblReset.TabIndex = 3;
@@ -920,7 +931,7 @@
             this.lblLotOut.BackColor = System.Drawing.Color.Transparent;
             this.lblLotOut.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblLotOut.Image = global::WR.Client.UI.Properties.Resources.zoom_in;
-            this.lblLotOut.Location = new System.Drawing.Point(9, 226);
+            this.lblLotOut.Location = new System.Drawing.Point(9, 229);
             this.lblLotOut.Name = "lblLotOut";
             this.lblLotOut.Size = new System.Drawing.Size(40, 39);
             this.lblLotOut.TabIndex = 1;
@@ -932,7 +943,7 @@
             this.lblLotIn.BackColor = System.Drawing.Color.Transparent;
             this.lblLotIn.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblLotIn.Image = global::WR.Client.UI.Properties.Resources.zoom_out;
-            this.lblLotIn.Location = new System.Drawing.Point(9, 281);
+            this.lblLotIn.Location = new System.Drawing.Point(9, 284);
             this.lblLotIn.Name = "lblLotIn";
             this.lblLotIn.Size = new System.Drawing.Size(40, 39);
             this.lblLotIn.TabIndex = 1;
@@ -944,7 +955,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel3.Location = new System.Drawing.Point(0, 38);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(76, 327);
+            this.panel3.Size = new System.Drawing.Size(76, 330);
             this.panel3.TabIndex = 4;
             // 
             // pnlTitile
@@ -967,18 +978,6 @@
             this.lblWaferID.TabIndex = 0;
             this.lblWaferID.Text = "Lot:    Wafer:";
             this.lblWaferID.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // splitter2
-            // 
-            this.splitter2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitter2.Location = new System.Drawing.Point(0, 365);
-            this.splitter2.MinExtra = 329;
-            this.splitter2.MinSize = 697;
-            this.splitter2.Name = "splitter2";
-            this.splitter2.Size = new System.Drawing.Size(460, 3);
-            this.splitter2.TabIndex = 5;
-            this.splitter2.TabStop = false;
-            this.splitter2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitter2_SplitterMoved);
             // 
             // tabControl1
             // 
@@ -1535,8 +1534,8 @@
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel7;
-        private System.Windows.Forms.Splitter splitter2;
         private System.Windows.Forms.Label lblReclass;
         private System.Windows.Forms.Timer timer3;
+        private System.Windows.Forms.Splitter splitter2;
     }
 }
