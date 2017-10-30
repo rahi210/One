@@ -455,10 +455,15 @@ namespace WR.WCF.Site
 
                     //更新waferresult表
                     sbt.Clear();
+                    //                    sbt.AppendFormat(@"select a.resultid,a.checkeddate,b.yieldnum,nvl(c.defectnum,0) defectnum from wm_waferresult a, 
+                    //                                 (select ba.layoutid,count(ba.id) yieldnum from wm_dielayoutlist ba where lower(trim(ba.disposition))<>'notexist' group by ba.layoutid) b,
+                    //                                (select ba.layoutid, count(ba.id) defectnum from wm_dielayoutlist ba where lower(trim(ba.disposition)) <> 'notexist' and ba.inspclassifiid<>'0' group by ba.layoutid) c
+                    //                                where a.dielayoutid=b.layoutid and a.dielayoutid = c.layoutid(+) and a.resultid='{0}'", resultid);
                     sbt.AppendFormat(@"select a.resultid,a.checkeddate,b.yieldnum,nvl(c.defectnum,0) defectnum from wm_waferresult a, 
-                                 (select ba.layoutid,count(ba.id) yieldnum from wm_dielayoutlist ba where lower(trim(ba.disposition))<>'notexist' group by ba.layoutid) b,
+                                 (select ba.layoutid,d.rows_ * d.columns_ -count(ba.id) yieldnum from wm_dielayoutlist ba inner join wm_dielayout d on d.layoutid = ba.layoutid where lower(trim(ba.disposition))='notexist' group by ba.layoutid, d.rows_, d.columns_) b,
                                 (select ba.layoutid, count(ba.id) defectnum from wm_dielayoutlist ba where lower(trim(ba.disposition)) <> 'notexist' and ba.inspclassifiid<>'0' group by ba.layoutid) c
                                 where a.dielayoutid=b.layoutid and a.dielayoutid = c.layoutid(+) and a.resultid='{0}'", resultid);
+
                     info = db.SqlQuery<WmwaferInfoEntity>(sbt.ToString()).ToList();
                     var y = (info[0].yieldnum.Value * 1.0 - info[0].defectnum.Value * 1.0) / info[0].yieldnum.Value;
 
@@ -569,8 +574,11 @@ namespace WR.WCF.Site
             {
                 using (BFdbContext db = new BFdbContext())
                 {
+                    //                    string sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist t,wm_dielayout a
+                    //                                                    where t.layoutid=a.layoutid and t.layoutid='{0}' and t.disposition in ('NotProcess     ','NotInspectable ','Fail           ','Pass           ','Processed      ')", id);
+
                     string sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist t,wm_dielayout a
-                                                    where t.layoutid=a.layoutid and t.layoutid='{0}' and t.disposition in ('NotProcess     ','NotInspectable ','Fail           ','Pass           ','Processed      ')", id);
+                                                    where t.layoutid=a.layoutid and t.layoutid='{0}'", id);
 
                     return db.SqlQuery<WmdielayoutlistEntitiy>(sql).ToList();
                 }
@@ -733,9 +741,9 @@ namespace WR.WCF.Site
                 string sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.dieqty
                                                 from wm_waferresult ta,wm_identification tb,
                                                 (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
-                                                (select c.resultid,count(a.id) dieqty 
+                                                (select c.resultid,b.rows_ * b.columns_ -count(a.id) dieqty 
                                                         from wm_dielayoutlist a,wm_dielayout b,wm_waferresult c
-                                                        where a.layoutid=b.layoutid and b.layoutid=c.dielayoutid and lower(trim(a.disposition))<>'notexist' group by c.resultid) td
+                                                        where a.layoutid=b.layoutid and b.layoutid=c.dielayoutid and lower(trim(a.disposition))='notexist' group by c.resultid ,b.rows_, b.columns_) td
                                                 where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
                                                         and instr(tb.device||'|'||tb.layer||'|'||tb.lot||'|','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate);
 
@@ -743,9 +751,9 @@ namespace WR.WCF.Site
                     sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.dieqty
                                                 from wm_waferresult ta,wm_identification tb,
                                                 (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
-                                                (select c.resultid,count(a.id) dieqty 
+                                                (select c.resultid,b.rows_ * b.columns_ -count(a.id) dieqty 
                                                         from wm_dielayoutlist a,wm_dielayout b,wm_waferresult c
-                                                        where a.layoutid=b.layoutid and b.layoutid=c.dielayoutid and lower(trim(a.disposition))<>'notexist' group by c.resultid) td
+                                                        where a.layoutid=b.layoutid and b.layoutid=c.dielayoutid and lower(trim(a.disposition))='notexist' group by c.resultid, b.rows_, b.columns_) td
                                                 where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
                                                         and instr(tb.device||'|||','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate);
 
@@ -753,9 +761,9 @@ namespace WR.WCF.Site
                     sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.dieqty
                                                 from wm_waferresult ta,wm_identification tb,
                                                 (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
-                                                (select c.resultid,count(a.id) dieqty 
+                                                (select c.resultid,b.rows_ * b.columns_ -count(a.id) dieqty 
                                                         from wm_dielayoutlist a,wm_dielayout b,wm_waferresult c
-                                                        where a.layoutid=b.layoutid and b.layoutid=c.dielayoutid and lower(trim(a.disposition))<>'notexist' group by c.resultid) td
+                                                        where a.layoutid=b.layoutid and b.layoutid=c.dielayoutid and lower(trim(a.disposition))='notexist' group by c.resultid, b.rows_, b.columns_) td
                                                 where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
                                                         and instr(tb.device||'|'||tb.layer||'||','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate);
 
@@ -1200,7 +1208,9 @@ namespace WR.WCF.Site
 
                         sql = string.Format("alter tablespace {0} add datafile '{1}' size 50M autoextend on next 50M maxsize UNLIMITED", name.ToUpper(), newFilePath);
 
-                        return db.ExecuteSqlCommand(sql) > 0;
+                        db.ExecuteSqlCommand(sql);
+
+                        return true;
                     }
 
                     return false;

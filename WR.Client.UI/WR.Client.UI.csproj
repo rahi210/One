@@ -542,6 +542,7 @@
     <Content Include="Resources\database-delete.png" />
     <Content Include="Resources\database-download.png" />
     <Content Include="Resources\database-upload.png" />
+    <None Include="Resources\sort.png" />
     <None Include="Resources\tablespace.png" />
     <None Include="Resources\examination.png" />
     <Content Include="Resources\export.png" />

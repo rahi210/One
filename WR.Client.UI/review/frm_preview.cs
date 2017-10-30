@@ -16,6 +16,7 @@ using WR.WCF.DataContract;
 using WR.Client.Controls;
 using WR.Utils;
 using System.Collections;
+using System.ComponentModel;
 
 namespace WR.Client.UI
 {
@@ -58,6 +59,11 @@ namespace WR.Client.UI
         {
             get { return _resultid; }
             set { _resultid = value; }
+        }
+
+        public List<WmdefectlistEntity> DefectSource
+        {
+            get { return (grdData.DataSource as BindingList<WmdefectlistEntity>).ToList(); }
         }
 
         /// <summary>
@@ -277,7 +283,8 @@ namespace WR.Client.UI
                     if (wf == null)
                         return;
 
-                    _dielayoutlist = service.GetDielayoutListById(wf.DIELAYOUTID);
+                    //_dielayoutlist = service.GetDielayoutListById(wf.DIELAYOUTID);
+                    _dielayoutlist = DataCache.GetAllDielayoutListById(service.GetDielayoutListById(wf.DIELAYOUTID));
 
                     List<CMNDICT> hotkey = DataCache.CmnDict.Where(p => p.DICTID == "2010").ToList();
                     hotkey.Add(new CMNDICT() { DICTID = "2010", CODE = null, NAME = "-" });
@@ -338,8 +345,8 @@ namespace WR.Client.UI
                     if (this.InvokeRequired)
                         this.Invoke(new Action(() =>
                         {
-                            //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(defList);
-                            grdData.DataSource = defList;
+                            grdData.DataSource = new BindingCollection<WmdefectlistEntity>(defList);
+                            //grdData.DataSource = defList;
                             lstView.VirtualMode = true;
                             lstView.VirtualListSize = defList.Count;
 
@@ -366,8 +373,8 @@ namespace WR.Client.UI
                         }));
                     else
                     {
-                        //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(defList);
-                        grdData.DataSource = defList;
+                        grdData.DataSource = new BindingCollection<WmdefectlistEntity>(defList);
+                        //grdData.DataSource = defList;
                         lstView.VirtualMode = true;
                         lstView.VirtualListSize = defList.Count;
 
@@ -473,7 +480,7 @@ namespace WR.Client.UI
 
                     if (cnmReclass.Tag.ToString() == "2")
                     {
-                        var list = grdData.DataSource as List<WmdefectlistEntity>;
+                        var list = DefectSource;
                         foreach (var def in picWafer.SelectDefect)
                         {
                             var ent = list.FirstOrDefault(s => s.DieAddress == def.ToString() && s.Cclassid != itm.ID);
@@ -526,10 +533,10 @@ namespace WR.Client.UI
                             ent.ModifiedDefect = ent.INSPID;
                             ent.Description = itm.NAME;
 
-                            if (rowIndex == updateIndex)
-                                UpdateDefectClassification(ent, i);
-
                             grdData.InvalidateRow(grdData.SelectedRows[rowIndex].Index);
+
+                            if (rowIndex == updateIndex)
+                                UpdateDefectClassification(ent, hasReverse ? 0 : i);
                         }
                     }
 
@@ -543,7 +550,7 @@ namespace WR.Client.UI
 
                     if (cnmReclass.Tag.ToString() == "2")
                     {
-                        var list = grdData.DataSource as List<WmdefectlistEntity>;
+                        var list = DefectSource;
                         foreach (var def in picWafer.SelectDefect)
                         {
                             var ent = list.FirstOrDefault(s => s.DieAddress == def.ToString() && s.Cclassid != itm.ID);
@@ -564,7 +571,7 @@ namespace WR.Client.UI
                     }
                     else
                     {
-                        List<WmdefectlistEntity> list = grdData.DataSource as List<WmdefectlistEntity>;
+                        List<WmdefectlistEntity> list = DefectSource;
                         var ent = list[lstView.SelectedIndices[0]];
                         ent.Cclassid = itm.ID;
                         ent.InspclassifiId = itm.ITEMID;
@@ -742,13 +749,13 @@ namespace WR.Client.UI
                     classId = Convert.ToInt32(tlsClass.ComboBox.SelectedValue);
 
                 if (classId != -1)
-                    defectlist = grdData.DataSource as List<WmdefectlistEntity>;
+                    defectlist = DefectSource;
                 else
                     defectlist = _defectlist;
             }
 
             if (!string.IsNullOrEmpty(tlsNewClass.Text))
-                defectlist = grdData.DataSource as List<WmdefectlistEntity>;
+                defectlist = DefectSource;
             else
                 defectlist = _defectlist;
 
@@ -1353,7 +1360,7 @@ namespace WR.Client.UI
         /// <returns></returns>
         private List<WmClassificationItemEntity> GetItemSum()
         {
-            var lst = _defectlist;//grdData.DataSource as List<WmdefectlistEntity>;
+            var lst = _defectlist;//DefectSource;
             var cl = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
 
             if (cl == null)
@@ -1782,10 +1789,10 @@ namespace WR.Client.UI
         {
             if (!grdData.Visible)
             {
-                var list = grdData.DataSource as List<WmdefectlistEntity>;
+                var list = DefectSource;
                 grdData.Visible = true;
-                //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(list);
-                grdData.DataSource = list;
+                grdData.DataSource = new BindingCollection<WmdefectlistEntity>(list);
+                //grdData.DataSource = list;
 
                 lstView.Visible = false;
 
@@ -1830,7 +1837,7 @@ namespace WR.Client.UI
                 if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0)
                 {
                     WmdefectlistEntity selectedent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
-                    List<WmdefectlistEntity> data = grdData.DataSource as List<WmdefectlistEntity>;
+                    List<WmdefectlistEntity> data = DefectSource;
                     int idx = data.FindIndex(p => p.Id == selectedent.Id);
                     lstView.Items[idx].EnsureVisible();
                     lstView.Items[idx].Selected = true;
@@ -1846,7 +1853,7 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void lstView_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-            var list = grdData.DataSource as List<WmdefectlistEntity>;
+            var list = DefectSource;
             if (list == null)
                 return;
 
@@ -1881,7 +1888,7 @@ namespace WR.Client.UI
             if (lstView.SelectedIndices != null && lstView.SelectedIndices.Count > 0)
             {
                 ResetTck();
-                var list = grdData.DataSource as List<WmdefectlistEntity>;
+                var list = DefectSource;
                 if (list == null)
                     return;
                 var ent = list[lstView.SelectedIndices[0]];
@@ -2003,8 +2010,8 @@ namespace WR.Client.UI
                 tlsFilter.Checked = true;
                 var tlst = _defectlist.Where(p => !string.IsNullOrEmpty(p.ImageName)).ToList();
 
-                //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(tlst);
-                grdData.DataSource = tlst;
+                grdData.DataSource = new BindingCollection<WmdefectlistEntity>(tlst);
+                //grdData.DataSource = tlst;
                 lstView.VirtualListSize = tlst.Count;
 
                 if (grdData.Visible)
@@ -2054,8 +2061,8 @@ namespace WR.Client.UI
                     }
                 }
 
-                //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(_defectlist);
-                grdData.DataSource = _defectlist;
+                grdData.DataSource = new BindingCollection<WmdefectlistEntity>(_defectlist);
+                //grdData.DataSource = _defectlist;
                 lstView.VirtualListSize = _defectlist.Count;
             }
         }
@@ -2172,7 +2179,7 @@ namespace WR.Client.UI
         /// <returns></returns>
         private string GetModifyDefect()
         {
-            //var defs = grdData.DataSource as List<WmdefectlistEntity>;
+            //var defs = DefectSource;
             var defs = _defectlist;
             if (defs == null)
                 return "";
@@ -2241,7 +2248,7 @@ namespace WR.Client.UI
                 }
                 else if (lstView.Visible && lstView.SelectedIndices != null && lstView.SelectedIndices.Count > 0)
                 {
-                    var list = grdData.DataSource as List<WmdefectlistEntity>;
+                    var list = DefectSource;
                     DrawDefect(list[lstView.SelectedIndices[0]].DieAddress);
                 }
 
@@ -2392,7 +2399,7 @@ namespace WR.Client.UI
                             {
                                 if (picWafer.SelectDefect.Count > 0 && picWafer.Status == "Reclass")
                                 {
-                                    var list = grdData.DataSource as List<WmdefectlistEntity>;
+                                    var list = DefectSource;
                                     foreach (var def in picWafer.SelectDefect)
                                     {
                                         var ent = list.FirstOrDefault(s => s.DieAddress == def.ToString() && s.Cclassid != clf.ID);
@@ -2448,7 +2455,7 @@ namespace WR.Client.UI
                                                 grdData.InvalidateRow(grdData.SelectedRows[rowIndex].Index);
 
                                                 if (updateIndex == rowIndex)
-                                                    UpdateDefectClassification(ent, i);
+                                                    UpdateDefectClassification(ent, hasReverse ? 0 : i);
 
                                                 //DrawDefect(ent.DieAddress);
 
@@ -2462,7 +2469,7 @@ namespace WR.Client.UI
                             {
                                 if (lstView.SelectedIndices != null && lstView.SelectedIndices.Count > 0)
                                 {
-                                    List<WmdefectlistEntity> list = grdData.DataSource as List<WmdefectlistEntity>;
+                                    List<WmdefectlistEntity> list = DefectSource;
                                     var ent = list[lstView.SelectedIndices[0]];
                                     ent.Cclassid = clf.ID;
                                     ent.InspclassifiId = clf.ITEMID;
@@ -2545,7 +2552,7 @@ namespace WR.Client.UI
             var count = grdData.CurrentCell.RowIndex + num;
             IsSave = false;
 
-            List<WmdefectlistEntity> list = grdData.DataSource as List<WmdefectlistEntity>;
+            List<WmdefectlistEntity> list = DefectSource;
 
             if ((cnmReclass.Tag != null && cnmReclass.Tag.ToString() == "2") || model.Cclassid != 0)
             {
@@ -2661,8 +2668,8 @@ namespace WR.Client.UI
             {
                 var selectDefectList = _defectlist.Where(s => picWafer.SelectDefect.Contains(s.DieAddress)).ToList();
 
-                //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(selectDefectList);
-                grdData.DataSource = selectDefectList;
+                grdData.DataSource = new BindingCollection<WmdefectlistEntity>(selectDefectList);
+                //grdData.DataSource = selectDefectList;
 
                 lstView.VirtualListSize = selectDefectList.Count;
 
@@ -2771,8 +2778,8 @@ namespace WR.Client.UI
             if (classId != -1)
                 list = _defectlist.Where(s => s.Cclassid == Convert.ToInt32(classId)).ToList();
 
-            //grdData.DataSource = new BindingCollection<WmdefectlistEntity>(list);
-            grdData.DataSource = list;
+            grdData.DataSource = new BindingCollection<WmdefectlistEntity>(list);
+            //grdData.DataSource = list;
 
             if (list.Count > 0)
                 DrawDefect(list[0].DieAddress);
@@ -2821,7 +2828,7 @@ namespace WR.Client.UI
             else if (tlsStatus.SelectedIndex == 2)
                 list = list.Where(s => string.IsNullOrEmpty(s.ModifiedDefect)).ToList();
 
-            grdData.DataSource = list;
+            grdData.DataSource = new BindingCollection<WmdefectlistEntity>(list);
         }
 
         /// <summary>
@@ -2927,6 +2934,32 @@ namespace WR.Client.UI
             IsysService service = sysService.GetService();
 
             return service.GetCmn("3020").Count(s => s.CODE == "1") > 0;
+        }
+
+        private void SetGridViewSort(bool isSort)
+        {
+            foreach (DataGridViewColumn col in grdData.Columns)
+            {
+                col.SortMode = isSort ? DataGridViewColumnSortMode.Automatic : DataGridViewColumnSortMode.NotSortable;
+            }
+        }
+
+        private void tlsSort_Click(object sender, EventArgs e)
+        {
+            if (!tlsSort.Checked)
+            {
+                tlsSort.ToolTipText = "Default Mode";
+                tlsSort.Checked = true;
+
+                SetGridViewSort(true);
+            }
+            else
+            {
+                tlsSort.ToolTipText = "Next Die Mode";
+                tlsSort.Checked = false;
+
+                SetGridViewSort(false);
+            }
         }
     }
 

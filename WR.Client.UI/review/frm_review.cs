@@ -1115,7 +1115,7 @@ namespace WR.Client.UI
 
                 IwrService service = wrService.GetService();
                 var dielayout = service.GetDielayoutById(result.DIELAYOUTID);
-                var dielist = service.GetDielayoutListById(result.DIELAYOUTID);
+                var dielist = DataCache.GetAllDielayoutListById(service.GetDielayoutListById(result.DIELAYOUTID));
                 var defectlit = service.GetDefectList(result.RESULTID, "");
                 CHGSinf sinf = new CHGSinf();
                 bool res = sinf.Export(filename, result.RECIPE_ID, result.LOT, result.SUBSTRATE_ID, result.SUBSTRATE_NOTCHLOCATION, dielayout, dielist, defectlit);
@@ -1191,7 +1191,7 @@ namespace WR.Client.UI
                         }
 
                         var dielayout = service.GetDielayoutById(result.DIELAYOUTID);
-                        var dielist = service.GetDielayoutListById(result.DIELAYOUTID);
+                        var dielist = DataCache.GetAllDielayoutListById(service.GetDielayoutListById(result.DIELAYOUTID));
                         var defectlit = service.GetDefectList(result.RESULTID, "");
 
                         CHGSinf sinf = new CHGSinf();
@@ -1323,7 +1323,8 @@ namespace WR.Client.UI
                     //thr.IsBackground = true;
                     //thr.Start();
 
-                    Task.Factory.StartNew(() =>{
+                    Task.Factory.StartNew(() =>
+                    {
                         BatchExportSinf(wfs);
 
                         MsgBoxEx.Info("SINF file is complete.");

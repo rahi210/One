@@ -166,13 +166,13 @@ namespace WR.Client.UI
             var newList = new List<WmdielayoutlistEntitiy>();
 
             if (rows * cols == oldList.Count)
-                return oldList;
+                return oldList.Where(s => !s.DISPOSITION.Trim().Equals("NotExist")).ToList();
 
             for (int i = 0; i < rows; i++)
             {
                 for (int y = 0; y < cols; y++)
                 {
-                    newList.Add(new WmdielayoutlistEntitiy() { ID = System.Guid.NewGuid().ToString(), DIEADDRESSX = y, DIEADDRESSY = i, LAYOUTID = layoutId, COLUMNS_ = cols, ROWS_ = rows });
+                    newList.Add(new WmdielayoutlistEntitiy() { ID = System.Guid.NewGuid().ToString(), DIEADDRESSX = y, DIEADDRESSY = i, LAYOUTID = layoutId, COLUMNS_ = cols, ROWS_ = rows, DISPOSITION = "NotProcess", INSPCLASSIFIID = 0 });
                 }
             }
 
@@ -186,10 +186,12 @@ namespace WR.Client.UI
                             ID = t == null ? n.ID : t.ID,
                             DIEADDRESSX = n.DIEADDRESSX,
                             DIEADDRESSY = n.DIEADDRESSY,
-                            LAYOUTID = n.LAYOUTID,
+                            LAYOUTID = layoutId,
                             DISPOSITION = t == null ? n.DISPOSITION : t.DISPOSITION,
-                            INSPCLASSIFIID = t.INSPCLASSIFIID
-                        }).ToList();
+                            INSPCLASSIFIID = t == null ? n.INSPCLASSIFIID : t.INSPCLASSIFIID,
+                            ROWS_ = rows,
+                            COLUMNS_ = cols
+                        }).Where(s => !s.DISPOSITION.Trim().Equals("NotExist")).ToList();
 
             return list;
         }

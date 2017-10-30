@@ -44,6 +44,7 @@ namespace WR.Client.UI
                     dtEndTime.Value = emPlan.ENDDATE;
 
                     nudUser.Value = emPlan.USERNUM;
+                    nudDefect.Value = emPlan.NUMDEFECT;
 
                     txtRemark.Text = emPlan.REMARK;
                 }
