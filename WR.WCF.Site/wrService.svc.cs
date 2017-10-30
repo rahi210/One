@@ -1540,6 +1540,7 @@ namespace WR.WCF.Site
                         model.STARTDATE = Convert.ToDateTime(stDate);
                         model.ENDDATE = Convert.ToDateTime(edDate);
                         model.USERNUM = usernum;
+                        model.NUMDEFECT = defectnum;
 
                         model.UPDATEID = by;
                         model.UPDATEDATE = DateTime.Now;
