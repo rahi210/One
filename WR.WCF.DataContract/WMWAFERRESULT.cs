@@ -95,7 +95,7 @@ namespace WR.WCF.DataContract
         { get; set; }
 
         [DataMember]
-        public Int64 CHECKEDDATE
+        public Int64? CHECKEDDATE
         { get; set; }
 
         [DataMember]
@@ -125,6 +125,10 @@ namespace WR.WCF.DataContract
 
         [DataMember]
         public string DELBY
+        { get; set; }
+
+        [DataMember]
+        public string ISREVIEW
         { get; set; }
     }
 }

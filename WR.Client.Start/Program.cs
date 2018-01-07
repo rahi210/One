@@ -17,51 +17,61 @@ namespace WR.Client.Start
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(AppDomain_UnhandledException);
-
-            LogService.InitializeService(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Start.exe.config"));
-            log = LogService.Getlog(typeof(Program));
-            log.Fatal("======>=Start up=>=====");
-
-            #region 检查是否有服务器地址
-            string url = Config.GetXmlValue(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Start.exe.config"), "RemoteURL");
-            if (string.IsNullOrEmpty(url))
+            try
             {
-                frm_Set frmSet = new frm_Set();
-                frmSet.ShowDialog();
-            }
 
-            url = Config.GetXmlValue(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Start.exe.config"), "RemoteURL");
-            if (string.IsNullOrEmpty(url))
-            {
-                MessageBox.Show("没有指定服务器地址，不能启动程序！", "信息提示", MessageBoxButtons.OK);
-                return;
-            }
-            #endregion
 
-            #region 检查是否有更新文件
-            using (frm_update set = new frm_update())
-            {
-                if (set.ShowDialog() != DialogResult.OK)
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
+                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(AppDomain_UnhandledException);
+
+                LogService.InitializeService(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Start.exe.config"));
+                log = LogService.Getlog(typeof(Program));
+                log.Fatal("======>=Start up=>=====");
+
+                #region 检查是否有服务器地址
+                string url = Config.GetXmlValue(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Start.exe.config"), "RemoteURL");
+                if (string.IsNullOrEmpty(url))
+                {
+                    frm_Set frmSet = new frm_Set();
+                    frmSet.ShowDialog();
+                }
+
+                url = Config.GetXmlValue(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Start.exe.config"), "RemoteURL");
+                if (string.IsNullOrEmpty(url))
+                {
+                    MessageBox.Show("没有指定服务器地址，不能启动程序！", "信息提示", MessageBoxButtons.OK);
                     return;
-            }
-            #endregion
+                }
+                #endregion
 
-            //System.Diagnostics.Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WR.Pos.exe"));
-            Form frm = System.Reflection.Assembly.LoadFrom(Application.StartupPath + "\\WR.Client.UI.dll").CreateInstance("WR.Client.UI.frm_main") as Form;
-            if (frm != null)
+                #region 检查是否有更新文件
+                using (frm_update set = new frm_update())
+                {
+                    if (set.ShowDialog() != DialogResult.OK)
+                        return;
+                }
+                #endregion
+
+                //System.Diagnostics.Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WR.Pos.exe"));
+                Form frm = System.Reflection.Assembly.LoadFrom(Application.StartupPath + "\\WR.Client.UI.dll").CreateInstance("WR.Client.UI.frm_main") as Form;
+                if (frm != null)
+                {
+                    Application.Run(frm);
+                    log.Fatal("=========<=Shut down=<============");
+                }
+                else
+                    log.Fatal("not find Assembly");
+
+                Application.DoEvents();
+                Application.Exit();
+            }
+            catch (Exception ex)
             {
-                Application.Run(frm);
-                log.Fatal("=========<=Shut down=<============");
+                log.Error(ex);
+                MessageBox.Show("操作中出现错误！", "错误提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else
-                log.Fatal("not find Assembly");
-
-            Application.DoEvents();
-            Application.Exit();
         }
 
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)

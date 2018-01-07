@@ -214,6 +214,12 @@ namespace WR.Client.UI
         #region 试卷
         private void tlPlanAdd_Click(object sender, EventArgs e)
         {
+            if (grdLibrary.SelectedRows == null || grdLibrary.SelectedRows.Count < 1)
+            {
+                MsgBoxEx.Info("Please add a new library");
+                return;
+            }
+
             string lid = grdLibrary.SelectedRows[0].Cells["LID"].Value.ToString();
 
             frm_planedit frm = new frm_planedit();
@@ -226,6 +232,12 @@ namespace WR.Client.UI
 
         private void tlPlanEdit_Click(object sender, EventArgs e)
         {
+            if (grdPlan.SelectedRows == null || grdPlan.SelectedRows.Count < 1)
+            {
+                MsgBoxEx.Info("Please select the updated data");
+                return;
+            }
+
             string id = grdPlan.SelectedRows[0].Cells["pid"].Value.ToString();
             var data = grdPlan.DataSource as List<EMPLAN>;
 
@@ -239,7 +251,10 @@ namespace WR.Client.UI
         private void tlPlanDelete_Click(object sender, EventArgs e)
         {
             if (grdPlan.SelectedRows == null || grdPlan.SelectedRows.Count < 1)
+            {
+                MsgBoxEx.Info("Please select Delete data");
                 return;
+            }
 
             if (MsgBoxEx.ConfirmYesNo("Are you sure to delete the record?") == DialogResult.No)
                 return;
@@ -255,6 +270,9 @@ namespace WR.Client.UI
 
         private void tlPlanRefresh_Click(object sender, EventArgs e)
         {
+            if (grdLibrary.SelectedRows == null || grdLibrary.SelectedRows.Count < 1)
+                return;
+
             string lid = grdLibrary.SelectedRows[0].Cells["LID"].Value.ToString();
 
             LoadPlanData(lid);

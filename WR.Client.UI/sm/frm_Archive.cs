@@ -129,6 +129,29 @@ namespace WR.Client.UI
             cbxDisk.SelectedIndex = 0;
 
             txtArchiveDate.Text = DataCache.CmnDict.Where(s => s.DICTID == "3021" && s.CODE == "0").Select(s => s.VALUE).FirstOrDefault();
+
+            ArchiveDate();
+        }
+
+        private void ArchiveDate()
+        {
+            var lastDate = DataCache.CmnDict.Where(s => s.DICTID == "3021" && s.CODE == "0").Select(s => s.VALUE).FirstOrDefault();
+
+            if (string.IsNullOrEmpty(lastDate))
+            {
+                MsgBoxEx.Info("Data not yet archived, please archive now.");
+            }
+            else
+            {
+                var intervalDay = (DateTime.Now - DateTime.ParseExact(lastDate,
+                              "yyyyMMdd",
+                               System.Globalization.CultureInfo.InvariantCulture)).Days;
+
+                if (intervalDay > 7)
+                {
+                    MsgBoxEx.Info("It's been over seven days since the last archive, please archive now.");
+                }
+            }
         }
 
         private void btnArchive_Click(object sender, EventArgs e)

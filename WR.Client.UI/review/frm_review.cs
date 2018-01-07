@@ -321,6 +321,10 @@ namespace WR.Client.UI
                     var ent = list.FirstOrDefault(p => p.RESULTID == e.Node.Tag.ToString());
                     if (ent != null)
                     {
+                        var isReview = GetWaferResultIsReview(ent.RESULTID);
+                        if (isReview)
+                            return;
+
                         frm_main frm = this.Tag as frm_main;
                         if (frm != null)
                         {
@@ -409,6 +413,11 @@ namespace WR.Client.UI
             if (frm != null)
             {
                 var ent = grdData.Rows[e.RowIndex].DataBoundItem as WmwaferResultEntity;
+
+                var isReview = GetWaferResultIsReview(ent.RESULTID);
+                if (isReview)
+                    return;
+
                 frm.Oparams = new string[] { ent.RESULTID, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT.ToString(), ent.SFIELD.ToString() };
                 frm.mnuSelect_ItemClick(frm.mnuReview, null);
             }
@@ -483,6 +492,11 @@ namespace WR.Client.UI
                 if (frm != null)
                 {
                     var ent = grdData.SelectedRows[0].DataBoundItem as WmwaferResultEntity;
+
+                    var isReview = GetWaferResultIsReview(ent.RESULTID);
+                    if (isReview)
+                        return;
+
                     frm.Oparams = new string[] { ent.RESULTID, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT.ToString(), ent.SFIELD.ToString() };
                     frm.mnuSelect_ItemClick(frm.mnuReview, null);
                 }
@@ -556,6 +570,11 @@ namespace WR.Client.UI
                 {
                     //var ent = grdData.SelectedRows[0].DataBoundItem as WmwaferResultEntity;
                     var ent = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == trList.SelectedNode.Tag.ToString());
+
+                    var isReview = GetWaferResultIsReview(ent.RESULTID);
+                    if (isReview)
+                        return;
+
                     frm.Oparams = new string[] { ent.RESULTID, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT.ToString(), ent.SFIELD.ToString() };
                     frm.mnuSelect_ItemClick(frm.mnuReview, null);
                 }
@@ -968,6 +987,11 @@ namespace WR.Client.UI
             {
                 var ent = grdData.SelectedRows[0].DataBoundItem as WmwaferResultEntity;
                 frm.Oparams = new string[] { ent.RESULTID, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT.ToString(), ent.SFIELD.ToString() };
+
+                var isReview = GetWaferResultIsReview(ent.RESULTID);
+                if (isReview)
+                    return;
+
                 frm.mnuSelect_ItemClick(frm.mnuReview, null);
             }
         }
@@ -1404,6 +1428,34 @@ namespace WR.Client.UI
             var frmMerge = new frm_merge();
 
             frmMerge.ShowDialog();
+        }
+
+        private bool GetWaferResultIsReview(string id)
+        {
+            bool isReview = false;
+            IwrService service = wrService.GetService();
+
+            var model = service.GetWaferResultById(id);
+
+            if (model != null)
+            {
+                isReview = model.ISREVIEW.Equals("1") ? true : false;
+            }
+
+            //if (!isReiview)
+            //{
+            //    service.UpdateWaferResultToReadOnly(id, "1");
+            //}
+
+            if (isReview)
+            {
+                var dialog = MsgBoxEx.ConfirmYesNo("Other users are working on this file,Are you sure to continue?");
+
+                if (dialog == System.Windows.Forms.DialogResult.Yes)
+                    isReview = false;
+            }
+
+            return isReview;
         }
     }
 }

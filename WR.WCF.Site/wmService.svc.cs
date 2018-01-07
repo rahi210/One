@@ -26,8 +26,10 @@ namespace WR.WCF.Site
             {
                 List<FileEntity> appFiles = DataCache.AppFiles();
 
+                //return appFiles.Where(p => p.LastTime > DateTime.ParseExact(updateDate, "yyyyMMddHHmmss",
+                //    System.Globalization.CultureInfo.GetCultureInfo("zh-CN"))).ToList();
                 return appFiles.Where(p => p.LastTime > DateTime.ParseExact(updateDate, "yyyyMMddHHmmss",
-                    System.Globalization.CultureInfo.GetCultureInfo("zh-CN"))).ToList();
+                   System.Globalization.CultureInfo.InvariantCulture)).ToList();
             }
             catch (Exception ex)
             {

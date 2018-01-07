@@ -17,6 +17,13 @@ namespace WR.WCF.Site
 {
     public class wrService : ServiceBase, IwrService
     {
+        private static LoggerEx log = LogService.Getlog(typeof(wrService));
+
+        private void AddLog(string methodName, string info)
+        {
+            log.Info(string.Format("{0} {1}.....", methodName, info));
+        }
+
         /// <summary>
         /// 获取缺陷分类
         /// </summary>
@@ -406,6 +413,8 @@ namespace WR.WCF.Site
         /// <returns></returns>
         public int UpdateDefect(string resultid, string checkedby, string mclassid, string finish)
         {
+            AddLog("UpdateDefect", "start");
+
             StringBuilder sbt = new StringBuilder();
             using (BFdbContext db = new BFdbContext())
             {
@@ -414,11 +423,14 @@ namespace WR.WCF.Site
                 //                                (select ba.layoutid, count(ba.id) defectnum from wm_dielayoutlist ba where lower(trim(ba.disposition)) <> 'notexist' and ba.inspclassifiid<>'0' group by ba.layoutid) c
                 //                                where a.dielayoutid=b.layoutid and a.dielayoutid = c.layoutid and a.resultid='{0}'", resultid);
                 sbt.AppendFormat(@"select a.resultid,a.checkeddate,a.dielayoutid from wm_waferresult a
-                                    where a.resultid='{0}'", resultid);
+                                    where a.resultid='{0}' and a.ischecked <> '2'", resultid);
 
                 var info = db.SqlQuery<WmwaferInfoEntity>(sbt.ToString()).ToList();
                 if (info == null || info.Count < 1)
+                {
+                    AddLog("UpdateDefect", "Data does not exist or completed" + sbt.ToString());
                     return -1;
+                }
 
                 var tran = db.BeginTransaction();
 
@@ -426,11 +438,16 @@ namespace WR.WCF.Site
                 {
                     sbt.Clear();
                     //更新defect表
+//                    sbt.AppendFormat(@"update wm_defectlist set ischecked='1',checkeddate={0:yyyyMMddHHmmss},checkedby='{1}'
+//                                     where (passid,inspid) in (select a.passid,a.inspid from wm_inspectionpass a,wm_inspectioninfo b where a.inspid=b.inspid and b.resultid='{2}')",
+//                                     DateTime.Now, checkedby, resultid);
+
                     sbt.AppendFormat(@"update wm_defectlist set ischecked='1',checkeddate={0:yyyyMMddHHmmss},checkedby='{1}'
-                                     where (passid,inspid) in (select a.passid,a.inspid from wm_inspectionpass a,wm_inspectioninfo b where a.inspid=b.inspid and b.resultid='{2}')",
-                                     DateTime.Now, checkedby, resultid);
+                                     where resultid='{2}'",
+                                    DateTime.Now, checkedby, resultid);
 
                     db.ExecuteSqlCommand(sbt.ToString());
+                    AddLog("UpdateDefect", sbt.ToString());
 
                     //修改后的defect
                     if (!string.IsNullOrEmpty(mclassid))
@@ -451,6 +468,8 @@ namespace WR.WCF.Site
                                 db.ExecuteSqlCommand(sbt.ToString());
                             }
                         }
+
+                        AddLog("UpdateDefect", mclassid);
                     }
 
                     //更新waferresult表
@@ -466,6 +485,7 @@ namespace WR.WCF.Site
 
                     info = db.SqlQuery<WmwaferInfoEntity>(sbt.ToString()).ToList();
                     var y = (info[0].yieldnum.Value * 1.0 - info[0].defectnum.Value * 1.0) / info[0].yieldnum.Value;
+                    AddLog("UpdateDefect", sbt.ToString());
 
                     sbt.Clear();
                     sbt.AppendFormat("update wm_waferresult set ischecked='{0}',checkeddate={1},checkedby='{2}',sfield={3},numdefect={4} where resultid='{5}'",
@@ -479,6 +499,10 @@ namespace WR.WCF.Site
                     db.ExecuteSqlCommand(sbt.ToString());
 
                     tran.Commit();
+
+                    AddLog("UpdateDefect", sbt.ToString());
+                    AddLog("UpdateDefect", "end");
+
                     return 1;
                 }
                 catch (Exception ex)
@@ -1882,5 +1906,29 @@ namespace WR.WCF.Site
             }
         }
         #endregion
+
+        /// <summary>
+        /// 更新检查结果的isreview状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="isreview"></param>
+        /// <returns></returns>
+        public int UpdateWaferResultToReadOnly(string id, string isreview)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    string sql = string.Format("update wm_waferresult t set t.isreview='{0}' where t.resultid='{1}'", isreview, id);
+
+                    return db.ExecuteSqlCommand(sql);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
     }
 }

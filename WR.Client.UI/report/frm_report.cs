@@ -249,38 +249,49 @@ namespace WR.Client.UI
 
             ShowLoading(ToopEnum.loading);
 
-            switch (tabReport.SelectedTab.Name)
+            try
             {
-                case "tabDensity":
-                    ShowDensity();
-                    break;
-                case "tabDefective":
-                    ShowCountCategory();
-                    break;
-                case "tabDie":
-                    ShowDefectiveDie();
-                    break;
-                case "tabDieSum":
-                    ShowInspDie();
-                    break;
-                case "tabDefectList":
-                    ShowDefectiveList();
-                    break;
-                case "tabGood":
-                    //ShowGoodDie();
-                    ShowGoodDieNew();
-                    break;
-                case "tabYield":
-                    ShowYield();
-                    break;
-                case "tabPolat":
-                    ShowPolat();
-                    break;
-                default:
-                    break;
-            }
 
-            CloseLoading();
+
+                switch (tabReport.SelectedTab.Name)
+                {
+                    case "tabDensity":
+                        ShowDensity();
+                        break;
+                    case "tabDefective":
+                        ShowCountCategory();
+                        break;
+                    case "tabDie":
+                        ShowDefectiveDie();
+                        break;
+                    case "tabDieSum":
+                        ShowInspDie();
+                        break;
+                    case "tabDefectList":
+                        ShowDefectiveList();
+                        break;
+                    case "tabGood":
+                        //ShowGoodDie();
+                        ShowGoodDieNew();
+                        break;
+                    case "tabYield":
+                        ShowYield();
+                        break;
+                    case "tabPolat":
+                        ShowPolat();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                CloseLoading();
+            }
         }
 
         private string GetLot()
@@ -366,19 +377,20 @@ namespace WR.Client.UI
         /// <param name="list"></param>
         private void ChtShow(List<WmCategoryReport> list)
         {
-            list = list.OrderByDescending(s => s.ID).ToList();
+            //list = list.OrderByDescending(s => s.ID).ToList();
 
             var serie = chtDefect.Series[0];
             serie.Points.Clear();
 
-            for (int i = 0; i < list.Count; i++)
+            for (int i = list.Count - 1; i >= 0; i--)
             {
                 if (list[i].DefectNum < 1)
                     continue;
 
                 DataPoint p = new DataPoint();
                 p.AxisLabel = list[i].DESCRIPTION;
-                p.SetValueXY(i + 1, list[i].DefectNum);
+                //p.SetValueXY(i + 1, list[i].DefectNum);
+                p.SetValueXY(list.Count - i, list[i].DefectNum);
                 serie.Points.Add(p);
             }
         }
@@ -981,37 +993,43 @@ namespace WR.Client.UI
                        new string[] { "List of wafer numbers:", lblGoodDieListNum.Text },
                        grdGoodDie, sd.FileName, true);
                     break;
+                //case "tabYield":
+                //    string tmpfile = Path.Combine(Application.StartupPath, Guid.NewGuid().ToString() + ".xls");
+                //    File.WriteAllBytes(tmpfile, global::WR.Client.UI.Properties.Resources.yieldreport);
+
+                //    DataTable dtSrc = grdYields.DataSource as DataTable;
+                //    DataTable dtSum = new DataTable();
+                //    dtSum.Columns.Add("classify", typeof(string));
+                //    dtSum.Columns.Add("defectnum", typeof(Int64));
+                //    dtSum.Columns.Add("diecount", typeof(Int64));
+                //    dtSum.Columns.Add("defecttotal", typeof(Int64));
+
+                //    DataRow drSum = dtSrc.Rows[dtSrc.Rows.Count - 1];
+                //    Int64 diecnt = Int64.Parse(drSum[dtSrc.Columns.Count - 1].ToString());
+                //    Int64 defcnt = 0;
+                //    for (int i = 1; i < dtSrc.Columns.Count - 1; i++)
+                //    {
+                //        defcnt += Int64.Parse(drSum[i].ToString());
+                //    }
+                //    for (int i = 1; i < dtSrc.Columns.Count; i++)
+                //    {
+                //        if ((Int64)drSum[i] <= 0)
+                //            continue;
+
+                //        DataRow dr = dtSum.NewRow();
+                //        dr["classify"] = dtSrc.Columns[i].ColumnName;
+                //        dr["defectnum"] = drSum[i];
+                //        dr["diecount"] = diecnt;
+                //        dr["defecttotal"] = defcnt;
+                //        dtSum.Rows.Add(dr);
+                //    }
+                //    NpoiHelper.GridToExcelYield(tmpfile, sd.FileName, dtSrc, dtSum);
+                //    break;
                 case "tabYield":
-                    string tmpfile = Path.Combine(Application.StartupPath, Guid.NewGuid().ToString() + ".xls");
-                    File.WriteAllBytes(tmpfile, global::WR.Client.UI.Properties.Resources.yieldreport);
-
-                    DataTable dtSrc = grdYields.DataSource as DataTable;
-                    DataTable dtSum = new DataTable();
-                    dtSum.Columns.Add("classify", typeof(string));
-                    dtSum.Columns.Add("defectnum", typeof(Int64));
-                    dtSum.Columns.Add("diecount", typeof(Int64));
-                    dtSum.Columns.Add("defecttotal", typeof(Int64));
-
-                    DataRow drSum = dtSrc.Rows[dtSrc.Rows.Count - 1];
-                    Int64 diecnt = Int64.Parse(drSum[dtSrc.Columns.Count - 1].ToString());
-                    Int64 defcnt = 0;
-                    for (int i = 1; i < dtSrc.Columns.Count - 1; i++)
-                    {
-                        defcnt += Int64.Parse(drSum[i].ToString());
-                    }
-                    for (int i = 1; i < dtSrc.Columns.Count; i++)
-                    {
-                        if ((Int64)drSum[i] <= 0)
-                            continue;
-
-                        DataRow dr = dtSum.NewRow();
-                        dr["classify"] = dtSrc.Columns[i].ColumnName;
-                        dr["defectnum"] = drSum[i];
-                        dr["diecount"] = diecnt;
-                        dr["defecttotal"] = defcnt;
-                        dtSum.Rows.Add(dr);
-                    }
-                    NpoiHelper.GridToExcelYield(tmpfile, sd.FileName, dtSrc, dtSum);
+                    NpoiHelper.GridToExcelByNPOI("Yield and Defect Report", cbxLot.Text.Trim(),
+                       string.Format("{0:yyyy/MM/dd}-{1:yyyy/MM/dd}", dtDate.Value, dateTo.Value),
+                       null, null, null,
+                       grdYields, sd.FileName, false);
                     break;
                 case "tabPolat":
                     string tmpfile2 = Path.Combine(Application.StartupPath, Guid.NewGuid().ToString() + ".xls");
@@ -1341,7 +1359,7 @@ namespace WR.Client.UI
                 dtSum.Columns.Add("CUM", typeof(double));
 
                 DataRow drSum = dtSrc.Rows[dtSrc.Rows.Count - 1];
-  
+
                 for (int i = 1; i < dtSrc.Columns.Count; i++)
                 {
                     if ((Int64)drSum[i] <= 0)
@@ -1352,7 +1370,7 @@ namespace WR.Client.UI
                     DataRow dr = dtSum.NewRow();
                     dr["classify"] = dtSrc.Columns[i].ColumnName;
                     dr["defectnum"] = drSum[i];
-                   
+
                     dtSum.Rows.Add(dr);
                 }
 

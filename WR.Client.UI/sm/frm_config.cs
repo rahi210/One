@@ -170,10 +170,10 @@ namespace WR.Client.UI
             if (cbxSpec.Checked)
             {
                 double totalday = (dateTo.Value - dtDate.Value).TotalDays;
-                if (totalday > 10)
+                if (totalday > 365)
                 {
                     dateTo.Focus();
-                    MsgBoxEx.Info("Please select the time period within 10 days.");
+                    MsgBoxEx.Info("Please select the time period within 365 days.");
                     return;
                 }
                 else if (totalday < 0)

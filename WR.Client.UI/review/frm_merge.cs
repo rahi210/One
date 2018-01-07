@@ -140,6 +140,7 @@ namespace WR.Client.UI
                             catch (Exception ex)
                             {
                                 MsgBoxEx.Error(string.Format("{0},In line:{1},File Name:{2}", ex.Message, i + 1, sinf.Name));
+                                return;
                             }
                         }
                     }

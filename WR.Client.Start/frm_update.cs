@@ -69,23 +69,23 @@ namespace WR.Client.Start
 
         private bool AppUpdate()
         {
-            string pathTmp = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "update");
-
-            //上次更新日期
-            string updateDate = Config.GetXmlValue(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Start.exe.config"), "AppUpdate");
-            DateTime date_ = DateTime.MinValue;
-            //如果更新日期格式错误，初始最早日期
-            if (!DateTime.TryParseExact(updateDate, "yyyy-MM-dd HH:mm:ss",
-                System.Globalization.CultureInfo.GetCultureInfo("zh-CN"),
-                System.Globalization.DateTimeStyles.None,
-                out date_))
-                date_ = DateTime.ParseExact("20130101", "yyyyMMdd",
-                    System.Globalization.CultureInfo.GetCultureInfo("zh-CN"));
-
-            updateDate = date_.ToString("yyyyMMddHHmmss");
-
             try
             {
+                string pathTmp = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "update");
+
+                //上次更新日期
+                string updateDate = Config.GetXmlValue(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Start.exe.config"), "AppUpdate");
+                DateTime date_ = DateTime.MinValue;
+                //如果更新日期格式错误，初始最早日期
+                if (!DateTime.TryParseExact(updateDate, "yyyy-MM-dd HH:mm:ss",
+                    System.Globalization.CultureInfo.GetCultureInfo("zh-CN"),
+                    System.Globalization.DateTimeStyles.None,
+                    out date_))
+                    date_ = DateTime.ParseExact("20130101", "yyyyMMdd",
+                        System.Globalization.CultureInfo.GetCultureInfo("zh-CN"));
+
+                updateDate = date_.ToString("yyyyMMddHHmmss");
+
                 wmService service = new wmService();
                 List<FileEntity> files = service.GetChannel().GetAppFilesList(updateDate);
 
@@ -184,7 +184,7 @@ namespace WR.Client.Start
                     string[] files = Directory.GetFiles(pathTmp);
                     foreach (string file in files)
                     {
-                        FileInfo fileinfo = new FileInfo(file); 
+                        FileInfo fileinfo = new FileInfo(file);
                         string filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileinfo.Name);
                         if (File.Exists(filename))
                             File.Delete(filename);

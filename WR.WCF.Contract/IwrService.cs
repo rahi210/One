@@ -163,5 +163,8 @@ namespace WR.WCF.Contract
         int GetPaper(string by);
         [OperationContract]
         List<WMCLASSIFICATIONITEM> GetClassificationItemByResultId(string resultid);
+
+        [OperationContract]
+        int UpdateWaferResultToReadOnly(string id, string isreview);
     }
 }

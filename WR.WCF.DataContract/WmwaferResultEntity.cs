@@ -106,5 +106,9 @@ namespace WR.WCF.DataContract
 
         public decimal? LFIELD
         { get; set; }
+
+        [DataMember]
+        public string ISREVIEW
+        { get; set; }
     }
 }

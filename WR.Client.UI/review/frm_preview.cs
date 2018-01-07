@@ -283,6 +283,7 @@ namespace WR.Client.UI
                     if (wf == null)
                         return;
 
+                    service.UpdateWaferResultToReadOnly(Resultid, "1");
                     //_dielayoutlist = service.GetDielayoutListById(wf.DIELAYOUTID);
                     _dielayoutlist = DataCache.GetAllDielayoutListById(service.GetDielayoutListById(wf.DIELAYOUTID));
 
@@ -1915,6 +1916,9 @@ namespace WR.Client.UI
             if (tlsFilter.Checked)
                 tlsFilter.Checked = false;
 
+            IwrService service = wrService.GetService();
+            service.UpdateWaferResultToReadOnly(Resultid, "0");
+
             int nextid = 0;
             int currid = DataCache.WaferResultInfo.FindIndex(p => p.RESULTID == Resultid);
             if (currid < 0)
@@ -1926,6 +1930,11 @@ namespace WR.Client.UI
 
             var ent = DataCache.WaferResultInfo[nextid];
             Resultid = ent.RESULTID;
+
+            var isReview = GetWaferResultIsReview(ent.RESULTID);
+            if (isReview)
+                return;
+
             SaveResultid(Resultid, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT, ent.SFIELD);
 
             Oparams = new string[] { ent.RESULTID, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT.ToString(), ent.SFIELD.ToString() };
@@ -1968,6 +1977,9 @@ namespace WR.Client.UI
             if (tlsFilter.Checked)
                 tlsFilter.Checked = false;
 
+            IwrService service = wrService.GetService();
+            service.UpdateWaferResultToReadOnly(Resultid, "0");
+
             int nextid = 0;
             int currid = DataCache.WaferResultInfo.FindIndex(p => p.RESULTID == Resultid);
             if (currid < 0)
@@ -1979,6 +1991,11 @@ namespace WR.Client.UI
 
             var ent = DataCache.WaferResultInfo[nextid];
             Resultid = ent.RESULTID;
+
+            var isReview = GetWaferResultIsReview(ent.RESULTID);
+            if (isReview)
+                return;
+
             SaveResultid(Resultid, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT, ent.SFIELD);
 
             Oparams = new string[] { ent.RESULTID, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT.ToString(), ent.SFIELD.ToString() };
@@ -2569,12 +2586,15 @@ namespace WR.Client.UI
 
                         //将一个Die上的某一缺陷复判为某一缺陷类型或reject后，该相同Die上的其余缺陷不要自动复判，保留其原有的缺陷类型
                         //（该功能待实施更新），但要自动跳过这些相同Die上的缺陷，减少复判次数（该功能目前已具备）。
-                        //list[index].Cclassid = model.Cclassid;
-                        //list[index].InspclassifiId = model.InspclassifiId;
-                        //list[index].ModifiedDefect = model.ModifiedDefect;
-                        //list[index].Description = model.Description;
+                        if ((cnmReclass.Tag != null && cnmReclass.Tag.ToString() == "2") || picWafer.Status == "Reclass")
+                        {
+                            list[index].Cclassid = model.Cclassid;
+                            list[index].InspclassifiId = model.InspclassifiId;
+                            list[index].ModifiedDefect = model.ModifiedDefect;
+                            list[index].Description = model.Description;
 
-                        //UpdateDieLayout(list[index].DieAddress, (int)model.Cclassid);
+                            UpdateDieLayout(list[index].DieAddress, (int)model.Cclassid);
+                        }
 
                         if (grdData.Visible)
                             grdData.InvalidateRow(index);
@@ -2588,7 +2608,7 @@ namespace WR.Client.UI
                 }
             }
 
-            if (cnmReclass.Tag != null && cnmReclass.Tag.ToString() == "2")
+            if ((cnmReclass.Tag != null && cnmReclass.Tag.ToString() == "2") || picWafer.Status == "Reclass")
             {
                 //获取die下其他的缺陷
                 var defectIdList = list.Where(s => s.DieAddress == model.DieAddress
@@ -2603,10 +2623,11 @@ namespace WR.Client.UI
 
                     //将一个Die上的某一缺陷复判为某一缺陷类型或reject后，该相同Die上的其余缺陷不要自动复判，保留其原有的缺陷类型
                     //（该功能待实施更新），但要自动跳过这些相同Die上的缺陷，减少复判次数（该功能目前已具备）。
-                    //list[index].Cclassid = model.Cclassid;
-                    //list[index].InspclassifiId = model.InspclassifiId;
-                    //list[index].ModifiedDefect = model.ModifiedDefect;
-                    //list[index].Description = model.Description;
+
+                    list[index].Cclassid = model.Cclassid;
+                    list[index].InspclassifiId = model.InspclassifiId;
+                    list[index].ModifiedDefect = model.ModifiedDefect;
+                    list[index].Description = model.Description;
 
                     count = index;
                     if (grdData.Visible)
@@ -2841,6 +2862,9 @@ namespace WR.Client.UI
             if (IsSave == false && MsgBoxEx.ConfirmYesNo("Are you sure to save the changes") == DialogResult.Yes)
                 timer2_Tick(sender, e);
 
+            IwrService service = wrService.GetService();
+            service.UpdateWaferResultToReadOnly(Resultid, "0");
+
             if (IsLayoutRole)
             {
                 var layout = string.Empty;
@@ -2887,7 +2911,7 @@ namespace WR.Client.UI
 
         private void picWafer_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right && picWafer.SelectRect != null && picWafer.Status == "Reclass" && picWafer.SelectDefect.Count > 0)
+            if (e.Button == MouseButtons.Right && picWafer.SelectRect != null && (picWafer.Status == "Reclass" || picWafer.Status == "ReDie") && picWafer.SelectDefect.Count > 0)
             {
                 if (picWafer.SelectRect.Contains(e.X, e.Y))
                 {
@@ -2960,6 +2984,29 @@ namespace WR.Client.UI
 
                 SetGridViewSort(false);
             }
+        }
+
+        private bool GetWaferResultIsReview(string id)
+        {
+            bool isReview = false;
+            IwrService service = wrService.GetService();
+
+            var model = service.GetWaferResultById(id);
+
+            if (model != null)
+            {
+                isReview = model.ISREVIEW.Equals("1") ? true : false;
+            }
+
+            if (isReview)
+            {
+                var dialog = MsgBoxEx.ConfirmYesNo("Other users are working on this file,Are you sure to continue?");
+
+                if (dialog == System.Windows.Forms.DialogResult.Yes)
+                    isReview = false;
+            }
+
+            return isReview;
         }
     }
 

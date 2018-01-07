@@ -30,25 +30,26 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_preview));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.lstView = new System.Windows.Forms.ListView();
             this.cnmReclass = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tlsReclass = new System.Windows.Forms.ToolStripMenuItem();
             this.imgsView = new System.Windows.Forms.ImageList(this.components);
             this.grdData = new CRD.WinUI.Editors.WrDataGridView();
             this.ColCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -74,20 +75,43 @@
             this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.tlsList = new System.Windows.Forms.ToolStripButton();
+            this.tlsThum = new System.Windows.Forms.ToolStripButton();
+            this.tlsFilter = new System.Windows.Forms.ToolStripButton();
+            this.tlsSort = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.tlsPsample = new System.Windows.Forms.ToolStripButton();
+            this.tlsNsample = new System.Windows.Forms.ToolStripButton();
+            this.tlsPpoint = new System.Windows.Forms.ToolStripButton();
+            this.tlsNpoint = new System.Windows.Forms.ToolStripButton();
+            this.tlsSaveResult = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tlsFinish = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tlsStatus = new System.Windows.Forms.ToolStripComboBox();
             this.tlsClass = new System.Windows.Forms.ToolStripComboBox();
             this.pnlPic = new System.Windows.Forms.Panel();
             this.tckContract = new System.Windows.Forms.TrackBar();
             this.tckBright = new System.Windows.Forms.TrackBar();
+            this.PicShow = new WR.Client.Controls.WrPictureBox();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.lblCapture = new System.Windows.Forms.Label();
+            this.lbl_P_Bright = new System.Windows.Forms.Label();
+            this.lbl_P_Restore = new System.Windows.Forms.Label();
+            this.lbl_P_BrightK = new System.Windows.Forms.Label();
+            this.lbl_P_Save = new System.Windows.Forms.Label();
+            this.lbl_P_Out = new System.Windows.Forms.Label();
+            this.lbl_P_In = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.splitter2 = new System.Windows.Forms.Splitter();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
+            this.picWafer = new WR.Client.Controls.WrPictureBox();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.lblReclass = new System.Windows.Forms.Label();
+            this.lblReset = new System.Windows.Forms.Label();
+            this.lblLotOut = new System.Windows.Forms.Label();
+            this.lblLotIn = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.pnlTitile = new System.Windows.Forms.Panel();
             this.lblWaferID = new System.Windows.Forms.Label();
@@ -106,6 +130,9 @@
             this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column16 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mnFront = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tlsEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.tlsSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.tlsClassCancel = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.grdReport = new CRD.WinUI.Editors.WrDataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -123,33 +150,6 @@
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.splitter3 = new System.Windows.Forms.Splitter();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
-            this.PicShow = new WR.Client.Controls.WrPictureBox();
-            this.lblCapture = new System.Windows.Forms.Label();
-            this.lbl_P_Bright = new System.Windows.Forms.Label();
-            this.lbl_P_Restore = new System.Windows.Forms.Label();
-            this.lbl_P_BrightK = new System.Windows.Forms.Label();
-            this.lbl_P_Save = new System.Windows.Forms.Label();
-            this.lbl_P_Out = new System.Windows.Forms.Label();
-            this.lbl_P_In = new System.Windows.Forms.Label();
-            this.tlsReclass = new System.Windows.Forms.ToolStripMenuItem();
-            this.tlsList = new System.Windows.Forms.ToolStripButton();
-            this.tlsThum = new System.Windows.Forms.ToolStripButton();
-            this.tlsFilter = new System.Windows.Forms.ToolStripButton();
-            this.tlsSort = new System.Windows.Forms.ToolStripButton();
-            this.tlsPsample = new System.Windows.Forms.ToolStripButton();
-            this.tlsNsample = new System.Windows.Forms.ToolStripButton();
-            this.tlsPpoint = new System.Windows.Forms.ToolStripButton();
-            this.tlsNpoint = new System.Windows.Forms.ToolStripButton();
-            this.tlsSaveResult = new System.Windows.Forms.ToolStripButton();
-            this.tlsFinish = new System.Windows.Forms.ToolStripButton();
-            this.picWafer = new WR.Client.Controls.WrPictureBox();
-            this.lblReclass = new System.Windows.Forms.Label();
-            this.lblReset = new System.Windows.Forms.Label();
-            this.lblLotOut = new System.Windows.Forms.Label();
-            this.lblLotIn = new System.Windows.Forms.Label();
-            this.tlsEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tlsSave = new System.Windows.Forms.ToolStripMenuItem();
-            this.tlsClassCancel = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.cnmReclass.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdData)).BeginInit();
@@ -157,10 +157,12 @@
             this.pnlPic.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tckContract)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tckBright)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PicShow)).BeginInit();
             this.panel5.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picWafer)).BeginInit();
             this.panel6.SuspendLayout();
             this.pnlTitile.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -170,8 +172,6 @@
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdReport)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chtDefect)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PicShow)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picWafer)).BeginInit();
             this.SuspendLayout();
             // 
             // imageList1
@@ -191,7 +191,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 369);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(806, 328);
+            this.panel1.Size = new System.Drawing.Size(560, 328);
             this.panel1.TabIndex = 0;
             // 
             // lstView
@@ -221,6 +221,13 @@
             this.cnmReclass.Name = "cnmReclass";
             this.cnmReclass.Size = new System.Drawing.Size(138, 26);
             // 
+            // tlsReclass
+            // 
+            this.tlsReclass.Image = global::WR.Client.UI.Properties.Resources.Crop;
+            this.tlsReclass.Name = "tlsReclass";
+            this.tlsReclass.Size = new System.Drawing.Size(137, 22);
+            this.tlsReclass.Text = "Re-classify";
+            // 
             // imgsView
             // 
             this.imgsView.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
@@ -235,14 +242,14 @@
             this.grdData.AllowUserToResizeRows = false;
             this.grdData.BackgroundColor = System.Drawing.SystemColors.Window;
             this.grdData.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(246)))), ((int)(((byte)(239)))));
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(246)))), ((int)(((byte)(239)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.grdData.ColumnHeadersHeight = 26;
             this.grdData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.grdData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -268,28 +275,28 @@
             this.Column29,
             this.Column6,
             this.Column5});
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.Color.Wheat;
-            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.Color.DarkSlateBlue;
-            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.grdData.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.Wheat;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.DarkSlateBlue;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdData.DefaultCellStyle = dataGridViewCellStyle3;
             this.grdData.EnableHeadersVisualStyles = false;
             this.grdData.GridColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.grdData.Location = new System.Drawing.Point(-2, 84);
             this.grdData.Name = "grdData";
             this.grdData.ReadOnly = true;
             this.grdData.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdData.RowHeadersDefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdData.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.grdData.RowHeadersVisible = false;
             this.grdData.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.grdData.RowTemplate.Height = 23;
@@ -304,8 +311,8 @@
             // ColCode
             // 
             this.ColCode.DataPropertyName = "InspectedSurface";
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ColCode.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ColCode.DefaultCellStyle = dataGridViewCellStyle2;
             this.ColCode.HeaderText = "Surface";
             this.ColCode.Name = "ColCode";
             this.ColCode.ReadOnly = true;
@@ -501,20 +508,145 @@
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(806, 72);
+            this.toolStrip1.Size = new System.Drawing.Size(560, 72);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             this.toolStrip1.Click += new System.EventHandler(this.panel5_Click);
+            // 
+            // tlsList
+            // 
+            this.tlsList.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tlsList.Image = global::WR.Client.UI.Properties.Resources.list48;
+            this.tlsList.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tlsList.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tlsList.Name = "tlsList";
+            this.tlsList.Size = new System.Drawing.Size(52, 69);
+            this.tlsList.Text = "List";
+            this.tlsList.ToolTipText = "List view";
+            this.tlsList.Click += new System.EventHandler(this.tlsList_Click);
+            // 
+            // tlsThum
+            // 
+            this.tlsThum.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tlsThum.Image = global::WR.Client.UI.Properties.Resources.thumbnail48;
+            this.tlsThum.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tlsThum.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tlsThum.Name = "tlsThum";
+            this.tlsThum.Size = new System.Drawing.Size(52, 69);
+            this.tlsThum.Text = "View";
+            this.tlsThum.ToolTipText = "Thumbnail view";
+            this.tlsThum.Click += new System.EventHandler(this.tlsThum_Click);
+            // 
+            // tlsFilter
+            // 
+            this.tlsFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tlsFilter.Image = global::WR.Client.UI.Properties.Resources.filterImage;
+            this.tlsFilter.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tlsFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tlsFilter.Name = "tlsFilter";
+            this.tlsFilter.Size = new System.Drawing.Size(52, 69);
+            this.tlsFilter.Text = "Filter Image";
+            this.tlsFilter.Click += new System.EventHandler(this.tlsFilter_Click);
+            // 
+            // tlsSort
+            // 
+            this.tlsSort.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tlsSort.Image = global::WR.Client.UI.Properties.Resources.sort;
+            this.tlsSort.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tlsSort.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tlsSort.Name = "tlsSort";
+            this.tlsSort.Size = new System.Drawing.Size(52, 69);
+            this.tlsSort.Text = "Next Die Mode";
+            this.tlsSort.Click += new System.EventHandler(this.tlsSort_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 72);
             // 
+            // tlsPsample
+            // 
+            this.tlsPsample.AutoSize = false;
+            this.tlsPsample.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tlsPsample.Image = global::WR.Client.UI.Properties.Resources.left1;
+            this.tlsPsample.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tlsPsample.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tlsPsample.Name = "tlsPsample";
+            this.tlsPsample.Size = new System.Drawing.Size(62, 69);
+            this.tlsPsample.Text = "Previous Sample";
+            this.tlsPsample.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tlsPsample.Click += new System.EventHandler(this.tlsPsample_Click);
+            // 
+            // tlsNsample
+            // 
+            this.tlsNsample.AutoSize = false;
+            this.tlsNsample.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tlsNsample.Image = global::WR.Client.UI.Properties.Resources.right1;
+            this.tlsNsample.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tlsNsample.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tlsNsample.Name = "tlsNsample";
+            this.tlsNsample.Size = new System.Drawing.Size(62, 69);
+            this.tlsNsample.Text = "Next Sample";
+            this.tlsNsample.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tlsNsample.Click += new System.EventHandler(this.tlsNsample_Click);
+            // 
+            // tlsPpoint
+            // 
+            this.tlsPpoint.AutoSize = false;
+            this.tlsPpoint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tlsPpoint.Image = global::WR.Client.UI.Properties.Resources.left2;
+            this.tlsPpoint.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tlsPpoint.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tlsPpoint.Name = "tlsPpoint";
+            this.tlsPpoint.Size = new System.Drawing.Size(62, 69);
+            this.tlsPpoint.Text = "Previous Point";
+            this.tlsPpoint.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tlsPpoint.Click += new System.EventHandler(this.tlsPpoint_Click);
+            // 
+            // tlsNpoint
+            // 
+            this.tlsNpoint.AutoSize = false;
+            this.tlsNpoint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tlsNpoint.Image = global::WR.Client.UI.Properties.Resources.right2;
+            this.tlsNpoint.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tlsNpoint.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tlsNpoint.Name = "tlsNpoint";
+            this.tlsNpoint.Size = new System.Drawing.Size(62, 69);
+            this.tlsNpoint.Text = "Next Point";
+            this.tlsNpoint.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tlsNpoint.Click += new System.EventHandler(this.tlsNpoint_Click);
+            // 
+            // tlsSaveResult
+            // 
+            this.tlsSaveResult.AutoSize = false;
+            this.tlsSaveResult.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tlsSaveResult.Image = global::WR.Client.UI.Properties.Resources.save;
+            this.tlsSaveResult.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tlsSaveResult.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tlsSaveResult.Name = "tlsSaveResult";
+            this.tlsSaveResult.Size = new System.Drawing.Size(60, 69);
+            this.tlsSaveResult.Text = "Save Results";
+            this.tlsSaveResult.ToolTipText = "save wafer result";
+            this.tlsSaveResult.Click += new System.EventHandler(this.tlsSaveResult_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 72);
+            // 
+            // tlsFinish
+            // 
+            this.tlsFinish.AutoSize = false;
+            this.tlsFinish.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tlsFinish.Image = global::WR.Client.UI.Properties.Resources.flag;
+            this.tlsFinish.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tlsFinish.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tlsFinish.Name = "tlsFinish";
+            this.tlsFinish.Size = new System.Drawing.Size(80, 69);
+            this.tlsFinish.Text = "Finish review";
+            this.tlsFinish.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tlsFinish.ToolTipText = "Finish review";
+            this.tlsFinish.Click += new System.EventHandler(this.tlsFinish_Click);
             // 
             // toolStripSeparator2
             // 
@@ -531,7 +663,7 @@
             "CLASSIFIED",
             "UNCLASSIFIED"});
             this.tlsStatus.Name = "tlsStatus";
-            this.tlsStatus.Size = new System.Drawing.Size(120, 72);
+            this.tlsStatus.Size = new System.Drawing.Size(120, 28);
             this.tlsStatus.SelectedIndexChanged += new System.EventHandler(this.tlsStatus_SelectedIndexChanged);
             // 
             // tlsClass
@@ -552,7 +684,7 @@
             this.pnlPic.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlPic.Location = new System.Drawing.Point(0, 0);
             this.pnlPic.Name = "pnlPic";
-            this.pnlPic.Size = new System.Drawing.Size(806, 369);
+            this.pnlPic.Size = new System.Drawing.Size(560, 369);
             this.pnlPic.TabIndex = 2;
             // 
             // tckContract
@@ -579,6 +711,31 @@
             this.tckBright.Visible = false;
             this.tckBright.Scroll += new System.EventHandler(this.tckBright_Scroll);
             // 
+            // PicShow
+            // 
+            this.PicShow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.PicShow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.PicShow.ColCnt = 0;
+            this.PicShow.CurrentDefect = null;
+            this.PicShow.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.PicShow.DefectList = null;
+            this.PicShow.DieLayoutList = null;
+            this.PicShow.HasDraw = false;
+            this.PicShow.Location = new System.Drawing.Point(44, 4);
+            this.PicShow.Name = "PicShow";
+            this.PicShow.RowCnt = 0;
+            this.PicShow.SelectDefect = ((System.Collections.ArrayList)(resources.GetObject("PicShow.SelectDefect")));
+            this.PicShow.SelectRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.PicShow.Size = new System.Drawing.Size(510, 360);
+            this.PicShow.Status = "";
+            this.PicShow.TabIndex = 2;
+            this.PicShow.TabStop = false;
+            this.PicShow.WrImage = null;
+            this.PicShow.ZoomMultiple = 0;
+            this.PicShow.Click += new System.EventHandler(this.PicShow_Click);
+            // 
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
@@ -596,13 +753,88 @@
             this.panel5.TabIndex = 1;
             this.panel5.Click += new System.EventHandler(this.panel5_Click);
             // 
+            // lblCapture
+            // 
+            this.lblCapture.Image = global::WR.Client.UI.Properties.Resources.capture32;
+            this.lblCapture.Location = new System.Drawing.Point(2, 263);
+            this.lblCapture.Name = "lblCapture";
+            this.lblCapture.Size = new System.Drawing.Size(34, 33);
+            this.lblCapture.TabIndex = 2;
+            this.lblCapture.Click += new System.EventHandler(this.lblCapture_Click);
+            // 
+            // lbl_P_Bright
+            // 
+            this.lbl_P_Bright.Image = global::WR.Client.UI.Properties.Resources.brightness32;
+            this.lbl_P_Bright.Location = new System.Drawing.Point(3, 176);
+            this.lbl_P_Bright.Name = "lbl_P_Bright";
+            this.lbl_P_Bright.Size = new System.Drawing.Size(34, 33);
+            this.lbl_P_Bright.TabIndex = 1;
+            this.lbl_P_Bright.Click += new System.EventHandler(this.lbl_P_Bright_Click);
+            this.lbl_P_Bright.MouseEnter += new System.EventHandler(this.lbl_PB_In_MouseEnter);
+            this.lbl_P_Bright.MouseLeave += new System.EventHandler(this.lbl_PB_In_MouseLeave);
+            // 
+            // lbl_P_Restore
+            // 
+            this.lbl_P_Restore.Image = global::WR.Client.UI.Properties.Resources.Restore32;
+            this.lbl_P_Restore.Location = new System.Drawing.Point(3, 219);
+            this.lbl_P_Restore.Name = "lbl_P_Restore";
+            this.lbl_P_Restore.Size = new System.Drawing.Size(34, 33);
+            this.lbl_P_Restore.TabIndex = 1;
+            this.lbl_P_Restore.Click += new System.EventHandler(this.lbl_P_Restore_Click);
+            this.lbl_P_Restore.MouseEnter += new System.EventHandler(this.lbl_P_In_MouseEnter);
+            this.lbl_P_Restore.MouseLeave += new System.EventHandler(this.lbl_P_In_MouseLeave);
+            // 
+            // lbl_P_BrightK
+            // 
+            this.lbl_P_BrightK.Image = global::WR.Client.UI.Properties.Resources.brightness32p;
+            this.lbl_P_BrightK.Location = new System.Drawing.Point(3, 133);
+            this.lbl_P_BrightK.Name = "lbl_P_BrightK";
+            this.lbl_P_BrightK.Size = new System.Drawing.Size(34, 33);
+            this.lbl_P_BrightK.TabIndex = 1;
+            this.lbl_P_BrightK.Click += new System.EventHandler(this.lbl_P_BrightK_Click);
+            this.lbl_P_BrightK.MouseEnter += new System.EventHandler(this.lbl_PK_In_MouseEnter);
+            this.lbl_P_BrightK.MouseLeave += new System.EventHandler(this.lbl_PK_In_MouseLeave);
+            // 
+            // lbl_P_Save
+            // 
+            this.lbl_P_Save.Image = global::WR.Client.UI.Properties.Resources.save32;
+            this.lbl_P_Save.Location = new System.Drawing.Point(3, 90);
+            this.lbl_P_Save.Name = "lbl_P_Save";
+            this.lbl_P_Save.Size = new System.Drawing.Size(34, 33);
+            this.lbl_P_Save.TabIndex = 1;
+            this.lbl_P_Save.Click += new System.EventHandler(this.lbl_P_Save_Click);
+            this.lbl_P_Save.MouseEnter += new System.EventHandler(this.lbl_P_In_MouseEnter);
+            this.lbl_P_Save.MouseLeave += new System.EventHandler(this.lbl_P_In_MouseLeave);
+            // 
+            // lbl_P_Out
+            // 
+            this.lbl_P_Out.Image = global::WR.Client.UI.Properties.Resources.zoom_out;
+            this.lbl_P_Out.Location = new System.Drawing.Point(3, 47);
+            this.lbl_P_Out.Name = "lbl_P_Out";
+            this.lbl_P_Out.Size = new System.Drawing.Size(34, 33);
+            this.lbl_P_Out.TabIndex = 1;
+            this.lbl_P_Out.Click += new System.EventHandler(this.lbl_P_Out_Click);
+            this.lbl_P_Out.MouseEnter += new System.EventHandler(this.lbl_P_In_MouseEnter);
+            this.lbl_P_Out.MouseLeave += new System.EventHandler(this.lbl_P_In_MouseLeave);
+            // 
+            // lbl_P_In
+            // 
+            this.lbl_P_In.Image = global::WR.Client.UI.Properties.Resources.zoom_in;
+            this.lbl_P_In.Location = new System.Drawing.Point(3, 3);
+            this.lbl_P_In.Name = "lbl_P_In";
+            this.lbl_P_In.Size = new System.Drawing.Size(34, 33);
+            this.lbl_P_In.TabIndex = 0;
+            this.lbl_P_In.Click += new System.EventHandler(this.lbl_P_In_Click);
+            this.lbl_P_In.MouseEnter += new System.EventHandler(this.lbl_P_In_MouseEnter);
+            this.lbl_P_In.MouseLeave += new System.EventHandler(this.lbl_P_In_MouseLeave);
+            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.splitter2);
             this.panel2.Controls.Add(this.panel4);
             this.panel2.Controls.Add(this.tabControl1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(806, 0);
+            this.panel2.Location = new System.Drawing.Point(560, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(460, 697);
             this.panel2.TabIndex = 1;
@@ -643,6 +875,34 @@
             this.panel7.Size = new System.Drawing.Size(330, 330);
             this.panel7.TabIndex = 1;
             // 
+            // picWafer
+            // 
+            this.picWafer.BackColor = System.Drawing.Color.Transparent;
+            this.picWafer.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.picWafer.ColCnt = 0;
+            this.picWafer.CurrentDefect = null;
+            this.picWafer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picWafer.DefectList = null;
+            this.picWafer.DieLayoutList = null;
+            this.picWafer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picWafer.HasDraw = true;
+            this.picWafer.Location = new System.Drawing.Point(0, 0);
+            this.picWafer.Name = "picWafer";
+            this.picWafer.RowCnt = 0;
+            this.picWafer.SelectDefect = ((System.Collections.ArrayList)(resources.GetObject("picWafer.SelectDefect")));
+            this.picWafer.SelectRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.picWafer.Size = new System.Drawing.Size(330, 330);
+            this.picWafer.Status = "";
+            this.picWafer.TabIndex = 2;
+            this.picWafer.TabStop = false;
+            this.picWafer.WrImage = null;
+            this.picWafer.ZoomMultiple = 1;
+            this.picWafer.DefectChanged += new WR.Client.Controls.WrPictureBox.DelegateDefectChanged(this.picWafer_DefectChanged);
+            this.picWafer.Click += new System.EventHandler(this.panel5_Click);
+            this.picWafer.Paint += new System.Windows.Forms.PaintEventHandler(this.picWafer_Paint);
+            this.picWafer.DoubleClick += new System.EventHandler(this.picWafer_DoubleClick);
+            this.picWafer.MouseClick += new System.Windows.Forms.MouseEventHandler(this.picWafer_MouseClick);
+            // 
             // panel6
             // 
             this.panel6.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
@@ -655,6 +915,52 @@
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(54, 330);
             this.panel6.TabIndex = 5;
+            // 
+            // lblReclass
+            // 
+            this.lblReclass.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblReclass.Image = global::WR.Client.UI.Properties.Resources.re_classify1;
+            this.lblReclass.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lblReclass.Location = new System.Drawing.Point(10, 141);
+            this.lblReclass.Name = "lblReclass";
+            this.lblReclass.Size = new System.Drawing.Size(36, 33);
+            this.lblReclass.TabIndex = 4;
+            this.lblReclass.Tag = "Re-classify";
+            this.lblReclass.Click += new System.EventHandler(this.lblReclass_Click);
+            // 
+            // lblReset
+            // 
+            this.lblReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblReset.Image = global::WR.Client.UI.Properties.Resources.Restore32;
+            this.lblReset.Location = new System.Drawing.Point(10, 185);
+            this.lblReset.Name = "lblReset";
+            this.lblReset.Size = new System.Drawing.Size(36, 33);
+            this.lblReset.TabIndex = 3;
+            this.lblReset.Click += new System.EventHandler(this.lblReset_Click);
+            // 
+            // lblLotOut
+            // 
+            this.lblLotOut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblLotOut.BackColor = System.Drawing.Color.Transparent;
+            this.lblLotOut.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblLotOut.Image = global::WR.Client.UI.Properties.Resources.zoom_in;
+            this.lblLotOut.Location = new System.Drawing.Point(9, 229);
+            this.lblLotOut.Name = "lblLotOut";
+            this.lblLotOut.Size = new System.Drawing.Size(40, 39);
+            this.lblLotOut.TabIndex = 1;
+            this.lblLotOut.Click += new System.EventHandler(this.lblLotOut_Click);
+            // 
+            // lblLotIn
+            // 
+            this.lblLotIn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblLotIn.BackColor = System.Drawing.Color.Transparent;
+            this.lblLotIn.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblLotIn.Image = global::WR.Client.UI.Properties.Resources.zoom_out;
+            this.lblLotIn.Location = new System.Drawing.Point(9, 284);
+            this.lblLotIn.Name = "lblLotIn";
+            this.lblLotIn.Size = new System.Drawing.Size(40, 39);
+            this.lblLotIn.TabIndex = 1;
+            this.lblLotIn.Click += new System.EventHandler(this.lblLotIn_Click);
             // 
             // panel3
             // 
@@ -718,18 +1024,18 @@
             this.grdClass.AllowUserToDeleteRows = false;
             this.grdClass.AllowUserToOrderColumns = true;
             this.grdClass.AllowUserToResizeRows = false;
-            dataGridViewCellStyle17.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.grdClass.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.grdClass.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.grdClass.BackgroundColor = System.Drawing.SystemColors.Window;
             this.grdClass.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle18.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(246)))), ((int)(((byte)(239)))));
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdClass.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(246)))), ((int)(((byte)(239)))));
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdClass.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.grdClass.ColumnHeadersHeight = 26;
             this.grdClass.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.grdClass.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -745,14 +1051,14 @@
             this.Column15,
             this.Column16});
             this.grdClass.ContextMenuStrip = this.mnFront;
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle20.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.Color.Wheat;
-            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.Color.DarkSlateBlue;
-            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.grdClass.DefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.Wheat;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.DarkSlateBlue;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdClass.DefaultCellStyle = dataGridViewCellStyle8;
             this.grdClass.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdClass.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.grdClass.EnableHeadersVisualStyles = false;
@@ -761,14 +1067,14 @@
             this.grdClass.MultiSelect = false;
             this.grdClass.Name = "grdClass";
             this.grdClass.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle21.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdClass.RowHeadersDefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdClass.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.grdClass.RowHeadersVisible = false;
             this.grdClass.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.grdClass.RowTemplate.Height = 23;
@@ -785,8 +1091,8 @@
             // Column1
             // 
             this.Column1.DataPropertyName = "ID";
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle7;
             this.Column1.HeaderText = "Id";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
@@ -877,6 +1183,29 @@
             this.mnFront.Size = new System.Drawing.Size(115, 70);
             this.mnFront.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.mnFront_ItemClicked);
             // 
+            // tlsEdit
+            // 
+            this.tlsEdit.Image = global::WR.Client.UI.Properties.Resources.edit24;
+            this.tlsEdit.Name = "tlsEdit";
+            this.tlsEdit.Size = new System.Drawing.Size(114, 22);
+            this.tlsEdit.Text = "Edit";
+            // 
+            // tlsSave
+            // 
+            this.tlsSave.Enabled = false;
+            this.tlsSave.Image = global::WR.Client.UI.Properties.Resources.save32;
+            this.tlsSave.Name = "tlsSave";
+            this.tlsSave.Size = new System.Drawing.Size(114, 22);
+            this.tlsSave.Text = "Save";
+            // 
+            // tlsClassCancel
+            // 
+            this.tlsClassCancel.Enabled = false;
+            this.tlsClassCancel.Image = global::WR.Client.UI.Properties.Resources.goback;
+            this.tlsClassCancel.Name = "tlsClassCancel";
+            this.tlsClassCancel.Size = new System.Drawing.Size(114, 22);
+            this.tlsClassCancel.Text = "Cancel";
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.grdReport);
@@ -898,14 +1227,14 @@
             this.grdReport.AllowUserToResizeRows = false;
             this.grdReport.BackgroundColor = System.Drawing.SystemColors.Window;
             this.grdReport.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(246)))), ((int)(((byte)(239)))));
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdReport.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(246)))), ((int)(((byte)(239)))));
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdReport.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             this.grdReport.ColumnHeadersHeight = 26;
             this.grdReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.grdReport.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -916,14 +1245,14 @@
             this.Column17,
             this.Column18,
             this.Column19});
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.Wheat;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.DarkSlateBlue;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.grdReport.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.Color.Wheat;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.DarkSlateBlue;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdReport.DefaultCellStyle = dataGridViewCellStyle11;
             this.grdReport.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdReport.EnableHeadersVisualStyles = false;
             this.grdReport.GridColor = System.Drawing.SystemColors.GradientActiveCaption;
@@ -931,14 +1260,14 @@
             this.grdReport.Name = "grdReport";
             this.grdReport.ReadOnly = true;
             this.grdReport.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdReport.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdReport.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.grdReport.RowHeadersVisible = false;
             this.grdReport.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.grdReport.RowTemplate.Height = 23;
@@ -1004,23 +1333,23 @@
             // chtDefect
             // 
             this.chtDefect.BackColor = System.Drawing.Color.Gainsboro;
-            chartArea2.AlignmentOrientation = ((System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations)((System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations.Vertical | System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations.Horizontal)));
-            chartArea2.Name = "ChartArea1";
-            this.chtDefect.ChartAreas.Add(chartArea2);
+            chartArea1.AlignmentOrientation = ((System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations)((System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations.Vertical | System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations.Horizontal)));
+            chartArea1.Name = "ChartArea1";
+            this.chtDefect.ChartAreas.Add(chartArea1);
             this.chtDefect.Dock = System.Windows.Forms.DockStyle.Bottom;
-            legend2.Name = "Legend1";
-            this.chtDefect.Legends.Add(legend2);
+            legend1.Name = "Legend1";
+            this.chtDefect.Legends.Add(legend1);
             this.chtDefect.Location = new System.Drawing.Point(0, 128);
             this.chtDefect.Name = "chtDefect";
             this.chtDefect.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
-            series2.ChartArea = "ChartArea1";
-            series2.IsVisibleInLegend = false;
-            series2.Legend = "Legend1";
-            series2.LegendText = "Defect";
-            series2.Name = "Series1";
-            series2.SmartLabelStyle.CalloutLineAnchorCapStyle = System.Windows.Forms.DataVisualization.Charting.LineAnchorCapStyle.Round;
-            series2.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String;
-            this.chtDefect.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.IsVisibleInLegend = false;
+            series1.Legend = "Legend1";
+            series1.LegendText = "Defect";
+            series1.Name = "Series1";
+            series1.SmartLabelStyle.CalloutLineAnchorCapStyle = System.Windows.Forms.DataVisualization.Charting.LineAnchorCapStyle.Round;
+            series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String;
+            this.chtDefect.Series.Add(series1);
             this.chtDefect.Size = new System.Drawing.Size(452, 171);
             this.chtDefect.TabIndex = 3;
             // 
@@ -1048,7 +1377,7 @@
             // splitter1
             // 
             this.splitter1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.splitter1.Location = new System.Drawing.Point(803, 0);
+            this.splitter1.Location = new System.Drawing.Point(557, 0);
             this.splitter1.MinExtra = 806;
             this.splitter1.MinSize = 460;
             this.splitter1.Name = "splitter1";
@@ -1062,7 +1391,7 @@
             this.splitter3.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.splitter3.Location = new System.Drawing.Point(0, 366);
             this.splitter3.Name = "splitter3";
-            this.splitter3.Size = new System.Drawing.Size(803, 3);
+            this.splitter3.Size = new System.Drawing.Size(557, 3);
             this.splitter3.TabIndex = 4;
             this.splitter3.TabStop = false;
             // 
@@ -1071,339 +1400,10 @@
             this.timer3.Interval = 1000;
             this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
             // 
-            // PicShow
-            // 
-            this.PicShow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.PicShow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.PicShow.ColCnt = 0;
-            this.PicShow.CurrentDefect = null;
-            this.PicShow.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.PicShow.DefectList = null;
-            this.PicShow.DieLayoutList = null;
-            this.PicShow.HasDraw = false;
-            this.PicShow.Location = new System.Drawing.Point(44, 4);
-            this.PicShow.Name = "PicShow";
-            this.PicShow.RowCnt = 0;
-            this.PicShow.SelectDefect = ((System.Collections.ArrayList)(resources.GetObject("PicShow.SelectDefect")));
-            this.PicShow.SelectRect = new System.Drawing.Rectangle(0, 0, 0, 0);
-            this.PicShow.Size = new System.Drawing.Size(756, 360);
-            this.PicShow.Status = "";
-            this.PicShow.TabIndex = 2;
-            this.PicShow.TabStop = false;
-            this.PicShow.WrImage = null;
-            this.PicShow.ZoomMultiple = 0;
-            this.PicShow.Click += new System.EventHandler(this.PicShow_Click);
-            // 
-            // lblCapture
-            // 
-            this.lblCapture.Image = global::WR.Client.UI.Properties.Resources.capture32;
-            this.lblCapture.Location = new System.Drawing.Point(2, 263);
-            this.lblCapture.Name = "lblCapture";
-            this.lblCapture.Size = new System.Drawing.Size(34, 33);
-            this.lblCapture.TabIndex = 2;
-            this.lblCapture.Click += new System.EventHandler(this.lblCapture_Click);
-            // 
-            // lbl_P_Bright
-            // 
-            this.lbl_P_Bright.Image = global::WR.Client.UI.Properties.Resources.brightness32;
-            this.lbl_P_Bright.Location = new System.Drawing.Point(3, 176);
-            this.lbl_P_Bright.Name = "lbl_P_Bright";
-            this.lbl_P_Bright.Size = new System.Drawing.Size(34, 33);
-            this.lbl_P_Bright.TabIndex = 1;
-            this.lbl_P_Bright.Click += new System.EventHandler(this.lbl_P_Bright_Click);
-            this.lbl_P_Bright.MouseEnter += new System.EventHandler(this.lbl_PB_In_MouseEnter);
-            this.lbl_P_Bright.MouseLeave += new System.EventHandler(this.lbl_PB_In_MouseLeave);
-            // 
-            // lbl_P_Restore
-            // 
-            this.lbl_P_Restore.Image = global::WR.Client.UI.Properties.Resources.Restore32;
-            this.lbl_P_Restore.Location = new System.Drawing.Point(3, 219);
-            this.lbl_P_Restore.Name = "lbl_P_Restore";
-            this.lbl_P_Restore.Size = new System.Drawing.Size(34, 33);
-            this.lbl_P_Restore.TabIndex = 1;
-            this.lbl_P_Restore.Click += new System.EventHandler(this.lbl_P_Restore_Click);
-            this.lbl_P_Restore.MouseEnter += new System.EventHandler(this.lbl_P_In_MouseEnter);
-            this.lbl_P_Restore.MouseLeave += new System.EventHandler(this.lbl_P_In_MouseLeave);
-            // 
-            // lbl_P_BrightK
-            // 
-            this.lbl_P_BrightK.Image = global::WR.Client.UI.Properties.Resources.brightness32p;
-            this.lbl_P_BrightK.Location = new System.Drawing.Point(3, 133);
-            this.lbl_P_BrightK.Name = "lbl_P_BrightK";
-            this.lbl_P_BrightK.Size = new System.Drawing.Size(34, 33);
-            this.lbl_P_BrightK.TabIndex = 1;
-            this.lbl_P_BrightK.Click += new System.EventHandler(this.lbl_P_BrightK_Click);
-            this.lbl_P_BrightK.MouseEnter += new System.EventHandler(this.lbl_PK_In_MouseEnter);
-            this.lbl_P_BrightK.MouseLeave += new System.EventHandler(this.lbl_PK_In_MouseLeave);
-            // 
-            // lbl_P_Save
-            // 
-            this.lbl_P_Save.Image = global::WR.Client.UI.Properties.Resources.save32;
-            this.lbl_P_Save.Location = new System.Drawing.Point(3, 90);
-            this.lbl_P_Save.Name = "lbl_P_Save";
-            this.lbl_P_Save.Size = new System.Drawing.Size(34, 33);
-            this.lbl_P_Save.TabIndex = 1;
-            this.lbl_P_Save.Click += new System.EventHandler(this.lbl_P_Save_Click);
-            this.lbl_P_Save.MouseEnter += new System.EventHandler(this.lbl_P_In_MouseEnter);
-            this.lbl_P_Save.MouseLeave += new System.EventHandler(this.lbl_P_In_MouseLeave);
-            // 
-            // lbl_P_Out
-            // 
-            this.lbl_P_Out.Image = global::WR.Client.UI.Properties.Resources.zoom_out;
-            this.lbl_P_Out.Location = new System.Drawing.Point(3, 47);
-            this.lbl_P_Out.Name = "lbl_P_Out";
-            this.lbl_P_Out.Size = new System.Drawing.Size(34, 33);
-            this.lbl_P_Out.TabIndex = 1;
-            this.lbl_P_Out.Click += new System.EventHandler(this.lbl_P_Out_Click);
-            this.lbl_P_Out.MouseEnter += new System.EventHandler(this.lbl_P_In_MouseEnter);
-            this.lbl_P_Out.MouseLeave += new System.EventHandler(this.lbl_P_In_MouseLeave);
-            // 
-            // lbl_P_In
-            // 
-            this.lbl_P_In.Image = global::WR.Client.UI.Properties.Resources.zoom_in;
-            this.lbl_P_In.Location = new System.Drawing.Point(3, 3);
-            this.lbl_P_In.Name = "lbl_P_In";
-            this.lbl_P_In.Size = new System.Drawing.Size(34, 33);
-            this.lbl_P_In.TabIndex = 0;
-            this.lbl_P_In.Click += new System.EventHandler(this.lbl_P_In_Click);
-            this.lbl_P_In.MouseEnter += new System.EventHandler(this.lbl_P_In_MouseEnter);
-            this.lbl_P_In.MouseLeave += new System.EventHandler(this.lbl_P_In_MouseLeave);
-            // 
-            // tlsReclass
-            // 
-            this.tlsReclass.Image = global::WR.Client.UI.Properties.Resources.Crop;
-            this.tlsReclass.Name = "tlsReclass";
-            this.tlsReclass.Size = new System.Drawing.Size(137, 22);
-            this.tlsReclass.Text = "Re-classify";
-            // 
-            // tlsList
-            // 
-            this.tlsList.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tlsList.Image = global::WR.Client.UI.Properties.Resources.list48;
-            this.tlsList.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tlsList.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tlsList.Name = "tlsList";
-            this.tlsList.Size = new System.Drawing.Size(52, 69);
-            this.tlsList.Text = "List";
-            this.tlsList.ToolTipText = "List view";
-            this.tlsList.Click += new System.EventHandler(this.tlsList_Click);
-            // 
-            // tlsThum
-            // 
-            this.tlsThum.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tlsThum.Image = global::WR.Client.UI.Properties.Resources.thumbnail48;
-            this.tlsThum.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tlsThum.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tlsThum.Name = "tlsThum";
-            this.tlsThum.Size = new System.Drawing.Size(52, 69);
-            this.tlsThum.Text = "View";
-            this.tlsThum.ToolTipText = "Thumbnail view";
-            this.tlsThum.Click += new System.EventHandler(this.tlsThum_Click);
-            // 
-            // tlsFilter
-            // 
-            this.tlsFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tlsFilter.Image = global::WR.Client.UI.Properties.Resources.filterImage;
-            this.tlsFilter.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tlsFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tlsFilter.Name = "tlsFilter";
-            this.tlsFilter.Size = new System.Drawing.Size(52, 69);
-            this.tlsFilter.Text = "Filter Image";
-            this.tlsFilter.Click += new System.EventHandler(this.tlsFilter_Click);
-            // 
-            // tlsSort
-            // 
-            this.tlsSort.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tlsSort.Image = global::WR.Client.UI.Properties.Resources.sort;
-            this.tlsSort.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tlsSort.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tlsSort.Name = "tlsSort";
-            this.tlsSort.Size = new System.Drawing.Size(52, 69);
-            this.tlsSort.Text = "Next Die Mode";
-            this.tlsSort.Click += new System.EventHandler(this.tlsSort_Click);
-            // 
-            // tlsPsample
-            // 
-            this.tlsPsample.AutoSize = false;
-            this.tlsPsample.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tlsPsample.Image = global::WR.Client.UI.Properties.Resources.left1;
-            this.tlsPsample.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tlsPsample.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tlsPsample.Name = "tlsPsample";
-            this.tlsPsample.Size = new System.Drawing.Size(62, 69);
-            this.tlsPsample.Text = "Previous Sample";
-            this.tlsPsample.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tlsPsample.Click += new System.EventHandler(this.tlsPsample_Click);
-            // 
-            // tlsNsample
-            // 
-            this.tlsNsample.AutoSize = false;
-            this.tlsNsample.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tlsNsample.Image = global::WR.Client.UI.Properties.Resources.right1;
-            this.tlsNsample.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tlsNsample.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tlsNsample.Name = "tlsNsample";
-            this.tlsNsample.Size = new System.Drawing.Size(62, 69);
-            this.tlsNsample.Text = "Next Sample";
-            this.tlsNsample.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tlsNsample.Click += new System.EventHandler(this.tlsNsample_Click);
-            // 
-            // tlsPpoint
-            // 
-            this.tlsPpoint.AutoSize = false;
-            this.tlsPpoint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tlsPpoint.Image = global::WR.Client.UI.Properties.Resources.left2;
-            this.tlsPpoint.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tlsPpoint.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tlsPpoint.Name = "tlsPpoint";
-            this.tlsPpoint.Size = new System.Drawing.Size(62, 69);
-            this.tlsPpoint.Text = "Previous Point";
-            this.tlsPpoint.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tlsPpoint.Click += new System.EventHandler(this.tlsPpoint_Click);
-            // 
-            // tlsNpoint
-            // 
-            this.tlsNpoint.AutoSize = false;
-            this.tlsNpoint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tlsNpoint.Image = global::WR.Client.UI.Properties.Resources.right2;
-            this.tlsNpoint.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tlsNpoint.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tlsNpoint.Name = "tlsNpoint";
-            this.tlsNpoint.Size = new System.Drawing.Size(62, 69);
-            this.tlsNpoint.Text = "Next Point";
-            this.tlsNpoint.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tlsNpoint.Click += new System.EventHandler(this.tlsNpoint_Click);
-            // 
-            // tlsSaveResult
-            // 
-            this.tlsSaveResult.AutoSize = false;
-            this.tlsSaveResult.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tlsSaveResult.Image = global::WR.Client.UI.Properties.Resources.save;
-            this.tlsSaveResult.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tlsSaveResult.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tlsSaveResult.Name = "tlsSaveResult";
-            this.tlsSaveResult.Size = new System.Drawing.Size(60, 69);
-            this.tlsSaveResult.Text = "Save Results";
-            this.tlsSaveResult.ToolTipText = "save wafer result";
-            this.tlsSaveResult.Click += new System.EventHandler(this.tlsSaveResult_Click);
-            // 
-            // tlsFinish
-            // 
-            this.tlsFinish.AutoSize = false;
-            this.tlsFinish.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tlsFinish.Image = global::WR.Client.UI.Properties.Resources.flag;
-            this.tlsFinish.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tlsFinish.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tlsFinish.Name = "tlsFinish";
-            this.tlsFinish.Size = new System.Drawing.Size(80, 69);
-            this.tlsFinish.Text = "Finish review";
-            this.tlsFinish.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tlsFinish.ToolTipText = "Finish review";
-            this.tlsFinish.Click += new System.EventHandler(this.tlsFinish_Click);
-            // 
-            // picWafer
-            // 
-            this.picWafer.BackColor = System.Drawing.Color.Transparent;
-            this.picWafer.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.picWafer.ColCnt = 0;
-            this.picWafer.CurrentDefect = null;
-            this.picWafer.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.picWafer.DefectList = null;
-            this.picWafer.DieLayoutList = null;
-            this.picWafer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.picWafer.HasDraw = true;
-            this.picWafer.Location = new System.Drawing.Point(0, 0);
-            this.picWafer.Name = "picWafer";
-            this.picWafer.RowCnt = 0;
-            this.picWafer.SelectDefect = ((System.Collections.ArrayList)(resources.GetObject("picWafer.SelectDefect")));
-            this.picWafer.SelectRect = new System.Drawing.Rectangle(0, 0, 0, 0);
-            this.picWafer.Size = new System.Drawing.Size(330, 330);
-            this.picWafer.Status = "";
-            this.picWafer.TabIndex = 2;
-            this.picWafer.TabStop = false;
-            this.picWafer.WrImage = null;
-            this.picWafer.ZoomMultiple = 1;
-            this.picWafer.DefectChanged += new WR.Client.Controls.WrPictureBox.DelegateDefectChanged(this.picWafer_DefectChanged);
-            this.picWafer.Click += new System.EventHandler(this.panel5_Click);
-            this.picWafer.Paint += new System.Windows.Forms.PaintEventHandler(this.picWafer_Paint);
-            this.picWafer.DoubleClick += new System.EventHandler(this.picWafer_DoubleClick);
-            this.picWafer.MouseClick += new System.Windows.Forms.MouseEventHandler(this.picWafer_MouseClick);
-            // 
-            // lblReclass
-            // 
-            this.lblReclass.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblReclass.Image = global::WR.Client.UI.Properties.Resources.re_classify1;
-            this.lblReclass.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.lblReclass.Location = new System.Drawing.Point(10, 141);
-            this.lblReclass.Name = "lblReclass";
-            this.lblReclass.Size = new System.Drawing.Size(36, 33);
-            this.lblReclass.TabIndex = 4;
-            this.lblReclass.Tag = "Re-classify";
-            this.lblReclass.Click += new System.EventHandler(this.lblReclass_Click);
-            // 
-            // lblReset
-            // 
-            this.lblReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblReset.Image = global::WR.Client.UI.Properties.Resources.Restore32;
-            this.lblReset.Location = new System.Drawing.Point(10, 185);
-            this.lblReset.Name = "lblReset";
-            this.lblReset.Size = new System.Drawing.Size(36, 33);
-            this.lblReset.TabIndex = 3;
-            this.lblReset.Click += new System.EventHandler(this.lblReset_Click);
-            // 
-            // lblLotOut
-            // 
-            this.lblLotOut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblLotOut.BackColor = System.Drawing.Color.Transparent;
-            this.lblLotOut.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblLotOut.Image = global::WR.Client.UI.Properties.Resources.zoom_in;
-            this.lblLotOut.Location = new System.Drawing.Point(9, 229);
-            this.lblLotOut.Name = "lblLotOut";
-            this.lblLotOut.Size = new System.Drawing.Size(40, 39);
-            this.lblLotOut.TabIndex = 1;
-            this.lblLotOut.Click += new System.EventHandler(this.lblLotOut_Click);
-            // 
-            // lblLotIn
-            // 
-            this.lblLotIn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblLotIn.BackColor = System.Drawing.Color.Transparent;
-            this.lblLotIn.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblLotIn.Image = global::WR.Client.UI.Properties.Resources.zoom_out;
-            this.lblLotIn.Location = new System.Drawing.Point(9, 284);
-            this.lblLotIn.Name = "lblLotIn";
-            this.lblLotIn.Size = new System.Drawing.Size(40, 39);
-            this.lblLotIn.TabIndex = 1;
-            this.lblLotIn.Click += new System.EventHandler(this.lblLotIn_Click);
-            // 
-            // tlsEdit
-            // 
-            this.tlsEdit.Image = global::WR.Client.UI.Properties.Resources.edit24;
-            this.tlsEdit.Name = "tlsEdit";
-            this.tlsEdit.Size = new System.Drawing.Size(114, 22);
-            this.tlsEdit.Text = "Edit";
-            // 
-            // tlsSave
-            // 
-            this.tlsSave.Enabled = false;
-            this.tlsSave.Image = global::WR.Client.UI.Properties.Resources.save32;
-            this.tlsSave.Name = "tlsSave";
-            this.tlsSave.Size = new System.Drawing.Size(114, 22);
-            this.tlsSave.Text = "Save";
-            // 
-            // tlsClassCancel
-            // 
-            this.tlsClassCancel.Enabled = false;
-            this.tlsClassCancel.Image = global::WR.Client.UI.Properties.Resources.goback;
-            this.tlsClassCancel.Name = "tlsClassCancel";
-            this.tlsClassCancel.Size = new System.Drawing.Size(114, 22);
-            this.tlsClassCancel.Text = "Cancel";
-            // 
             // frm_preview
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1266, 697);
+            this.ClientSize = new System.Drawing.Size(1020, 697);
             this.Controls.Add(this.splitter3);
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.pnlPic);
@@ -1425,10 +1425,12 @@
             this.pnlPic.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tckContract)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tckBright)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PicShow)).EndInit();
             this.panel5.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picWafer)).EndInit();
             this.panel6.ResumeLayout(false);
             this.pnlTitile.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
@@ -1438,8 +1440,6 @@
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdReport)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chtDefect)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PicShow)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picWafer)).EndInit();
             this.ResumeLayout(false);
 
         }
