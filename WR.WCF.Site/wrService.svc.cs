@@ -65,16 +65,23 @@ namespace WR.WCF.Site
             {
                 using (BFdbContext db = new BFdbContext())
                 {
-                    string sql = string.Format(@"select ta.id, ta.description, ta.name, nvl(tb.cnt, 0) Points,'Front' inspectiontype
+                    string sql = string.Format("select substr(t.completiontime,0,6) from wm_waferresult t where t.resultid='{0}'", resultid);
+
+                    var yearMonth = db.SqlQuery<string>(sql).FirstOrDefault();
+
+                    if (!string.IsNullOrEmpty(yearMonth) && yearMonth == DateTime.Now.ToString("yyyyMM"))
+                        yearMonth = string.Empty;
+
+                    sql = string.Format(@"select ta.id, ta.description, ta.name, nvl(tb.cnt, 0) Points,'Front' inspectiontype
                                                   from (select a.schemeid, a.id, a.description, b.name,a.itemid
                                                           from wm_classificationitem a, wm_classificationscheme b,wm_waferresult c 
                                                          where a.schemeid = b.schemeid and b.schemeid=c.classificationinfoid  and c.delflag='0' 
                                                                and c.resultid='{0}') ta,       
                                                        (select a.inspclassifiid,count(a.inspclassifiid) as cnt
-                                                          from wm_defectlist a
+                                                          from wm_defectlist{1} a
                                                          where a.resultid = '{0}'
                                                          group by a.inspclassifiid) tb
-                                                 where ta.itemid = tb.inspclassifiid(+) order by ta.id", resultid);
+                                                 where ta.itemid = tb.inspclassifiid(+) order by ta.id", resultid, yearMonth);
 
                     return db.SqlQuery<WmClassificationItemEntity>(sql).ToList();
                 }
@@ -347,17 +354,24 @@ namespace WR.WCF.Site
             {
                 using (BFdbContext db = new BFdbContext())
                 {
+                    string sql = string.Format("select substr(t.completiontime,0,6) from wm_waferresult t where t.resultid='{0}'", resultid);
+
+                    var yearMonth = db.SqlQuery<string>(sql).FirstOrDefault();
+
+                    if (!string.IsNullOrEmpty(yearMonth) && yearMonth == DateTime.Now.ToString("yyyyMM"))
+                        yearMonth = string.Empty;
+
                     string ischk = "";
                     if (!string.IsNullOrEmpty(ischecked) && ischecked == "0")
                         ischk = "and a.modifieddefect is not null";
                     else if (!string.IsNullOrEmpty(ischecked) && ischecked == "1")
                         ischk = "and a.modifieddefect is null";
 
-                    string sql = string.Format(@"select a.id,a.passid,a.inspid,a.modifieddefect,a.inspclassifiid,a.imagename,a.area_,d.color,
+                    sql = string.Format(@"select a.id,a.passid,a.inspid,a.modifieddefect,a.inspclassifiid,a.imagename,a.area_,d.color,
                                                     a.ischecked,a.checkeddate,d.name as description,a.dieaddress,b.inspectedsurface,'0' adc,d.schemeid,d.id cclassid, a.size_ 
-                                                    from wm_defectlist a,wm_inspectionpass b,wm_inspectioninfo c,wm_classificationitem d 
+                                                    from wm_defectlist{2} a,wm_inspectionpass b,wm_inspectioninfo c,wm_classificationitem d 
                                                     where a.passid=b.passid and a.inspid=b.inspid and b.inspid=c.inspid and a.inspclassifiid=d.itemid and a.resultid= c.resultid
-                                                    and c.resultid='{0}' {1} order by a.id", resultid, ischk);
+                                                    and c.resultid='{0}' {1} order by a.id", resultid, ischk, yearMonth);
 
                     return db.SqlQuery<WmdefectlistEntity>(sql).ToList();
                 }
@@ -436,15 +450,22 @@ namespace WR.WCF.Site
 
                 try
                 {
+                    string sql = string.Format("select substr(t.completiontime,0,6) from wm_waferresult t where t.resultid='{0}'", resultid);
+
+                    var yearMonth = db.SqlQuery<string>(sql).FirstOrDefault();
+
+                    if (!string.IsNullOrEmpty(yearMonth) && yearMonth == DateTime.Now.ToString("yyyyMM"))
+                        yearMonth = string.Empty;
+
                     sbt.Clear();
                     //更新defect表
-//                    sbt.AppendFormat(@"update wm_defectlist set ischecked='1',checkeddate={0:yyyyMMddHHmmss},checkedby='{1}'
-//                                     where (passid,inspid) in (select a.passid,a.inspid from wm_inspectionpass a,wm_inspectioninfo b where a.inspid=b.inspid and b.resultid='{2}')",
-//                                     DateTime.Now, checkedby, resultid);
+                    //                    sbt.AppendFormat(@"update wm_defectlist set ischecked='1',checkeddate={0:yyyyMMddHHmmss},checkedby='{1}'
+                    //                                     where (passid,inspid) in (select a.passid,a.inspid from wm_inspectionpass a,wm_inspectioninfo b where a.inspid=b.inspid and b.resultid='{2}')",
+                    //                                     DateTime.Now, checkedby, resultid);
 
-                    sbt.AppendFormat(@"update wm_defectlist set ischecked='1',checkeddate={0:yyyyMMddHHmmss},checkedby='{1}'
+                    sbt.AppendFormat(@"update wm_defectlist{3} set ischecked='1',checkeddate={0:yyyyMMddHHmmss},checkedby='{1}'
                                      where resultid='{2}'",
-                                    DateTime.Now, checkedby, resultid);
+                                    DateTime.Now, checkedby, resultid, yearMonth);
 
                     db.ExecuteSqlCommand(sbt.ToString());
                     AddLog("UpdateDefect", sbt.ToString());
@@ -464,7 +485,7 @@ namespace WR.WCF.Site
                                 db.ExecuteSqlCommand(sbt.ToString());
 
                                 sbt.Clear();
-                                sbt.AppendFormat(" update wm_dielayoutlist t set t.inspclassifiid='{0}' where t.layoutid='{1}' and t.dieaddressx={2} and t.dieaddressy='{3}'", ids[6], info[0].dielayoutid, ids[4], ids[5]);
+                                sbt.AppendFormat("update wm_dielayoutlist{4} t set t.inspclassifiid='{0}' where t.layoutid='{1}' and t.dieaddressx={2} and t.dieaddressy='{3}'", ids[6], info[0].dielayoutid, ids[4], ids[5], yearMonth);
                                 db.ExecuteSqlCommand(sbt.ToString());
                             }
                         }
@@ -478,11 +499,14 @@ namespace WR.WCF.Site
                     //                                 (select ba.layoutid,count(ba.id) yieldnum from wm_dielayoutlist ba where lower(trim(ba.disposition))<>'notexist' group by ba.layoutid) b,
                     //                                (select ba.layoutid, count(ba.id) defectnum from wm_dielayoutlist ba where lower(trim(ba.disposition)) <> 'notexist' and ba.inspclassifiid<>'0' group by ba.layoutid) c
                     //                                where a.dielayoutid=b.layoutid and a.dielayoutid = c.layoutid(+) and a.resultid='{0}'", resultid);
+//                    sbt.AppendFormat(@"select a.resultid,a.checkeddate,b.yieldnum,nvl(c.defectnum,0) defectnum from wm_waferresult a, 
+//                                 (select ba.layoutid,d.rows_ * d.columns_ -count(ba.id) yieldnum from wm_dielayoutlist{1} ba inner join wm_dielayout d on d.layoutid = ba.layoutid where lower(trim(ba.disposition))='notexist' group by ba.layoutid, d.rows_, d.columns_) b,
+//                                (select ba.layoutid, count(ba.id) defectnum from wm_dielayoutlist{1} ba where lower(trim(ba.disposition)) <> 'notexist' and ba.inspclassifiid<>'0' group by ba.layoutid) c
+//                                where a.dielayoutid=b.layoutid and a.dielayoutid = c.layoutid(+) and a.resultid='{0}'", resultid, yearMonth);
                     sbt.AppendFormat(@"select a.resultid,a.checkeddate,b.yieldnum,nvl(c.defectnum,0) defectnum from wm_waferresult a, 
-                                 (select ba.layoutid,d.rows_ * d.columns_ -count(ba.id) yieldnum from wm_dielayoutlist ba inner join wm_dielayout d on d.layoutid = ba.layoutid where lower(trim(ba.disposition))='notexist' group by ba.layoutid, d.rows_, d.columns_) b,
-                                (select ba.layoutid, count(ba.id) defectnum from wm_dielayoutlist ba where lower(trim(ba.disposition)) <> 'notexist' and ba.inspclassifiid<>'0' group by ba.layoutid) c
-                                where a.dielayoutid=b.layoutid and a.dielayoutid = c.layoutid(+) and a.resultid='{0}'", resultid);
-
+                                 (select ba.layoutid,d.rows_ * d.columns_ -count(ba.id) yieldnum from wm_dielayoutlist{1} ba inner join wm_dielayout d on d.layoutid = ba.layoutid where lower(trim(ba.disposition)) in ( 'notexist','notprocess') group by ba.layoutid, d.rows_, d.columns_) b,
+                                (select ba.layoutid, count(ba.id) defectnum from wm_dielayoutlist{1} ba where lower(trim(ba.disposition)) <> 'notexist' and ba.inspclassifiid<>'0' group by ba.layoutid) c
+                                where a.dielayoutid=b.layoutid and a.dielayoutid = c.layoutid(+) and a.resultid='{0}'", resultid, yearMonth);
                     info = db.SqlQuery<WmwaferInfoEntity>(sbt.ToString()).ToList();
                     var y = (info[0].yieldnum.Value * 1.0 - info[0].defectnum.Value * 1.0) / info[0].yieldnum.Value;
                     AddLog("UpdateDefect", sbt.ToString());
@@ -601,8 +625,20 @@ namespace WR.WCF.Site
                     //                    string sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist t,wm_dielayout a
                     //                                                    where t.layoutid=a.layoutid and t.layoutid='{0}' and t.disposition in ('NotProcess     ','NotInspectable ','Fail           ','Pass           ','Processed      ')", id);
 
-                    string sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist t,wm_dielayout a
+                    string sql = string.Format("select substr(t.completiontime,0,6) from wm_waferresult t where t.dielayoutid='{0}'", id);
+
+                    var date = db.SqlQuery<string>(sql).FirstOrDefault();
+
+                    if (!string.IsNullOrEmpty(date) && date != DateTime.Now.ToString("yyyyMM"))
+                    {
+                        sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist{1} t,wm_dielayout a
+                                                    where t.layoutid=a.layoutid and t.layoutid='{0}'", id, date);
+                    }
+                    else
+                    {
+                        sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist t,wm_dielayout a
                                                     where t.layoutid=a.layoutid and t.layoutid='{0}'", id);
+                    }
 
                     return db.SqlQuery<WmdielayoutlistEntitiy>(sql).ToList();
                 }
@@ -624,26 +660,44 @@ namespace WR.WCF.Site
         {
             using (BFdbContext db = new BFdbContext())
             {
+                AddLog("GetDensityReport", "start");
 
-                string sql = string.Format(@"select b.device,b.layer,b.lot,b.substrate_id,a.dieaddress,d.id,d.name description,1 cnt,th.defectdensity,c.completiontime,a.DIEADDRESS 
-                                                from wm_defectlist a,wm_waferresult te,wm_identification b,wm_inspectioninfo c,wm_inspectionpass th,wm_classificationitem d
+                var dateList = GetCompletiontime(stDate, edDate);
+                var list = new List<WmdensityReport>();
+                var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+
+                foreach (var yearMonth in dateList)
+                {
+                    var tablename = yearMonth;
+
+                    if (yearMonth == currentYearMonth)
+                        tablename = string.Empty;
+
+                    string sql = string.Format(@"select b.device,b.layer,b.lot,b.substrate_id,a.dieaddress,d.id,d.name description,1 cnt,th.defectdensity,c.completiontime,a.DIEADDRESS 
+                                                from wm_defectlist{3} a,wm_waferresult te,wm_identification b,wm_inspectioninfo c,wm_inspectionpass th,wm_classificationitem d
                                                 where a.resultid=te.resultid and te.identificationid=b.identificationid and a.passid=th.passid and a.inspid=th.inspid and th.inspid=c.inspid
                                                     and a.inspclassifiid=d.itemid and instr(b.device||'|'||b.layer||'|'||b.lot||'|','{0}')>0 and te.delflag='0' and c.completiontime>={1} and c.completiontime<={2} 
-                                                order by b.lot,b.substrate_id,d.id", lot, stDate, edDate);
-                if (lot.EndsWith("|||"))
-                    sql = string.Format(@"select b.device,b.layer,b.lot,b.substrate_id,a.dieaddress,d.id,d.name description,1 cnt,th.defectdensity,c.completiontime,a.DIEADDRESS 
-                                                from wm_defectlist a,wm_waferresult te,wm_identification b,wm_inspectioninfo c,wm_inspectionpass th,wm_classificationitem d
+                                                order by b.lot,b.substrate_id,d.id", lot, stDate, edDate, tablename);
+                    if (lot.EndsWith("|||"))
+                        sql = string.Format(@"select b.device,b.layer,b.lot,b.substrate_id,a.dieaddress,d.id,d.name description,1 cnt,th.defectdensity,c.completiontime,a.DIEADDRESS 
+                                                from wm_defectlist{3} a,wm_waferresult te,wm_identification b,wm_inspectioninfo c,wm_inspectionpass th,wm_classificationitem d
                                                 where a.resultid=te.resultid and te.identificationid=b.identificationid and a.passid=th.passid and a.inspid=th.inspid and th.inspid=c.inspid
                                                     and a.inspclassifiid=d.itemid and instr(b.device||'|||','{0}')>0 and te.delflag='0' and c.completiontime>={1} and c.completiontime<={2} 
-                                                order by b.lot,b.substrate_id,d.id", lot, stDate, edDate);
-                else if (lot.EndsWith("||"))
-                    sql = string.Format(@"select b.device,b.layer,b.lot,b.substrate_id,a.dieaddress,d.id,d.name description,1 cnt,th.defectdensity,c.completiontime,a.DIEADDRESS 
-                                                from wm_defectlist a,wm_waferresult te,wm_identification b,wm_inspectioninfo c,wm_inspectionpass th,wm_classificationitem d
+                                                order by b.lot,b.substrate_id,d.id", lot, stDate, edDate, tablename);
+                    else if (lot.EndsWith("||"))
+                        sql = string.Format(@"select b.device,b.layer,b.lot,b.substrate_id,a.dieaddress,d.id,d.name description,1 cnt,th.defectdensity,c.completiontime,a.DIEADDRESS 
+                                                from wm_defectlist{3} a,wm_waferresult te,wm_identification b,wm_inspectioninfo c,wm_inspectionpass th,wm_classificationitem d
                                                 where a.resultid=te.resultid and te.identificationid=b.identificationid and a.passid=th.passid and a.inspid=th.inspid and th.inspid=c.inspid
                                                     and a.inspclassifiid=d.itemid and instr(b.device||'|'||b.layer||'||','{0}')>0 and te.delflag='0'and c.completiontime>={1} and c.completiontime<={2} 
-                                                order by b.lot,b.substrate_id,d.id", lot, stDate, edDate);
+                                                order by b.lot,b.substrate_id,d.id", lot, stDate, edDate, tablename);
 
-                return db.SqlQuery<WmdensityReport>(sql).ToList();
+                    //return db.SqlQuery<WmdensityReport>(sql).ToList();
+                    list.AddRange(db.SqlQuery<WmdensityReport>(sql).ToList());
+
+                    AddLog("GetDensityReport end", sql);
+                }
+
+                return list;
             }
         }
 
@@ -657,27 +711,50 @@ namespace WR.WCF.Site
         {
             using (BFdbContext db = new BFdbContext())
             {
-                string sql = string.Format(@"select count(a.inspecteddieid) cnt,count(distinct c.resultid) wafercnt 
-                                            from wm_inspecteddielist a,wm_inspectioninfo b,wm_waferresult c,wm_identification d
-                                            where a.inspid=b.inspid and b.resultid=c.resultid and c.identificationid=d.identificationid
-                                                and instr(d.device||'|'||d.layer||'|'||d.lot||'|','{0}')>0 and c.delflag='0' and b.completiontime>={1} and b.completiontime<={2}", lot, stDate, edDate);
-                if (lot.EndsWith("|||"))
-                    sql = string.Format(@"select count(a.inspecteddieid) cnt,count(distinct c.resultid) wafercnt 
-                                            from wm_inspecteddielist a,wm_inspectioninfo b,wm_waferresult c,wm_identification d
-                                            where a.inspid=b.inspid and b.resultid=c.resultid and c.identificationid=d.identificationid
-                                                and instr(d.device||'|||','{0}')>0 and c.delflag='0' and b.completiontime>={1} and b.completiontime<={2}", lot, stDate, edDate);
-                else if (lot.EndsWith("||"))
-                    sql = string.Format(@"select count(a.inspecteddieid) cnt,count(distinct c.resultid) wafercnt 
-                                            from wm_inspecteddielist a,wm_inspectioninfo b,wm_waferresult c,wm_identification d
-                                            where a.inspid=b.inspid and b.resultid=c.resultid and c.identificationid=d.identificationid
-                                                and instr(d.device||'|'||d.layer||'||','{0}')>0 and c.delflag='0' and b.completiontime>={1} and b.completiontime<={2}", lot, stDate, edDate);
+                var dateList = GetCompletiontime(stDate, edDate);
+                var lst = new List<WmdensityReport>();
+                var currentYearMonth = DateTime.Now.ToString("yyyyMM");
 
-                var lst = db.SqlQuery<WmdensityReport>(sql).ToList();
+                var count = 0;
+                var wafercnt = 0;
 
-                if (lst != null && lst.Count > 0)
-                    return new int[] { lst[0].CNT, lst[0].WAFERCNT };
-                else
-                    return new int[] { 0, 0 };
+                foreach (var yearMonth in dateList)
+                {
+                    var tablename = yearMonth;
+
+                    if (yearMonth == currentYearMonth)
+                        tablename = string.Empty;
+
+                    string sql = string.Format(@"select count(a.inspecteddieid) cnt,count(distinct c.resultid) wafercnt 
+                                            from wm_inspecteddielist{3} a,wm_inspectioninfo b,wm_waferresult c,wm_identification d
+                                            where a.inspid=b.inspid and b.resultid=c.resultid and c.identificationid=d.identificationid
+                                                and instr(d.device||'|'||d.layer||'|'||d.lot||'|','{0}')>0 and c.delflag='0' and b.completiontime>={1} and b.completiontime<={2}", lot, stDate, edDate, tablename);
+                    if (lot.EndsWith("|||"))
+                        sql = string.Format(@"select count(a.inspecteddieid) cnt,count(distinct c.resultid) wafercnt 
+                                            from wm_inspecteddielist{3} a,wm_inspectioninfo b,wm_waferresult c,wm_identification d
+                                            where a.inspid=b.inspid and b.resultid=c.resultid and c.identificationid=d.identificationid
+                                                and instr(d.device||'|||','{0}')>0 and c.delflag='0' and b.completiontime>={1} and b.completiontime<={2}", lot, stDate, edDate, tablename);
+                    else if (lot.EndsWith("||"))
+                        sql = string.Format(@"select count(a.inspecteddieid) cnt,count(distinct c.resultid) wafercnt 
+                                            from wm_inspecteddielist{3} a,wm_inspectioninfo b,wm_waferresult c,wm_identification d
+                                            where a.inspid=b.inspid and b.resultid=c.resultid and c.identificationid=d.identificationid
+                                                and instr(d.device||'|'||d.layer||'||','{0}')>0 and c.delflag='0' and b.completiontime>={1} and b.completiontime<={2}", lot, stDate, edDate, tablename);
+
+                    //lst.AddRange(db.SqlQuery<WmdensityReport>(sql).ToList());
+
+                    if (lst != null && lst.Count > 0)
+                    {
+                        count += lst[0].CNT;
+                        wafercnt += lst[0].WAFERCNT;
+                    }
+                }
+
+                //if (lst != null && lst.Count > 0)
+                //    return new int[] { lst[0].CNT, lst[0].WAFERCNT };
+                //else
+                //    return new int[] { 0, 0 };
+
+                return new int[] { count, wafercnt };
             }
         }
 
@@ -691,30 +768,44 @@ namespace WR.WCF.Site
         {
             using (BFdbContext db = new BFdbContext())
             {
-                string sql = string.Format(@"select c.device,c.lot,c.layer,b.completiontime,c.substrate_id,a.id,a.name description,d.defectnum
+                var dateList = GetCompletiontime(stDate, edDate);
+                var list = new List<WmCategoryReport>();
+                var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+
+                foreach (var yearMonth in dateList)
+                {
+                    var tablename = yearMonth;
+
+                    if (yearMonth == currentYearMonth)
+                        tablename = string.Empty;
+
+                    string sql = string.Format(@"select c.device,c.lot,c.layer,b.completiontime,c.substrate_id,a.id,a.name description,d.defectnum
                                                 from wm_classificationitem a,wm_waferresult b,wm_identification c,
                                             (select t.resultid,t.inspclassifiid,count(t.id) defectnum
-                                            from wm_defectlist t group by t.resultid,t.inspclassifiid) d
+                                            from wm_defectlist{3} t group by t.resultid,t.inspclassifiid) d
                                             where a.itemid=d.inspclassifiid and d.resultid=b.resultid and b.identificationid=c.identificationid
-                                            and instr(c.device||'|'||c.layer||'|'||c.lot||'|','{0}')>0 and b.delflag='0' and b.completiontime>={1} and b.completiontime<={2} order by c.substrate_id,a.id", lot, stDate, edDate);
+                                            and instr(c.device||'|'||c.layer||'|'||c.lot||'|','{0}')>0 and b.delflag='0' and b.completiontime>={1} and b.completiontime<={2} order by c.substrate_id,a.id", lot, stDate, edDate, tablename);
 
-                if (lot.EndsWith("|||"))
-                    sql = string.Format(@"select c.device,c.lot,c.layer,b.completiontime,c.substrate_id,a.id,a.name description,d.defectnum
+                    if (lot.EndsWith("|||"))
+                        sql = string.Format(@"select c.device,c.lot,c.layer,b.completiontime,c.substrate_id,a.id,a.name description,d.defectnum
                                                 from wm_classificationitem a,wm_waferresult b,wm_identification c,
                                             (select t.resultid,t.inspclassifiid,count(t.id) defectnum
-                                            from wm_defectlist t group by t.resultid,t.inspclassifiid) d
+                                            from wm_defectlist{3} t group by t.resultid,t.inspclassifiid) d
                                             where a.itemid=d.inspclassifiid and d.resultid=b.resultid and b.identificationid=c.identificationid
-                                            and instr(c.device||'|||','{0}')>0 and b.delflag='0' and b.completiontime>={1} and b.completiontime<={2} order by c.substrate_id,a.id", lot, stDate, edDate);
+                                            and instr(c.device||'|||','{0}')>0 and b.delflag='0' and b.completiontime>={1} and b.completiontime<={2} order by c.substrate_id,a.id", lot, stDate, edDate, tablename);
 
-                else if (lot.EndsWith("||"))
-                    sql = string.Format(@"select c.device,c.lot,c.layer,b.completiontime,c.substrate_id,a.id,a.name description,d.defectnum
+                    else if (lot.EndsWith("||"))
+                        sql = string.Format(@"select c.device,c.lot,c.layer,b.completiontime,c.substrate_id,a.id,a.name description,d.defectnum
                                                 from wm_classificationitem a,wm_waferresult b,wm_identification c,
                                             (select t.resultid,t.inspclassifiid,count(t.id) defectnum
-                                            from wm_defectlist t group by t.resultid,t.inspclassifiid) d
+                                            from wm_defectlist{3} t group by t.resultid,t.inspclassifiid) d
                                             where a.itemid=d.inspclassifiid and d.resultid=b.resultid and b.identificationid=c.identificationid
-                                            and instr(c.device||'|'||c.layer||'||','{0}')>0 and b.delflag='0' and b.completiontime>={1} and b.completiontime<={2} order by c.substrate_id,a.id", lot, stDate, edDate);
+                                            and instr(c.device||'|'||c.layer||'||','{0}')>0 and b.delflag='0' and b.completiontime>={1} and b.completiontime<={2} order by c.substrate_id,a.id", lot, stDate, edDate, tablename);
 
-                return db.SqlQuery<WmCategoryReport>(sql).ToList();
+                    list.AddRange(db.SqlQuery<WmCategoryReport>(sql).ToList());
+                }
+
+                return list;
             }
         }
 
@@ -728,27 +819,51 @@ namespace WR.WCF.Site
         {
             using (BFdbContext db = new BFdbContext())
             {
-                string sql = string.Format(@"select b.device,b.layer,b.lot,b.substrate_id,a.dieaddress,d.id,d.name description,c.completiontime,a.area_,a.size_,a.DIEADDRESS 
-                                                from wm_defectlist a,wm_waferresult te,wm_identification b,wm_inspectioninfo c,wm_classificationitem d
+                var dateList = GetCompletiontime(stDate, edDate);
+                var list = new List<WmDefectiveDieReport>();
+                var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+
+                foreach (var yearMonth in dateList)
+                {
+                    var tablename = yearMonth;
+
+                    if (yearMonth == currentYearMonth)
+                        tablename = string.Empty;
+
+                    string sql = string.Format(@"select b.device,b.layer,b.lot,b.substrate_id,a.dieaddress,d.id,d.name description,c.completiontime,a.area_,a.size_,a.DIEADDRESS 
+                                                from wm_defectlist{3} a,wm_waferresult te,wm_identification b,wm_inspectioninfo c,wm_classificationitem d
                                                 where a.resultid=te.resultid and te.identificationid=b.identificationid and a.resultid=c.resultid
                                                     and a.inspclassifiid=d.itemid and instr(b.device||'|'||b.layer||'|'||b.lot||'|','{0}')>0 and te.delflag='0' and c.completiontime>={1} and c.completiontime<={2} 
-                                                order by b.lot,b.substrate_id,d.id", lot, stDate, edDate);
+                                                order by b.lot,b.substrate_id,d.id", lot, stDate, edDate, tablename);
 
-                if (lot.EndsWith("|||"))
-                    sql = string.Format(@"select b.device,b.layer,b.lot,b.substrate_id,a.dieaddress,d.id,d.name description,c.completiontime,a.area_,a.size_,a.DIEADDRESS 
-                                                from wm_defectlist a,wm_waferresult te,wm_identification b,wm_inspectioninfo c,wm_classificationitem d
+                    if (lot.EndsWith("|||"))
+                        sql = string.Format(@"select b.device,b.layer,b.lot,b.substrate_id,a.dieaddress,d.id,d.name description,c.completiontime,a.area_,a.size_,a.DIEADDRESS 
+                                                from wm_defectlist{3} a,wm_waferresult te,wm_identification b,wm_inspectioninfo c,wm_classificationitem d
                                                 where a.resultid=te.resultid and te.identificationid=b.identificationid and a.resultid=c.resultid
                                                     and a.inspclassifiid=d.itemid and instr(b.device||'|||','{0}')>0 and te.delflag='0' and c.completiontime>={1} and c.completiontime<={2} 
-                                                order by b.lot,b.substrate_id,d.id", lot, stDate, edDate);
+                                                order by b.lot,b.substrate_id,d.id", lot, stDate, edDate, tablename);
 
-                else if (lot.EndsWith("||"))
-                    sql = string.Format(@"select b.device,b.layer,b.lot,b.substrate_id,a.dieaddress,d.id,d.name description,c.completiontime,a.area_,a.size_,a.DIEADDRESS 
-                                                from wm_defectlist a,wm_waferresult te,wm_identification b,wm_inspectioninfo c,wm_classificationitem d
+                    else if (lot.EndsWith("||"))
+                        sql = string.Format(@"select b.device,b.layer,b.lot,b.substrate_id,a.dieaddress,d.id,d.name description,c.completiontime,a.area_,a.size_,a.DIEADDRESS 
+                                                from wm_defectlist{3} a,wm_waferresult te,wm_identification b,wm_inspectioninfo c,wm_classificationitem d
                                                 where a.resultid=te.resultid and te.identificationid=b.identificationid and a.resultid=c.resultid
                                                     and a.inspclassifiid=d.itemid and instr(b.device||'|'||b.layer||'||','{0}')>0 and te.delflag='0' and c.completiontime>={1} and c.completiontime<={2} 
-                                                order by b.lot,b.substrate_id,d.id", lot, stDate, edDate);
+                                                order by b.lot,b.substrate_id,d.id", lot, stDate, edDate, tablename);
 
-                return db.SqlQuery<WmDefectiveDieReport>(sql).ToList();
+                    list.AddRange(db.SqlQuery<WmDefectiveDieReport>(sql).ToList());
+                }
+
+                return list;
+            }
+        }
+
+        private List<string> GetCompletiontime(string stDate, string edDate)
+        {
+            using (BFdbContext db = new BFdbContext())
+            {
+                string sql = string.Format(@"select distinct substr(t.completiontime,0,6) from wm_waferresult t where t.completiontime>={0} and t.completiontime<={1} group by t.completiontime", stDate, edDate);
+
+                return db.SqlQuery<string>(sql).ToList();
             }
         }
 
@@ -762,36 +877,81 @@ namespace WR.WCF.Site
         {
             using (BFdbContext db = new BFdbContext())
             {
-                string sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.dieqty
+                //                string sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.dieqty
+                //                                                from wm_waferresult ta,wm_identification tb,
+                //                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
+                //                                                (select c.resultid,b.rows_ * b.columns_ -count(a.id) dieqty 
+                //                                                        from wm_dielayoutlist a,wm_dielayout b,wm_waferresult c
+                //                                                        where a.layoutid=b.layoutid and b.layoutid=c.dielayoutid and lower(trim(a.disposition))='notexist' group by c.resultid ,b.rows_, b.columns_) td
+                //                                                where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
+                //                                                        and instr(tb.device||'|'||tb.layer||'|'||tb.lot||'|','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate);
+
+                //                if (lot.EndsWith("|||"))
+                //                    sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.dieqty
+                //                                                from wm_waferresult ta,wm_identification tb,
+                //                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
+                //                                                (select c.resultid,b.rows_ * b.columns_ -count(a.id) dieqty 
+                //                                                        from wm_dielayoutlist a,wm_dielayout b,wm_waferresult c
+                //                                                        where a.layoutid=b.layoutid and b.layoutid=c.dielayoutid and lower(trim(a.disposition))='notexist' group by c.resultid, b.rows_, b.columns_) td
+                //                                                where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
+                //                                                        and instr(tb.device||'|||','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate);
+
+                //                else if (lot.EndsWith("||"))
+                //                    sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.dieqty
+                //                                                from wm_waferresult ta,wm_identification tb,
+                //                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
+                //                                                (select c.resultid,b.rows_ * b.columns_ -count(a.id) dieqty 
+                //                                                        from wm_dielayoutlist a,wm_dielayout b,wm_waferresult c
+                //                                                        where a.layoutid=b.layoutid and b.layoutid=c.dielayoutid and lower(trim(a.disposition))='notexist' group by c.resultid, b.rows_, b.columns_) td
+                //                                                where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
+                //                                                        and instr(tb.device||'|'||tb.layer||'||','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate);
+
+                //                return db.SqlQuery<WmInpDieReport>(sql).ToList();
+
+                var dateList = GetCompletiontime(stDate, edDate);
+                var list = new List<WmInpDieReport>();
+                var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+
+                foreach (var yearMonth in dateList)
+                {
+                    var tablename = yearMonth;
+
+                    if (yearMonth == currentYearMonth)
+                        tablename = string.Empty;
+
+                    string sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.dieqty
                                                 from wm_waferresult ta,wm_identification tb,
-                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
+                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist{3} a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
                                                 (select c.resultid,b.rows_ * b.columns_ -count(a.id) dieqty 
-                                                        from wm_dielayoutlist a,wm_dielayout b,wm_waferresult c
+                                                        from wm_dielayoutlist{3} a,wm_dielayout b,wm_waferresult c
                                                         where a.layoutid=b.layoutid and b.layoutid=c.dielayoutid and lower(trim(a.disposition))='notexist' group by c.resultid ,b.rows_, b.columns_) td
                                                 where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
-                                                        and instr(tb.device||'|'||tb.layer||'|'||tb.lot||'|','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate);
+                                                        and instr(tb.device||'|'||tb.layer||'|'||tb.lot||'|','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate, tablename);
 
-                if (lot.EndsWith("|||"))
-                    sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.dieqty
+                    if (lot.EndsWith("|||"))
+                        sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.dieqty
                                                 from wm_waferresult ta,wm_identification tb,
-                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
+                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist{3} a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
                                                 (select c.resultid,b.rows_ * b.columns_ -count(a.id) dieqty 
-                                                        from wm_dielayoutlist a,wm_dielayout b,wm_waferresult c
+                                                        from wm_dielayoutlist{3} a,wm_dielayout b,wm_waferresult c
                                                         where a.layoutid=b.layoutid and b.layoutid=c.dielayoutid and lower(trim(a.disposition))='notexist' group by c.resultid, b.rows_, b.columns_) td
                                                 where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
-                                                        and instr(tb.device||'|||','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate);
+                                                        and instr(tb.device||'|||','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate, tablename);
 
-                else if (lot.EndsWith("||"))
-                    sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.dieqty
+                    else if (lot.EndsWith("||"))
+                        sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.dieqty
                                                 from wm_waferresult ta,wm_identification tb,
-                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
+                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist{3} a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
                                                 (select c.resultid,b.rows_ * b.columns_ -count(a.id) dieqty 
-                                                        from wm_dielayoutlist a,wm_dielayout b,wm_waferresult c
+                                                        from wm_dielayoutlist{3} a,wm_dielayout b,wm_waferresult c
                                                         where a.layoutid=b.layoutid and b.layoutid=c.dielayoutid and lower(trim(a.disposition))='notexist' group by c.resultid, b.rows_, b.columns_) td
                                                 where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
-                                                        and instr(tb.device||'|'||tb.layer||'||','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate);
+                                                        and instr(tb.device||'|'||tb.layer||'||','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate, tablename);
 
-                return db.SqlQuery<WmInpDieReport>(sql).ToList();
+                    list.AddRange(db.SqlQuery<WmInpDieReport>(sql).ToList());
+                }
+
+                return list;
             }
         }
 
@@ -799,27 +959,45 @@ namespace WR.WCF.Site
         {
             using (BFdbContext db = new BFdbContext())
             {
-                string sql = string.Format(@"select d.lot,d.device,d.layer,d.substrate_id,d.substrate_slot,a.id defectnumber,b.id,b.name description,
-                                            a.dieaddress,a.area_,a.size_,c.completiontime,a.DIEADDRESS 
-                                            from wm_defectlist a,wm_classificationitem b,wm_waferresult c,wm_identification d
-                                            where a.inspclassifiid=b.itemid and a.resultid=c.resultid and c.identificationid=d.identificationid 
-                                                and instr(d.device||'|'||d.layer||'|'||d.lot||'|','{0}')>0 and c.delflag='0' and c.completiontime>={1} and c.completiontime<={2} order by d.substrate_id,a.id", lot, stDate, edDate);
+                AddLog("GetDefectListReport", "start");
 
-                if (lot.EndsWith("|||"))
-                    sql = string.Format(@"select d.lot,d.device,d.layer,d.substrate_id,d.substrate_slot,a.id defectnumber,b.id,b.name description,
-                                            a.dieaddress,a.area_,a.size_,c.completiontime,a.DIEADDRESS 
-                                            from wm_defectlist a,wm_classificationitem b,wm_waferresult c,wm_identification d
-                                            where a.inspclassifiid=b.itemid and a.resultid=c.resultid and c.identificationid=d.identificationid 
-                                                and instr(d.device||'|||','{0}')>0 and c.delflag='0' and c.completiontime>={1} and c.completiontime<={2} order by d.substrate_id,a.id", lot, stDate, edDate);
+                var dateList = GetCompletiontime(stDate, edDate);
+                var list = new List<WmDefectListReport>();
+                var currentYearMonth = DateTime.Now.ToString("yyyyMM");
 
-                else if (lot.EndsWith("||"))
-                    sql = string.Format(@"select d.lot,d.device,d.layer,d.substrate_id,d.substrate_slot,a.id defectnumber,b.id,b.name description,
-                                            a.dieaddress,a.area_,a.size_,c.completiontime,a.DIEADDRESS 
-                                            from wm_defectlist a,wm_classificationitem b,wm_waferresult c,wm_identification d
-                                            where a.inspclassifiid=b.itemid and a.resultid=c.resultid and c.identificationid=d.identificationid 
-                                                and instr(d.device||'|'||d.layer||'||','{0}')>0 and c.delflag='0' and c.completiontime>={1} and c.completiontime<={2} order by d.substrate_id,a.id", lot, stDate, edDate);
+                foreach (var yearMonth in dateList)
+                {
+                    var tablename = yearMonth;
 
-                return db.SqlQuery<WmDefectListReport>(sql).ToList();
+                    if (yearMonth == currentYearMonth)
+                        tablename = string.Empty;
+
+                    string sql = string.Format(@"select d.lot,d.device,d.layer,d.substrate_id,d.substrate_slot,a.id defectnumber,b.id,b.name description,
+                                            a.dieaddress,a.area_,a.size_,c.completiontime,a.DIEADDRESS 
+                                            from wm_defectlist{3} a,wm_classificationitem b,wm_waferresult c,wm_identification d
+                                            where a.inspclassifiid=b.itemid and a.resultid=c.resultid and c.identificationid=d.identificationid 
+                                                and instr(d.device||'|'||d.layer||'|'||d.lot||'|','{0}')>0 and c.delflag='0' and c.completiontime>={1} and c.completiontime<={2} order by d.substrate_id,a.id", lot, stDate, edDate, tablename);
+
+                    if (lot.EndsWith("|||"))
+                        sql = string.Format(@"select d.lot,d.device,d.layer,d.substrate_id,d.substrate_slot,a.id defectnumber,b.id,b.name description,
+                                            a.dieaddress,a.area_,a.size_,c.completiontime,a.DIEADDRESS 
+                                            from wm_defectlist{3} a,wm_classificationitem b,wm_waferresult c,wm_identification d
+                                            where a.inspclassifiid=b.itemid and a.resultid=c.resultid and c.identificationid=d.identificationid 
+                                                and instr(d.device||'|||','{0}')>0 and c.delflag='0' and c.completiontime>={1} and c.completiontime<={2} order by d.substrate_id,a.id", lot, stDate, edDate, tablename);
+
+                    else if (lot.EndsWith("||"))
+                        sql = string.Format(@"select d.lot,d.device,d.layer,d.substrate_id,d.substrate_slot,a.id defectnumber,b.id,b.name description,
+                                            a.dieaddress,a.area_,a.size_,c.completiontime,a.DIEADDRESS 
+                                            from wm_defectlist{3} a,wm_classificationitem b,wm_waferresult c,wm_identification d
+                                            where a.inspclassifiid=b.itemid and a.resultid=c.resultid and c.identificationid=d.identificationid 
+                                                and instr(d.device||'|'||d.layer||'||','{0}')>0 and c.delflag='0' and c.completiontime>={1} and c.completiontime<={2} order by d.substrate_id,a.id", lot, stDate, edDate, tablename);
+
+                    //return db.SqlQuery<WmDefectListReport>(sql).ToList();
+                    list.AddRange(db.SqlQuery<WmDefectListReport>(sql).ToList());
+                    AddLog("GetDefectListReport end", sql);
+                }
+
+                return list;
             }
         }
 
@@ -827,33 +1005,67 @@ namespace WR.WCF.Site
         {
             using (BFdbContext db = new BFdbContext())
             {
-                string sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.inspcnt,ta.resultid
-                                                from wm_waferresult ta,wm_identification tb,
-                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
-                                                (select b.resultid,count(inspecteddieid) inspcnt 
-                                                        from wm_inspecteddielist a,wm_inspectioninfo b where a.inspid=b.inspid  group by b.resultid) td
-                                                where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
-                                                        and instr(tb.device||'|'||tb.layer||'|'||tb.lot||'|','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2}  order by tb.substrate_id", lot, stDate, edDate);
+                AddLog("GetGoodDieReport", "start");
 
-                if (lot.EndsWith("|||"))
-                    sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.inspcnt,ta.resultid
-                                                from wm_waferresult ta,wm_identification tb,
-                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
-                                                (select b.resultid,count(inspecteddieid) inspcnt 
-                                                        from wm_inspecteddielist a,wm_inspectioninfo b where a.inspid=b.inspid  group by b.resultid) td
-                                                where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
-                                                        and instr(tb.device||'|||','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate);
+                var dateList = GetCompletiontime(stDate, edDate);
+                var list = new List<WmGoodDieReport>();
+                var currentYearMonth = DateTime.Now.ToString("yyyyMM");
 
-                else if (lot.EndsWith("||"))
-                    sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.inspcnt,ta.resultid
-                                                from wm_waferresult ta,wm_identification tb,
-                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
-                                                (select b.resultid,count(inspecteddieid) inspcnt 
-                                                        from wm_inspecteddielist a,wm_inspectioninfo b where a.inspid=b.inspid  group by b.resultid) td
-                                                where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
-                                                        and instr(tb.device||'|'||tb.layer||'||','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2}  order by tb.substrate_id", lot, stDate, edDate);
+                foreach (var yearMonth in dateList)
+                {
+                    var tablename = yearMonth;
 
-                return db.SqlQuery<WmGoodDieReport>(sql).ToList();
+                    if (yearMonth == currentYearMonth)
+                        tablename = string.Empty;
+
+                    string sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.inspcnt,ta.resultid
+                                                from wm_waferresult ta,wm_identification tb,
+                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist{3} a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
+                                                (select b.resultid,count(inspecteddieid) inspcnt 
+                                                        from wm_inspecteddielist{3} a,wm_inspectioninfo b where a.inspid=b.inspid  group by b.resultid) td
+                                                where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
+                                                        and instr(tb.device||'|'||tb.layer||'|'||tb.lot||'|','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2}  order by tb.substrate_id", lot, stDate, edDate, tablename);
+
+                    if (lot.EndsWith("|||"))
+                        sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.inspcnt,ta.resultid
+                                                from wm_waferresult ta,wm_identification tb,
+                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist{3} a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
+                                                (select b.resultid,count(inspecteddieid) inspcnt 
+                                                        from wm_inspecteddielist{3} a,wm_inspectioninfo b where a.inspid=b.inspid  group by b.resultid) td
+                                                where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
+                                                        and instr(tb.device||'|||','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2} order by tb.substrate_id", lot, stDate, edDate, tablename);
+
+                    else if (lot.EndsWith("||"))
+                        sql = string.Format(@"select tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,tc.defectnum,td.inspcnt,ta.resultid
+                                                from wm_waferresult ta,wm_identification tb,
+                                                (select a.resultid,count(distinct a.dieaddress) defectnum from wm_defectlist{3} a,wm_classificationitem b where a.inspclassifiid=b.itemid and b.id<>0 group by a.resultid) tc,
+                                                (select b.resultid,count(inspecteddieid) inspcnt 
+                                                        from wm_inspecteddielist{3} a,wm_inspectioninfo b where a.inspid=b.inspid  group by b.resultid) td
+                                                where ta.identificationid=tb.identificationid and ta.resultid=tc.resultid and ta.resultid=td.resultid 
+                                                        and instr(tb.device||'|'||tb.layer||'||','{0}')>0 and ta.delflag='0' and ta.completiontime>={1} and ta.completiontime<={2}  order by tb.substrate_id", lot, stDate, edDate, tablename);
+
+                    //return db.SqlQuery<WmGoodDieReport>(sql).ToList();
+                    list.AddRange(db.SqlQuery<WmGoodDieReport>(sql).ToList());
+
+                    AddLog("GetGoodDieReport end", sql);
+                }
+
+                //list = (from l in list
+                //        group l by new { l.LOT, l.DEVICE, l.LAYER, l.SUBSTRATE_ID, l.SUBSTRATE_SLOT, l.COMPLETIONTIME, l.RESULTID } into tmp
+                //        select new WmGoodDieReport
+                //        {
+                //            LOT = tmp.Key.LOT,
+                //            DEVICE = tmp.Key.DEVICE,
+                //            LAYER = tmp.Key.LAYER,
+                //            SUBSTRATE_ID = tmp.Key.SUBSTRATE_ID,
+                //            SUBSTRATE_SLOT = tmp.Key.SUBSTRATE_SLOT,
+                //            COMPLETIONTIME = tmp.Key.COMPLETIONTIME,
+                //            RESULTID = tmp.Key.RESULTID,
+                //            DEFECTNUM = tmp.Sum(t => t.DEFECTNUM),
+                //            INSPCNT = tmp.Sum(t => t.INSPCNT)
+                //        }).ToList();
+
+                return list;
             }
         }
 
@@ -928,36 +1140,63 @@ namespace WR.WCF.Site
                 {
                     string sql = "";
 
-                    if (lot.EndsWith("|||"))
-                        sql = string.Format(@"select c.device, c.layer,c.lot, a.inspclassifiid, c.substrate_id,count(a.id) NumCnt, a.resultid
-                                                  from wm_defectlist       a,
+                    var dateList = GetCompletiontime(stDate, edDate);
+                    var list = new List<WmItemsSummaryEntity>();
+                    var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+
+                    foreach (var yearMonth in dateList)
+                    {
+                        var tablename = yearMonth;
+
+                        if (yearMonth == currentYearMonth)
+                            tablename = string.Empty;
+
+                        if (lot.EndsWith("|||"))
+                            sql = string.Format(@"select c.device, c.layer,c.lot, a.inspclassifiid, c.substrate_id,count(a.id) NumCnt, a.resultid
+                                                  from wm_defectlist{3}       a,
                                                        wm_waferresult      b,
                                                        wm_identification   c
                                                  where a.resultid = b.resultid
                                                    and b.identificationid = c.identificationid
                                                    and b.delflag='0' and instr(c.device||'|||','{0}')>0 and b.completiontime>={1} and b.completiontime<={2} 
-                                                 group by c.device, c.layer,c.lot,c.substrate_id, a.inspclassifiid, a.resultid", lot, stDate, edDate);
-                    else if (lot.EndsWith("||"))
-                        sql = string.Format(@"select c.device, c.layer, c.lot,a.inspclassifiid, c.substrate_id,count(a.id) NumCnt, a.resultid
-                                                  from wm_defectlist       a,
+                                                 group by c.device, c.layer,c.lot,c.substrate_id, a.inspclassifiid, a.resultid", lot, stDate, edDate, tablename);
+                        else if (lot.EndsWith("||"))
+                            sql = string.Format(@"select c.device, c.layer, c.lot,a.inspclassifiid, c.substrate_id,count(a.id) NumCnt, a.resultid
+                                                  from wm_defectlist{3}       a,
                                                        wm_waferresult      b,
                                                        wm_identification   c
                                                  where a.resultid = b.resultid
                                                    and b.identificationid = c.identificationid
                                                    and b.delflag='0' and instr(c.device||'|'||c.layer||'||','{0}')>0 and b.completiontime>={1} and b.completiontime<={2} 
-                                                 group by c.device, c.layer,c.lot,c.substrate_id, a.inspclassifiid, a.resultid", lot, stDate, edDate);
-                    else
-                        sql = string.Format(@"select c.device, c.layer,c.lot, a.inspclassifiid,c.substrate_id, count(a.id) NumCnt, a.resultid
-                                                  from wm_defectlist       a,
+                                                 group by c.device, c.layer,c.lot,c.substrate_id, a.inspclassifiid, a.resultid", lot, stDate, edDate, tablename);
+                        else
+                            sql = string.Format(@"select c.device, c.layer,c.lot, a.inspclassifiid,c.substrate_id, count(a.id) NumCnt, a.resultid
+                                                  from wm_defectlist{3}       a,
                                                        wm_waferresult      b,
                                                        wm_identification   c
                                                  where a.resultid = b.resultid
                                                    and b.identificationid = c.identificationid
                                                    and b.delflag='0' and instr(c.device||'|'||c.layer||'|'||c.lot||'|','{0}')>0 and b.completiontime>={1} and b.completiontime<={2} 
-                                                 group by c.device, c.layer,c.lot, c.substrate_id,a.inspclassifiid, a.resultid", lot, stDate, edDate);
+                                                 group by c.device, c.layer,c.lot, c.substrate_id,a.inspclassifiid, a.resultid", lot, stDate, edDate, tablename);
 
-                    //log.Error(sql);
-                    return db.SqlQuery<WmItemsSummaryEntity>(sql).ToList();
+                        //log.Error(sql);
+                        list.AddRange(db.SqlQuery<WmItemsSummaryEntity>(sql).ToList());
+                    }
+
+                    list = (from l in list
+                            group l by new { l.Device, l.Layer, l.Lot, l.Inspclassifiid, l.Substrate_id, l.RESULTID } into tmp
+                            select new WmItemsSummaryEntity
+                            {
+                                Device = tmp.Key.Device,
+                                Layer = tmp.Key.Layer,
+                                Lot = tmp.Key.Lot,
+                                Inspclassifiid = tmp.Key.Inspclassifiid,
+                                Substrate_id = tmp.Key.Substrate_id,
+                                RESULTID = tmp.Key.RESULTID,
+                                NumCnt = tmp.Sum(t => t.NumCnt)
+                            }).ToList();
+
+                    return list;
                 }
             }
             catch (Exception ex)
@@ -975,9 +1214,20 @@ namespace WR.WCF.Site
                 {
                     string sql = "";
 
-                    if (lot.EndsWith("|||"))
-                        sql = string.Format(@"select d.device, d.layer, count(a.inspecteddieid) NumCnt
-                                               from wm_inspecteddielist a,
+                    var dateList = GetCompletiontime(stDate, edDate);
+                    var list = new List<WmItemsSummaryEntity>();
+                    var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+
+                    foreach (var yearMonth in dateList)
+                    {
+                        var tablename = yearMonth;
+
+                        if (yearMonth == currentYearMonth)
+                            tablename = string.Empty;
+
+                        if (lot.EndsWith("|||"))
+                            sql = string.Format(@"select d.device, d.layer, count(a.inspecteddieid) NumCnt
+                                               from wm_inspecteddielist{3} a,
                                                     wm_inspectioninfo   b,
                                                     wm_waferresult      c,
                                                     wm_identification   d
@@ -985,10 +1235,10 @@ namespace WR.WCF.Site
                                                 and b.resultid = c.resultid
                                                 and c.identificationid = d.identificationid
                                                 and c.delflag = '0' and instr(d.device||'|||','{0}')>0  and c.completiontime>={1} and c.completiontime<={2} 
-                                              group by d.device, d.layer", lot, stDate, edDate);
-                    else if (lot.EndsWith("||"))
-                        sql = string.Format(@"select d.device, d.layer, count(a.inspecteddieid) NumCnt
-                                               from wm_inspecteddielist a,
+                                              group by d.device, d.layer", lot, stDate, edDate, tablename);
+                        else if (lot.EndsWith("||"))
+                            sql = string.Format(@"select d.device, d.layer, count(a.inspecteddieid) NumCnt
+                                               from wm_inspecteddielist{3} a,
                                                     wm_inspectioninfo   b,
                                                     wm_waferresult      c,
                                                     wm_identification   d
@@ -996,10 +1246,10 @@ namespace WR.WCF.Site
                                                 and b.resultid = c.resultid
                                                 and c.identificationid = d.identificationid
                                                 and c.delflag = '0' and instr(d.device||'|'||d.layer||'||','{0}')>0  and c.completiontime>={1} and c.completiontime<={2} 
-                                              group by d.device, d.layer", lot, stDate, edDate);
-                    else
-                        sql = string.Format(@"select d.device, d.layer,d.lot,d.substrate_id, count(a.inspecteddieid) NumCnt
-                                               from wm_inspecteddielist a,
+                                              group by d.device, d.layer", lot, stDate, edDate, tablename);
+                        else
+                            sql = string.Format(@"select d.device, d.layer,d.lot,d.substrate_id, count(a.inspecteddieid) NumCnt
+                                               from wm_inspecteddielist{3} a,
                                                     wm_inspectioninfo   b,
                                                     wm_waferresult      c,
                                                     wm_identification   d
@@ -1007,9 +1257,21 @@ namespace WR.WCF.Site
                                                 and b.resultid = c.resultid
                                                 and c.identificationid = d.identificationid
                                                 and c.delflag = '0' and instr(d.device||'|'||d.layer||'|'||d.lot||'|','{0}')>0  and c.completiontime>={1} and c.completiontime<={2}
-                                              group by d.device, d.layer,d.lot,d.substrate_id", lot, stDate, edDate);
+                                              group by d.device, d.layer,d.lot,d.substrate_id", lot, stDate, edDate, tablename);
 
-                    return db.SqlQuery<WmItemsSummaryEntity>(sql).ToList();
+                        list.AddRange(db.SqlQuery<WmItemsSummaryEntity>(sql).ToList());
+                    }
+
+                    list = (from l in list
+                            group l by new { l.Device, l.Layer } into tmp
+                            select new WmItemsSummaryEntity
+                            {
+                                Device = tmp.Key.Device,
+                                Layer = tmp.Key.Layer,
+                                NumCnt = tmp.Sum(t => t.NumCnt)
+                            }).ToList();
+
+                    return list;
                 }
             }
             catch (Exception ex)
@@ -1922,6 +2184,94 @@ namespace WR.WCF.Site
                     string sql = string.Format("update wm_waferresult t set t.isreview='{0}' where t.resultid='{1}'", isreview, id);
 
                     return db.ExecuteSqlCommand(sql);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public List<WMYIELDSETTING> GetAllYieldSetting()
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    return db.FindAll<WMYIELDSETTING>().ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public int AddYield(string repiceId, decimal layeryield, decimal waferyield)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    if (db.WMYIELDSETTING.Any(p => p.RECIPE_ID == repiceId))
+                    {
+                        return -2;
+                    }
+
+                    var entity = new WMYIELDSETTING
+                      {
+                          RECIPE_ID = repiceId,
+                          LOT_YIELD = layeryield,
+                          WAFER_YIELD = waferyield
+                      };
+
+                    return db.Insert<WMYIELDSETTING>(entity);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public int EditYield(string repiceId, decimal layeryield, decimal waferyield)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    var entity = new WMYIELDSETTING
+                    {
+                        RECIPE_ID = repiceId,
+                        LOT_YIELD = layeryield,
+                        WAFER_YIELD = waferyield
+                    };
+
+                    return db.Update<WMYIELDSETTING>(entity);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public int DelYield(string repiceId)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    var entity = db.Find<WMYIELDSETTING>(s => s.RECIPE_ID == repiceId);
+
+                    if (entity != null)
+                        return db.Delete<WMYIELDSETTING>(entity);
+                    else
+                        return -1;
                 }
             }
             catch (Exception ex)
