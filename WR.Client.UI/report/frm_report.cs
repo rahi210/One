@@ -97,7 +97,7 @@ namespace WR.Client.UI
             }
 
             dateFlag = false;
-            dtDate.Value = DateTime.Now.AddYears(-3);
+            dtDate.Value = DateTime.Now.AddMonths(-1);
             dateTo.Value = DateTime.Now;
 
             //DataCache.IdentifcationInfo.ForEach((p) =>
@@ -912,6 +912,8 @@ namespace WR.Client.UI
             }
 
             SaveFileDialog sd = new SaveFileDialog();
+            sd.Filter = "xls文件(*.xls)|*.xls";
+
             switch (tabReport.SelectedTab.Name)
             {
                 case "tabDensity":

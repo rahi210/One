@@ -42,6 +42,7 @@ namespace WR.Client.UI
                 MsgBoxEx.Info("Please input name");
                 return;
             }
+
             IsysService service = sysService.GetService();
             string res = "";
 

@@ -88,6 +88,7 @@
     <Compile Include="WmItemsSummaryEntity.cs" />
     <Compile Include="EmExamResultEntity.cs" />
     <Compile Include="EmdefectlistEntity.cs" />
+    <Compile Include="WMYIELDSETTING.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

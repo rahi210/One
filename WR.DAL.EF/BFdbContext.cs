@@ -336,5 +336,6 @@ namespace WR.DAL.EF
         //public DbSet<EMITEMRESULT> EMITEMRESULT { get; set; }
         public DbSet<EMEXAMRESULT> EMEXAMRESULT { get; set; }
         public DbSet<EMPLAN> EMPLAN { get; set; }
+        public DbSet<WMYIELDSETTING> WMYIELDSETTING { get; set; }
     }
 }

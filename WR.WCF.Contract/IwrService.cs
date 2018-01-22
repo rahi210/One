@@ -140,7 +140,7 @@ namespace WR.WCF.Contract
         List<EMPLAN> GetEmPlan(string lid);
 
         [OperationContract]
-        int AddPlan(string lid, string name, string stDate, string edDate, int usernum,int defectnum, string remark, string by);
+        int AddPlan(string lid, string name, string stDate, string edDate, int usernum, int defectnum, string remark, string by);
         [OperationContract]
         int UpdatePlan(string id, string name, string stDate, string edDate, int usernum, int defectnum, string remark, string by);
         [OperationContract]
@@ -166,5 +166,17 @@ namespace WR.WCF.Contract
 
         [OperationContract]
         int UpdateWaferResultToReadOnly(string id, string isreview);
+
+        [OperationContract]
+        List<WMYIELDSETTING> GetAllYieldSetting();
+
+        [OperationContract]
+        int AddYield(string repiceId, decimal layeryield, decimal waferyield);
+
+        [OperationContract]
+        int EditYield(string repiceId, decimal layeryield, decimal waferyield);
+
+        [OperationContract]
+        int DelYield(string repiceId);
     }
 }

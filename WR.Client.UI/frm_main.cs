@@ -298,7 +298,7 @@ namespace WR.Client.UI
                     if (DataCache.HasExam)
                     {
                         frm = new frm_paper();
-                        ((frm_paper)frm).Oparams = Oparams;
+                        //((frm_paper)frm).Oparams = Oparams;
                     }
                     else
                     {

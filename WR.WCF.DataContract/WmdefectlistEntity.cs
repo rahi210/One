@@ -79,5 +79,9 @@ namespace WR.WCF.DataContract
         [DataMember]
         public string Color
         { get; set; }
+
+        [DataMember]
+        public string MaskType
+        { get; set; }
     }
 }

@@ -67,6 +67,10 @@
             this.btnSystem = new System.Windows.Forms.Button();
             this.nudDisk = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -83,15 +87,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudLotYield)).BeginInit();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudDisk)).BeginInit();
+            this.panel5.SuspendLayout();
+            this.tabControl2.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.fpnl);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(414, 600);
+            this.groupBox1.Size = new System.Drawing.Size(400, 568);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "All Surface Rule";
@@ -102,7 +109,7 @@
             this.fpnl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fpnl.Location = new System.Drawing.Point(3, 17);
             this.fpnl.Name = "fpnl";
-            this.fpnl.Size = new System.Drawing.Size(408, 580);
+            this.fpnl.Size = new System.Drawing.Size(394, 548);
             this.fpnl.TabIndex = 1;
             // 
             // panel1
@@ -426,6 +433,7 @@
             // 
             // nudWaferYield
             // 
+            this.nudWaferYield.DecimalPlaces = 2;
             this.nudWaferYield.Location = new System.Drawing.Point(100, 43);
             this.nudWaferYield.Name = "nudWaferYield";
             this.nudWaferYield.Size = new System.Drawing.Size(94, 21);
@@ -433,6 +441,7 @@
             // 
             // nudLotYield
             // 
+            this.nudLotYield.DecimalPlaces = 2;
             this.nudLotYield.Location = new System.Drawing.Point(100, 16);
             this.nudLotYield.Name = "nudLotYield";
             this.nudLotYield.Size = new System.Drawing.Size(94, 21);
@@ -443,7 +452,7 @@
             this.btnWaferYield.BackgroundImage = global::WR.Client.UI.Properties.Resources.button;
             this.btnWaferYield.Image = global::WR.Client.UI.Properties.Resources.move24;
             this.btnWaferYield.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnWaferYield.Location = new System.Drawing.Point(223, 225);
+            this.btnWaferYield.Location = new System.Drawing.Point(223, 215);
             this.btnWaferYield.Name = "btnWaferYield";
             this.btnWaferYield.Size = new System.Drawing.Size(80, 33);
             this.btnWaferYield.TabIndex = 15;
@@ -487,7 +496,7 @@
             this.btnSystem.BackgroundImage = global::WR.Client.UI.Properties.Resources.button;
             this.btnSystem.Image = global::WR.Client.UI.Properties.Resources.move24;
             this.btnSystem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSystem.Location = new System.Drawing.Point(200, 205);
+            this.btnSystem.Location = new System.Drawing.Point(223, 216);
             this.btnSystem.Name = "btnSystem";
             this.btnSystem.Size = new System.Drawing.Size(80, 33);
             this.btnSystem.TabIndex = 19;
@@ -511,12 +520,53 @@
             this.label7.TabIndex = 17;
             this.label7.Text = "Disk Alert Value(%):";
             // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.tabControl2);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(414, 600);
+            this.panel5.TabIndex = 20;
+            // 
+            // tabControl2
+            // 
+            this.tabControl2.Controls.Add(this.tabPage5);
+            this.tabControl2.Controls.Add(this.tabPage6);
+            this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl2.Location = new System.Drawing.Point(0, 0);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(414, 600);
+            this.tabControl2.TabIndex = 0;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.groupBox1);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(406, 574);
+            this.tabPage5.TabIndex = 0;
+            this.tabPage5.Text = "Rule";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(406, 574);
+            this.tabPage6.TabIndex = 1;
+            this.tabPage6.Text = "Yield Setting";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
             // frm_config
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(744, 600);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel1);
             this.Name = "frm_config";
             this.Text = "frm_config";
@@ -542,6 +592,9 @@
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudDisk)).EndInit();
+            this.panel5.ResumeLayout(false);
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -587,6 +640,10 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox cbxFilter;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.TabControl tabControl2;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.TabPage tabPage6;
 
     }
 }

@@ -28,6 +28,8 @@ namespace WR.Client.UI
 
         public static List<CMNDICT> CmnDict;
 
+        public static List<WMYIELDSETTING> YieldSetting { get; set; }
+
         public static List<TbMenuEntity> Tbmenus;
 
         private static List<WmidentificationEntity> _identifcationInfo;
@@ -85,7 +87,18 @@ namespace WR.Client.UI
                                             join n in newWaferList
                                             on new { w.DEVICE, w.LAYER, w.LOT, w.SUBSTRATE_ID, w.CREATEDDATE } equals new { n.DEVICE, n.LAYER, n.LOT, n.SUBSTRATE_ID, n.CREATEDDATE }
                                             select w).ToList();
+
+                        lotList = ((from w in _waferResultInfo
+                                    group w by new { w.DEVICE, w.LAYER, w.LOT } into l
+                                    select new { DEVICE = l.Key.DEVICE, LAYER = l.Key.LAYER, LOT = l.Key.LOT, LFIELD = l.Average(s => s.SFIELD) }))
+                                   .ToList();
+
+                        _waferResultInfo.ForEach(s => s.LFIELD = lotList.FirstOrDefault(l => l.DEVICE == s.DEVICE && l.LAYER == s.LAYER && l.LOT == s.LOT).LFIELD);
                     }
+
+                    _waferResultInfo.ForEach(s => s.RECIPE_ID = string.IsNullOrEmpty(s.RECIPE_ID) ? "" : s.RECIPE_ID);
+
+                    YieldSetting = service.GetAllYieldSetting();
                 }
 
                 return _waferResultInfo;

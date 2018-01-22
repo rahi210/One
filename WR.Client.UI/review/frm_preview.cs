@@ -2655,9 +2655,10 @@ namespace WR.Client.UI
             //重新计算良率 
             decimal goodCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID == 0);
             decimal defectCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID != 0);
+            decimal dieCnt = _dielayoutlist.Count(s => s.DISPOSITION.Trim().ToLower() != "notexist" || s.DISPOSITION.Trim().ToLower() != "notprocess");
 
             Oparams[3] = defectCnt.ToString();
-            Oparams[4] = (goodCnt / _dielayoutlist.Count * 100).ToString("0.00");
+            Oparams[4] = (goodCnt / dieCnt * 100).ToString("0.00");
 
             lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", Oparams[1], Oparams[2], Oparams[3], Oparams[4]);
         }

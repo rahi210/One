@@ -57,9 +57,13 @@ namespace WR.Client.UI
                     {
                         string address = string.Format("{0},{1}", j, dielayout.ROWS_ - 1 - i);
                         var defect = defectlist.FirstOrDefault(p => p.DieAddress == address);
+
                         if (defect != null)
                         {
-                            sw.Write("{0}", defect.Cclassid.Value.ToString("X").ToUpper().PadLeft(2, '0'));
+                            var cclassid = defectlist.Where(p => p.DieAddress == address).Max(s => s.Cclassid);
+
+                            //sw.Write("{0}", defect.Cclassid.Value.ToString("X").ToUpper().PadLeft(2, '0'));
+                            sw.Write("{0}", cclassid.Value.ToString("X").ToUpper().PadLeft(2, '0'));
                             if ((j + 1) != dielayout.COLUMNS_)
                                 sw.Write(" ");
 

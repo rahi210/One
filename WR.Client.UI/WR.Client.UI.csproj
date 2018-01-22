@@ -104,11 +104,23 @@
     <Compile Include="review\frm_merge.Designer.cs">
       <DependentUpon>frm_merge.cs</DependentUpon>
     </Compile>
+    <Compile Include="sm\frm_yieldsetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="sm\frm_yieldsetting.Designer.cs">
+      <DependentUpon>frm_yieldsetting.cs</DependentUpon>
+    </Compile>
     <Compile Include="sm\frm_Archive.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="sm\frm_Archive.Designer.cs">
       <DependentUpon>frm_Archive.cs</DependentUpon>
+    </Compile>
+    <Compile Include="sm\frm_yieldedit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="sm\frm_yieldedit.Designer.cs">
+      <DependentUpon>frm_yieldedit.cs</DependentUpon>
     </Compile>
     <Compile Include="sys\frm_about.cs">
       <SubType>Form</SubType>
@@ -234,6 +246,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="review\frm_merge.resx">
       <DependentUpon>frm_merge.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="sm\frm_yieldedit.resx">
+      <DependentUpon>frm_yieldedit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="sm\frm_yieldsetting.resx">
+      <DependentUpon>frm_yieldsetting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="sm\frm_Archive.resx">
       <DependentUpon>frm_Archive.cs</DependentUpon>

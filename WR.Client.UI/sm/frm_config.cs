@@ -19,6 +19,18 @@ namespace WR.Client.UI
             InitializeComponent();
         }
 
+        private void YieldInit()
+        {
+            //tabControl2.SelectTab(1);
+            var frmYield = new frm_yieldsetting();
+            frmYield.FormBorderStyle = FormBorderStyle.None;
+            frmYield.TopLevel = false;
+            frmYield.Show();
+            frmYield.Parent = tabControl2.TabPages[1];
+            frmYield.Dock = DockStyle.Fill;
+            tabControl2.SelectedTab.AutoScroll = true;
+        }
+
         private void frm_config_Load(object sender, EventArgs e)
         {
             fpnl.Controls.Clear();
@@ -57,7 +69,7 @@ namespace WR.Client.UI
             }
             else
             {
-                dtDate.Value = DateTime.Today.AddDays(-10);
+                dtDate.Value = DateTime.Today.AddDays(-365);
                 dateTo.Value = DateTime.Today;
             }
 
@@ -75,6 +87,8 @@ namespace WR.Client.UI
             InitWaferOption(service);
 
             InitSystemOption(service);
+
+            YieldInit();
         }
 
         private void InitWaferOption(IsysService service)
@@ -266,9 +280,9 @@ namespace WR.Client.UI
 
             string filterdata = WR.Utils.Config.GetAppSetting("duplicate_data_visible");
             if (string.IsNullOrEmpty(filterdata) || filterdata != "1")
-                DataCache.UserInfo.theday = true;
+                DataCache.UserInfo.FilterData = true;
             else
-                DataCache.UserInfo.theday = false;
+                DataCache.UserInfo.FilterData = false;
 
             MsgBoxEx.Info("Save success, please refresh the data.");
         }
@@ -425,5 +439,10 @@ namespace WR.Client.UI
 
             MsgBoxEx.Info("Save success, please refresh the data.");
         }
+        //private void btnYieldSettings_Click(object sender, EventArgs e)
+        //{
+        //    frm_yieldsetting frm = new frm_yieldsetting();
+        //    frm.ShowDialog();
+        //}
     }
 }

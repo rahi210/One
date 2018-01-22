@@ -97,6 +97,8 @@ namespace WR.Client.UI
                 lstRe_view.Click += new EventHandler(itmRe2_Click);
             }
 
+            grdData.AutoGenerateColumns = false;
+
             LoadData();
 
             lotYield = double.Parse(DataCache.CmnDict.FirstOrDefault(s => s.DICTID == "3010" && s.CODE == "0").VALUE);
@@ -436,6 +438,20 @@ namespace WR.Client.UI
                     e.CellStyle.ForeColor = Color.DarkGreen;
                 }
 
+                var _lotYield = lotYield;
+                var _waferYield = waferYield;
+
+                if (grdData["RECIPE_ID", e.RowIndex].Value != null)
+                {
+                    var yieldModel = DataCache.YieldSetting.FirstOrDefault(s => s.RECIPE_ID == grdData["RECIPE_ID", e.RowIndex].Value.ToString());
+
+                    if (yieldModel != null)
+                    {
+                        _lotYield = Convert.ToDouble(yieldModel.LOT_YIELD);
+                        _waferYield = Convert.ToDouble(yieldModel.WAFER_YIELD);
+                    }
+                }
+
                 string name = grdData.Columns[e.ColumnIndex].Name;
                 switch (name)
                 {
@@ -466,14 +482,14 @@ namespace WR.Client.UI
                     case "Column10":
                         if (e.Value != null)
                         {
-                            if (double.Parse(e.Value.ToString()) < waferYield)
+                            if (double.Parse(e.Value.ToString()) < _waferYield)
                                 e.CellStyle.ForeColor = Color.Red;
                         }
                         break;
                     case "Column19":
                         if (e.Value != null)
                         {
-                            if (double.Parse(e.Value.ToString()) < lotYield)
+                            if (double.Parse(e.Value.ToString()) < _lotYield)
                                 e.CellStyle.ForeColor = Color.Red;
                         }
                         break;
@@ -1394,7 +1410,7 @@ namespace WR.Client.UI
 
         private void txtId_Enter(object sender, EventArgs e)
         {
-            if (txtId.Text.Trim() == "Please input lot id or wafer id")
+            if (txtId.Text.Trim() == "Please input layer or repice id or lot id or wafer id")
             {
                 txtId.Text = "";
                 txtId.ForeColor = SystemColors.WindowText;
@@ -1405,17 +1421,20 @@ namespace WR.Client.UI
         {
             if (txtId.Text.Trim() == "")
             {
-                txtId.Text = "Please input lot id or wafer id";
+                txtId.Text = "Please input layer or repice id or lot id or wafer id";
                 txtId.ForeColor = SystemColors.ActiveBorder;
             }
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            if (txtId.Text == "Please input lot id or wafer id")
+            if (txtId.Text == "Please input layer or repice id or lot id or wafer id")
                 grdData.DataSource = new BindingCollection<WmwaferResultEntity>(DataCache.WaferResultInfo).ToList();
             else
-                grdData.DataSource = new BindingCollection<WmwaferResultEntity>(DataCache.WaferResultInfo.Where(p => p.LOT.IndexOf(txtId.Text) >= 0 || p.SUBSTRATE_ID.IndexOf(txtId.Text) >= 0).ToList());
+                grdData.DataSource = new BindingCollection<WmwaferResultEntity>(DataCache.WaferResultInfo.Where(p => p.RECIPE_ID.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
+                    || p.LOT.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
+                    || p.SUBSTRATE_ID.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
+                    || p.LAYER.ToLower().IndexOf(txtId.Text.ToLower()) >= 0).ToList());
         }
 
         /// <summary>

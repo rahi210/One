@@ -74,6 +74,7 @@
             this.Column29 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MaskType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tlsList = new System.Windows.Forms.ToolStripButton();
             this.tlsThum = new System.Windows.Forms.ToolStripButton();
@@ -274,7 +275,8 @@
             this.ColIschecked,
             this.Column29,
             this.Column6,
-            this.Column5});
+            this.Column5,
+            this.MaskType});
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -483,6 +485,14 @@
             this.Column5.Name = "Column5";
             this.Column5.ReadOnly = true;
             this.Column5.Visible = false;
+            // 
+            // MaskType
+            // 
+            this.MaskType.DataPropertyName = "MaskType";
+            this.MaskType.HeaderText = "MaskType";
+            this.MaskType.Name = "MaskType";
+            this.MaskType.ReadOnly = true;
+            this.MaskType.Width = 70;
             // 
             // toolStrip1
             // 
@@ -1516,6 +1526,19 @@
         private System.Windows.Forms.Label lbl_P_Restore;
         private System.Windows.Forms.TrackBar tckBright;
         private System.Windows.Forms.TrackBar tckContract;
+        private System.Windows.Forms.Label lblReset;
+        private System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.Label lblCapture;
+        private System.Windows.Forms.ToolStripComboBox tlsClass;
+        private System.Windows.Forms.Splitter splitter1;
+        private System.Windows.Forms.Splitter splitter3;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Label lblReclass;
+        private System.Windows.Forms.Timer timer3;
+        private System.Windows.Forms.Splitter splitter2;
+        private System.Windows.Forms.ToolStripButton tlsSort;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColCode;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColName;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColUpdated;
@@ -1538,18 +1561,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column29;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
-        private System.Windows.Forms.Label lblReset;
-        private System.Windows.Forms.Timer timer2;
-        private System.Windows.Forms.Label lblCapture;
-        private System.Windows.Forms.ToolStripComboBox tlsClass;
-        private System.Windows.Forms.Splitter splitter1;
-        private System.Windows.Forms.Splitter splitter3;
-        private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel7;
-        private System.Windows.Forms.Label lblReclass;
-        private System.Windows.Forms.Timer timer3;
-        private System.Windows.Forms.Splitter splitter2;
-        private System.Windows.Forms.ToolStripButton tlsSort;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MaskType;
     }
 }
