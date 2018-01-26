@@ -238,6 +238,8 @@ namespace WR.Client.UI
         /// <returns></returns>
         private string GetExamInfo()
         {
+            DataCache.HasExam = false;
+
             var msg = string.Empty;
 
             var hasExamRole = DataCache.Tbmenus.Count(s => s.MENUCODE == "50003") > 0;

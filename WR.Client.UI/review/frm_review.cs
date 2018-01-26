@@ -441,6 +441,12 @@ namespace WR.Client.UI
                 var _lotYield = lotYield;
                 var _waferYield = waferYield;
 
+                var ayield = waferYield;
+                var byield = waferYield;
+                var cyield = waferYield;
+                var dyield = waferYield;
+                var eyield = waferYield;
+
                 if (grdData["RECIPE_ID", e.RowIndex].Value != null)
                 {
                     var yieldModel = DataCache.YieldSetting.FirstOrDefault(s => s.RECIPE_ID == grdData["RECIPE_ID", e.RowIndex].Value.ToString());
@@ -449,6 +455,26 @@ namespace WR.Client.UI
                     {
                         _lotYield = Convert.ToDouble(yieldModel.LOT_YIELD);
                         _waferYield = Convert.ToDouble(yieldModel.WAFER_YIELD);
+
+                        if (yieldModel.WAFER_YIELD > 0)
+                        {
+                            ayield = _waferYield;
+                            byield = _waferYield;
+                            cyield = _waferYield;
+                            dyield = _waferYield;
+                            eyield = _waferYield;
+                        }
+
+                        if (yieldModel.MASKA_YIELD > 0)
+                            ayield = Convert.ToDouble(yieldModel.MASKA_YIELD);
+                        if (yieldModel.MASKB_YIELD > 0)
+                            byield = Convert.ToDouble(yieldModel.MASKB_YIELD);
+                        if (yieldModel.MASKC_YIELD > 0)
+                            cyield = Convert.ToDouble(yieldModel.MASKC_YIELD);
+                        if (yieldModel.MASKD_YIELD > 0)
+                            dyield = Convert.ToDouble(yieldModel.MASKD_YIELD);
+                        if (yieldModel.MASKE_YIELD > 0)
+                            eyield = Convert.ToDouble(yieldModel.MASKE_YIELD);
                     }
                 }
 
@@ -493,7 +519,41 @@ namespace WR.Client.UI
                                 e.CellStyle.ForeColor = Color.Red;
                         }
                         break;
-
+                    case "MaskA_Die":
+                        if (e.Value != null)
+                        {
+                            if (double.Parse(e.Value.ToString()) < ayield)
+                                e.CellStyle.ForeColor = Color.Red;
+                        }
+                        break;
+                    case "MaskB_Die":
+                        if (e.Value != null)
+                        {
+                            if (double.Parse(e.Value.ToString()) < byield)
+                                e.CellStyle.ForeColor = Color.Red;
+                        }
+                        break;
+                    case "MaskC_Die":
+                        if (e.Value != null)
+                        {
+                            if (double.Parse(e.Value.ToString()) < cyield)
+                                e.CellStyle.ForeColor = Color.Red;
+                        }
+                        break;
+                    case "MaskD_Die":
+                        if (e.Value != null)
+                        {
+                            if (double.Parse(e.Value.ToString()) < dyield)
+                                e.CellStyle.ForeColor = Color.Red;
+                        }
+                        break;
+                    case "MaskE_Die":
+                        if (e.Value != null)
+                        {
+                            if (double.Parse(e.Value.ToString()) < eyield)
+                                e.CellStyle.ForeColor = Color.Red;
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -1144,7 +1204,8 @@ namespace WR.Client.UI
             try
             {
                 string sinfPath = string.IsNullOrEmpty(DataCache.SinfPath) ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SINF") : DataCache.SinfPath;
-                var path = Path.Combine(sinfPath, string.Format("{0}-{1}", result.LOT, result.DEVICE));
+                //var path = Path.Combine(sinfPath, string.Format("{0}-{1}", result.LOT, result.DEVICE));
+                var path = Path.Combine(sinfPath, result.DEVICE, result.LAYER, result.LOT);
 
                 filename = Path.Combine(path, string.Format("{0}.sinf", result.SUBSTRATE_ID.Replace(".", "").Replace(" ", "")));
 
@@ -1188,41 +1249,19 @@ namespace WR.Client.UI
 
             try
             {
-
-                Task[] tasks = new Task[resultList.Count];
-
                 IwrService service = wrService.GetService();
 
                 string sinfPath = string.IsNullOrEmpty(DataCache.SinfPath) ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SINF") : DataCache.SinfPath;
 
-                //foreach (var result in resultList)
-                //{
-                //    tasks[i] = Task.Factory.StartNew(() =>
-                //    {
-                //        var path = Path.Combine(sinfPath, string.Format("{0}_{1}", result.LOT, result.DEVICE));
-                //        var filename = Path.Combine(path, string.Format("{0}.sinf", result.SUBSTRATE_ID.Replace(".", "").Replace(" ", "")));
-
-                //        if (!Directory.Exists(path))
-                //        {
-                //            Directory.CreateDirectory(path);
-                //        }
-
-                //        var dielayout = service.GetDielayoutById(result.DIELAYOUTID);
-                //        var dielist = service.GetDielayoutListById(result.DIELAYOUTID);
-                //        var defectlit = service.GetDefectList(result.RESULTID, "");
-
-                //        CHGSinf sinf = new CHGSinf();
-                //        bool res = sinf.Export(filename, result.RECIPE_ID, result.LOT, result.SUBSTRATE_ID, result.SUBSTRATE_NOTCHLOCATION, dielayout, dielist, defectlit);
-                //    });
+                Task[] tasks = new Task[resultList.Count];
 
                 for (int i = 0; i < resultList.Count; i++)
                 {
-
-                    var result = resultList[i];
-
-                    tasks[i] = Task.Factory.StartNew(() =>
+                    tasks[i] = Task.Factory.StartNew(t =>
                     {
-                        var path = Path.Combine(sinfPath, string.Format("{0}-{1}", result.LOT, result.DEVICE));
+                        var result = resultList[(int)t];
+                        //var path = Path.Combine(sinfPath, string.Format("{0}-{1}", result.LOT, result.DEVICE));
+                        var path = Path.Combine(sinfPath, result.DEVICE, result.LAYER, result.LOT);
                         var filename = Path.Combine(path, string.Format("{0}.sinf", result.SUBSTRATE_ID.Replace(".", "").Replace(" ", "")));
 
                         if (!Directory.Exists(path))
@@ -1236,10 +1275,34 @@ namespace WR.Client.UI
 
                         CHGSinf sinf = new CHGSinf();
                         bool res = sinf.Export(filename, result.RECIPE_ID, result.LOT, result.SUBSTRATE_ID, result.SUBSTRATE_NOTCHLOCATION, dielayout, dielist, defectlit);
-                    });
+                    }, i);
                 }
 
                 Task.WaitAll(tasks);
+                //var task = Task.Factory.StartNew(() =>
+                //                       {
+                //                           for (int i = 0; i < resultList.Count; i++)
+                //                           {
+                //                               var result = resultList[i];
+                //                               var path = Path.Combine(sinfPath, string.Format("{0}-{1}", result.LOT, result.DEVICE));
+                //                               //var path = Path.Combine(sinfPath, result.DEVICE, result.LOT);
+                //                               var filename = Path.Combine(path, string.Format("{0}.sinf", result.SUBSTRATE_ID.Replace(".", "").Replace(" ", "")));
+
+                //                               if (!Directory.Exists(path))
+                //                               {
+                //                                   Directory.CreateDirectory(path);
+                //                               }
+
+                //                               var dielayout = service.GetDielayoutById(result.DIELAYOUTID);
+                //                               var dielist = DataCache.GetAllDielayoutListById(service.GetDielayoutListById(result.DIELAYOUTID));
+                //                               var defectlit = service.GetDefectList(result.RESULTID, "");
+
+                //                               CHGSinf sinf = new CHGSinf();
+                //                               bool res = sinf.Export(filename, result.RECIPE_ID, result.LOT, result.SUBSTRATE_ID, result.SUBSTRATE_NOTCHLOCATION, dielayout, dielist, defectlit);
+                //                           }
+                //                       });
+
+                //task.Wait();
             }
             finally
             {
@@ -1351,7 +1414,19 @@ namespace WR.Client.UI
                 if (node.Level != 4 && node.Level != 3)
                 {
                     //batch import
-                    var wfs = DataCache.WaferResultInfo.Where(s => s.DEVICE.Equals(node.Text) || s.LAYER.Equals(node.Text) || s.LOT.Equals(node.Text)).ToList();
+                    var wfs = new List<WmwaferResultEntity>();
+                    var value = node.FullPath.Split(new char[] { '\\' });
+
+                    if (node.Level == 0)
+                        wfs = DataCache.WaferResultInfo.Where(s => s.DEVICE.Equals(node.Text)).ToList();
+                    else if (node.Level == 1)
+                    {
+                        wfs = DataCache.WaferResultInfo.Where(s => s.DEVICE.Equals(value[0]) && s.LAYER.Equals(value[1])).ToList();
+                    }
+                    else if (node.Level == 2)
+                    {
+                        wfs = DataCache.WaferResultInfo.Where(s => s.DEVICE.Equals(value[0]) && s.LAYER.Equals(value[1]) && s.LOT.Equals(value[2])).ToList();
+                    }
 
                     //Thread thr = new Thread(new ThreadStart(() =>
                     //{

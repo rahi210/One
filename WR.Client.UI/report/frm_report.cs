@@ -318,7 +318,7 @@ namespace WR.Client.UI
         private void ShowDensity()
         {
             IwrService service = wrService.GetService();
-            var lst = service.GetDensityReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
+            var lst = service.GetDensityReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"), DataCache.UserInfo.FilterData ? "1" : "0");
             var blst = new BindingCollection<WmdensityReport>(lst);
             grdDensity.DataSource = blst;
 
@@ -364,7 +364,7 @@ namespace WR.Client.UI
         private void ShowCountCategory()
         {
             IwrService service = wrService.GetService();
-            var lst = service.GetCategoryReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
+            var lst = service.GetCategoryReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"), DataCache.UserInfo.FilterData ? "1" : "0");
             var blst = new BindingCollection<WmCategoryReport>(lst);
             grdCategory.DataSource = blst;
 
@@ -401,7 +401,8 @@ namespace WR.Client.UI
         private void ShowDefectiveDie()
         {
             IwrService service = wrService.GetService();
-            var lst = service.GetDefectiveDieReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
+            var lst = service.GetDefectiveDieReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"), DataCache.UserInfo.FilterData ? "1" : "0");
+
             lst.ForEach((p) =>
             {
                 decimal area = 0;
@@ -456,7 +457,8 @@ namespace WR.Client.UI
         private void ShowInspDie()
         {
             IwrService service = wrService.GetService();
-            var lst = service.GetDieInspDieReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
+            var lst = service.GetDieInspDieReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"), DataCache.UserInfo.FilterData ? "1" : "0");
+
             lst.ForEach((p) =>
             {
                 if (!p.DIEQTY.HasValue || p.DIEQTY.Value < 1)
@@ -496,23 +498,26 @@ namespace WR.Client.UI
         private void ShowDefectiveList()
         {
             IwrService service = wrService.GetService();
-            var lst = service.GetDefectListReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
-            lst.ForEach((p) =>
-            {
-                p.CodeDESCRIPTION = string.Format("({0}){1}", p.ID, p.DESCRIPTION);
-                try
+            var lst = service.GetDefectListReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"), DataCache.UserInfo.FilterData ? "1" : "0");
+
+            if (DataCache.UserInfo.FilterData)
+
+                lst.ForEach((p) =>
                 {
-                    var sz = p.SIZE_.Split(new char[] { ',' });
+                    p.CodeDESCRIPTION = string.Format("({0}){1}", p.ID, p.DESCRIPTION);
+                    try
+                    {
+                        var sz = p.SIZE_.Split(new char[] { ',' });
 
-                    p.XSIZE_ = Math.Round(decimal.Parse(sz[0]), 3).ToString();
-                    p.YSIZE_ = Math.Round(decimal.Parse(sz[1]), 3).ToString();
+                        p.XSIZE_ = Math.Round(decimal.Parse(sz[0]), 3).ToString();
+                        p.YSIZE_ = Math.Round(decimal.Parse(sz[1]), 3).ToString();
 
-                    decimal area = 0;
-                    if (decimal.TryParse(p.AREA_, out area))
-                        p.AREA_ = Math.Round(area, 3).ToString();
-                }
-                catch { }
-            });
+                        decimal area = 0;
+                        if (decimal.TryParse(p.AREA_, out area))
+                            p.AREA_ = Math.Round(area, 3).ToString();
+                    }
+                    catch { }
+                });
 
             var blst = new BindingCollection<WmDefectListReport>(lst);
             grdDefectList.DataSource = blst;
@@ -546,7 +551,7 @@ namespace WR.Client.UI
         private void ShowGoodDie()
         {
             IwrService service = wrService.GetService();
-            var lst = service.GetGoodDieReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
+            var lst = service.GetGoodDieReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"), DataCache.UserInfo.FilterData ? "1" : "0");
             lst.ForEach((p) =>
             {
                 p.GOODCNT = p.INSPCNT - p.DEFECTNUM;
@@ -584,7 +589,7 @@ namespace WR.Client.UI
         private void ShowGoodDieNew()
         {
             IwrService service = wrService.GetService();
-            var lst = service.GetGoodDieReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
+            var lst = service.GetGoodDieReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"), DataCache.UserInfo.FilterData ? "1" : "0");
             lst.ForEach((p) =>
             {
                 p.GOODCNT = p.INSPCNT - p.DEFECTNUM;

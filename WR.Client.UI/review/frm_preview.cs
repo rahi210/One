@@ -2233,15 +2233,20 @@ namespace WR.Client.UI
             ShowLoading(ToopEnum.saving);
 
             IwrService service = wrService.GetService();
-            int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
-            if (res >= 0)
+            var res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
+            if (res.Id >= 0)
             {
-                var ent = service.GetWaferResultById(Resultid);
+                //var ent = service.GetWaferResultById(Resultid);
                 var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
-                wf.ISCHECKED = ent.ISCHECKED;
-                wf.CHECKEDDATE = ent.CHECKEDDATE;
-                wf.NUMDEFECT = ent.NUMDEFECT;
-                wf.SFIELD = ent.SFIELD;
+                wf.ISCHECKED = res.ISCHECKED;
+                wf.CHECKEDDATE = res.CHECKEDDATE;
+                wf.NUMDEFECT = res.NUMDEFECT;
+                wf.SFIELD = res.SFIELD;
+                wf.MASKA_DIE = res.MASKA_DIE;
+                wf.MASKB_DIE = res.MASKB_DIE;
+                wf.MASKC_DIE = res.MASKC_DIE;
+                wf.MASKD_DIE = res.MASKD_DIE;
+                wf.MASKE_DIE = res.MASKE_DIE;
 
                 var lotList = ((from w in DataCache.WaferResultInfo
                                 group w by new { w.DEVICE, w.LAYER, w.LOT } into l
@@ -2296,16 +2301,21 @@ namespace WR.Client.UI
             try
             {
                 IwrService service = wrService.GetService();
-                int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "2");
+                var res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "2");
 
-                if (res >= 0)
+                if (res.Id >= 0)
                 {
-                    var ent = service.GetWaferResultById(Resultid);
+                    //var ent = service.GetWaferResultById(Resultid);
                     var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
-                    wf.ISCHECKED = ent.ISCHECKED;
-                    wf.CHECKEDDATE = ent.CHECKEDDATE;
-                    wf.NUMDEFECT = ent.NUMDEFECT;
-                    wf.SFIELD = ent.SFIELD;
+                    wf.ISCHECKED = res.ISCHECKED;
+                    wf.CHECKEDDATE = res.CHECKEDDATE;
+                    wf.NUMDEFECT = res.NUMDEFECT;
+                    wf.SFIELD = res.SFIELD;
+                    wf.MASKA_DIE = res.MASKA_DIE;
+                    wf.MASKB_DIE = res.MASKB_DIE;
+                    wf.MASKC_DIE = res.MASKC_DIE;
+                    wf.MASKD_DIE = res.MASKD_DIE;
+                    wf.MASKE_DIE = res.MASKE_DIE;
 
                     if (wf.ISCHECKED == "2")
                     {
@@ -2742,18 +2752,23 @@ namespace WR.Client.UI
                     IwrService service = wrService.GetService();
 
                     //log.Debug("UpdateDefect Start...............");
-                    int res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
+                    var res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
                     //log.Debug("UpdateDefect End...............");
-                    if (res >= 0)
+                    if (res.Id >= 0)
                     {
                         //log.Debug("GetWaferResultById Start...............");
-                        var ent = service.GetWaferResultById(Resultid);
+                        //var ent = service.GetWaferResultById(Resultid);
                         //log.Debug("GetWaferResultById End...............");
                         var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
-                        wf.ISCHECKED = ent.ISCHECKED;
-                        wf.CHECKEDDATE = ent.CHECKEDDATE;
-                        wf.NUMDEFECT = ent.NUMDEFECT;
-                        wf.SFIELD = ent.SFIELD;
+                        wf.ISCHECKED = res.ISCHECKED;
+                        wf.CHECKEDDATE = res.CHECKEDDATE;
+                        wf.NUMDEFECT = res.NUMDEFECT;
+                        wf.SFIELD = res.SFIELD;
+                        wf.MASKA_DIE = res.MASKA_DIE;
+                        wf.MASKB_DIE = res.MASKB_DIE;
+                        wf.MASKC_DIE = res.MASKC_DIE;
+                        wf.MASKD_DIE = res.MASKD_DIE;
+                        wf.MASKE_DIE = res.MASKE_DIE;
 
                         var lotList = ((from w in DataCache.WaferResultInfo
                                         group w by new { w.DEVICE, w.LAYER, w.LOT } into l

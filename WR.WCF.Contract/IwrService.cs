@@ -43,7 +43,7 @@ namespace WR.WCF.Contract
         List<WmdefectlistEntity> GetDefectList(string resultid, string ischecked);
 
         [OperationContract]
-        int UpdateDefect(string resultid, string checkedby, string mclassid, string finish);
+        WmwaferResultEntity UpdateDefect(string resultid, string checkedby, string mclassid, string finish);
 
         [OperationContract]
         int UpdateClassificationItemUser(string hotkeys, string userid);
@@ -58,7 +58,7 @@ namespace WR.WCF.Contract
         WMWAFERRESULT GetWaferResultById(string id);
 
         [OperationContract]
-        List<WmdensityReport> GetDensityReport(string lot, string fdate, string tdate);
+        List<WmdensityReport> GetDensityReport(string lot, string fdate, string tdate, string isFilter);
 
         [OperationContract]
         WMDIELAYOUT GetDielayoutById(string id);
@@ -70,19 +70,19 @@ namespace WR.WCF.Contract
         int[] GetCountInspected(string lot, string stDate, string edDate);
 
         [OperationContract]
-        List<WmCategoryReport> GetCategoryReport(string lot, string stDate, string edDate);
+        List<WmCategoryReport> GetCategoryReport(string lot, string stDate, string edDate, string isFilter);
 
         [OperationContract]
-        List<WmDefectiveDieReport> GetDefectiveDieReport(string lot, string stDate, string edDate);
+        List<WmDefectiveDieReport> GetDefectiveDieReport(string lot, string stDate, string edDate, string isFilter);
 
         [OperationContract]
-        List<WmInpDieReport> GetDieInspDieReport(string lot, string stDate, string edDate);
+        List<WmInpDieReport> GetDieInspDieReport(string lot, string stDate, string edDate, string isFilter);
 
         [OperationContract]
-        List<WmDefectListReport> GetDefectListReport(string lot, string stDate, string edDate);
+        List<WmDefectListReport> GetDefectListReport(string lot, string stDate, string edDate, string isFilter);
 
         [OperationContract]
-        List<WmGoodDieReport> GetGoodDieReport(string lot, string stDate, string edDate);
+        List<WmGoodDieReport> GetGoodDieReport(string lot, string stDate, string edDate, string isFilter);
 
         [OperationContract]
         List<WMCLASSIFICATIONITEM> GetClassificationItemsByLayer(string lot, string stDate, string edDate);
@@ -171,10 +171,10 @@ namespace WR.WCF.Contract
         List<WMYIELDSETTING> GetAllYieldSetting();
 
         [OperationContract]
-        int AddYield(string repiceId, decimal layeryield, decimal waferyield);
+        int AddYield(string repiceId, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield);
 
         [OperationContract]
-        int EditYield(string repiceId, decimal layeryield, decimal waferyield);
+        int EditYield(string repiceId, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield);
 
         [OperationContract]
         int DelYield(string repiceId);
