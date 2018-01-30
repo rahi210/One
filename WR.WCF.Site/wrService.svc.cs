@@ -511,18 +511,30 @@ namespace WR.WCF.Site
 
                     //更新masktype
                     sbt.Clear();
+//                    sbt.AppendFormat(@"update wm_inspectioninfo t set (t.maska_defect,t.maskb_defect,t.maskc_defect,t.maskd_defect,t.maske_defect)= 
+//                                    (select sum(case when d.masktype = 'A' and c.id <> 0 then 1 else 0 end) maska_defect , 
+//                                    sum(case when d.masktype = 'B' and c.id <> 0 then 1 else 0 end) maskb_defect , 
+//                                    sum(case when d.masktype = 'C' and c.id <> 0 then 1 else 0 end) maskc_defect , 
+//                                    sum(case when d.masktype = 'D' and c.id <> 0 then 1 else 0 end) maskd_defect , 
+//                                    sum(case when d.masktype = 'E' and c.id <> 0 then 1 else 0 end) maske_defect 
+//                                    from wm_defectlist{0} d 
+//                                    inner join wm_classificationitem c 
+//                                    on c.itemid = d.inspclassifiid 
+//                                    where d.inspid = t.inspid) 
+//                                    where exists(select 1 from wm_defectlist{0} d inner join wm_classificationitem c on c.itemid = d.inspclassifiid 
+//                                    where d.inspid = t.inspid) and t.resultid='{1}' ", yearMonth, resultid);
                     sbt.AppendFormat(@"update wm_inspectioninfo t set (t.maska_defect,t.maskb_defect,t.maskc_defect,t.maskd_defect,t.maske_defect)= 
-                                    (select sum(case when d.masktype = 'A' and c.id <> 0 then 1 else 0 end) maska_defect , 
-                                    sum(case when d.masktype = 'B' and c.id <> 0 then 1 else 0 end) maskb_defect , 
-                                    sum(case when d.masktype = 'C' and c.id <> 0 then 1 else 0 end) maskc_defect , 
-                                    sum(case when d.masktype = 'D' and c.id <> 0 then 1 else 0 end) maskd_defect , 
-                                    sum(case when d.masktype = 'E' and c.id <> 0 then 1 else 0 end) maske_defect 
-                                    from wm_defectlist{0} d 
+                                    (select nvl(sum(case when d.masktype = 'A' then cnt else 0 end),0) maska_defect,  
+                                    nvl(sum(case when d.masktype = 'B' then cnt else 0 end),0) maskb_defect,
+                                    nvl(sum(case when d.masktype = 'C' then cnt else 0 end),0) maskc_defect, 
+                                    nvl(sum(case when d.masktype = 'D' then cnt else 0 end),0) maskd_defect, 
+                                    nvl(sum(case when d.masktype = 'E' then cnt else 0 end),0) maske_defect
+                                    from (select de.masktype, count(distinct de.dieaddress) cnt from wm_defectlist{0} de 
                                     inner join wm_classificationitem c 
-                                    on c.itemid = d.inspclassifiid 
-                                    where d.inspid = t.inspid) 
-                                    where exists(select 1 from wm_defectlist{0} d inner join wm_classificationitem c on c.itemid = d.inspclassifiid 
-                                    where d.inspid = t.inspid) and t.resultid='{1}' ", yearMonth, resultid);
+                                    on c.itemid = de.inspclassifiid 
+                                    where de.resultid='{1}' and c.id<>'0'
+                                     group by de.masktype) d)
+                                    where t.resultid='{1}' ", yearMonth, resultid);
                     db.ExecuteSqlCommand(sbt.ToString());
 
                     //更新waferresult表
@@ -2035,7 +2047,13 @@ namespace WR.WCF.Site
                                                                  inner join em_classificationmark m
                                                                     on m.cid = c.id
                                                                  where d.resultid = t.eid)
-                                                         where t.eid = '{0}'", resultid));
+                                                         where t.eid = '{0}' and exists (select 1
+                                                              from em_defectlist d
+                                                             inner join wm_classificationitem c
+                                                                on c.itemid = d.inspclassifiid
+                                                             inner join em_classificationmark m
+                                                                on m.cid = c.id
+                                                             where d.resultid = t.eid)", resultid));
 
                         //rightnum
                         db.ExecuteSqlCommand(string.Format(@"update em_examresult t
@@ -2146,7 +2164,7 @@ namespace WR.WCF.Site
         {
             using (BFdbContext db = new BFdbContext())
             {
-                var sql = @"select * from em_plan t where sysdate between t.startdate and t.enddate order by t.startdate desc";
+                var sql = @"select * from em_plan t where sysdate between t.startdate and t.enddate and t.delflag='0' order by t.startdate desc";
 
                 var listPlan = db.SqlQuery<EMPLAN>(sql).ToList();
 
@@ -2162,7 +2180,7 @@ namespace WR.WCF.Site
                              inner join em_plan p
                                 on p.pid = t.planid
                              where t.userid = '{0}'
-                               and p.pid='{1}'
+                               and p.pid='{1}' and p.delflag='0'
                                and sysdate between p.startdate and p.enddate", by, p.PID);
 
                     var listExamResult = db.SqlQuery<EMEXAMRESULT>(sql).FirstOrDefault();

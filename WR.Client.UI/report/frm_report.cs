@@ -251,8 +251,6 @@ namespace WR.Client.UI
 
             try
             {
-
-
                 switch (tabReport.SelectedTab.Name)
                 {
                     case "tabDensity":
