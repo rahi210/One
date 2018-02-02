@@ -167,11 +167,11 @@ namespace WR.WCF.Site
                                                     decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
                                                     t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
                                                     t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id,
-                                                   case when b.inspecteddie>0 and b.maska_die>0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) else 0 end maska_die,
-                                                   case when b.inspecteddie>0 and b.maskb_die>0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) else 0 end maskb_die,
-                                                   case when b.inspecteddie>0 and b.maskc_die>0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) else 0 end maskc_die,
-                                                   case when b.inspecteddie>0 and b.maskd_die>0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) else 0 end maskd_die,
-                                                   case when b.inspecteddie>0 and b.maske_die>0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) else 0 end maske_die
+                                                   case when b.inspecteddie>0 and b.maska_die>0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) end maska_die,
+                                                   case when b.inspecteddie>0 and b.maskb_die>0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) end maskb_die,
+                                                   case when b.inspecteddie>0 and b.maskc_die>0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
+                                                   case when b.inspecteddie>0 and b.maskd_die>0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
+                                                   case when b.inspecteddie>0 and b.maske_die>0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
                                                     from wm_waferresult t,wm_identification a,wm_inspectioninfo b,cmn_relation c
                                                     where t.identificationid=a.identificationid and t.resultid=b.resultid and instr(a.device||'-'||a.layer,c.device||'-'||decode(c.layer,'*','',c.layer))>0 
                                                         and ((t.completiontime>={1} and t.completiontime<={2}) or {3}) and c.userid='{0}' and t.delflag='0' order by a.device,a.layer,a.lot,a.substrate_id",
@@ -184,11 +184,11 @@ namespace WR.WCF.Site
                                                     decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
                                                     t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
                                                     t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id,
-                                                    case when b.inspecteddie>0 and b.maska_die>0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) else 0 end maska_die,
-                                                   case when b.inspecteddie>0 and b.maskb_die>0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) else 0 end maskb_die,
-                                                   case when b.inspecteddie>0 and b.maskc_die>0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) else 0 end maskc_die,
-                                                   case when b.inspecteddie>0 and b.maskd_die>0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) else 0 end maskd_die,
-                                                   case when b.inspecteddie>0 and b.maske_die>0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) else 0 end maske_die
+                                                    case when b.inspecteddie>0 and b.maska_die>0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) end maska_die,
+                                                   case when b.inspecteddie>0 and b.maskb_die>0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) end maskb_die,
+                                                   case when b.inspecteddie>0 and b.maskc_die>0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
+                                                   case when b.inspecteddie>0 and b.maskd_die>0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
+                                                   case when b.inspecteddie>0 and b.maske_die>0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
                                                     from wm_waferresult t,wm_identification a,wm_inspectioninfo b
                                                     where t.identificationid=a.identificationid and t.resultid=b.resultid
                                                         and ((t.completiontime>={0} and t.completiontime<={1}) or {2}) and t.delflag='0' order by a.device,a.layer,a.lot,a.substrate_id",
@@ -567,15 +567,27 @@ namespace WR.WCF.Site
                     db.ExecuteSqlCommand(sbt.ToString());
 
                     sbt.Clear();
+//                    sbt.AppendFormat(@"select rownum Id,a.device,a.layer,a.lot,a.substrate_slot,a.substrate_id,a.substrate_notchlocation,t.SFIELD,
+//                                                    decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
+//                                                    t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
+//                                                    t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id,
+//                                                    case when b.inspecteddie>0 and b.maska_die>0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) else 0 end maska_die,
+//                                                   case when b.inspecteddie>0 and b.maskb_die>0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) else 0 end maskb_die,
+//                                                   case when b.inspecteddie>0 and b.maskc_die>0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) else 0 end maskc_die,
+//                                                   case when b.inspecteddie>0 and b.maskd_die>0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) else 0 end maskd_die,
+//                                                   case when b.inspecteddie>0 and b.maske_die>0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) else 0 end maske_die
+//                                                    from wm_waferresult t,wm_identification a,wm_inspectioninfo b
+//                                                    where t.identificationid=a.identificationid and t.resultid=b.resultid
+//                                                    and t.resultid='{0}'", resultid);
                     sbt.AppendFormat(@"select rownum Id,a.device,a.layer,a.lot,a.substrate_slot,a.substrate_id,a.substrate_notchlocation,t.SFIELD,
                                                     decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
                                                     t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
                                                     t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id,
-                                                    case when b.inspecteddie>0 and b.maska_die>0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) else 0 end maska_die,
-                                                   case when b.inspecteddie>0 and b.maskb_die>0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) else 0 end maskb_die,
-                                                   case when b.inspecteddie>0 and b.maskc_die>0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) else 0 end maskc_die,
-                                                   case when b.inspecteddie>0 and b.maskd_die>0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) else 0 end maskd_die,
-                                                   case when b.inspecteddie>0 and b.maske_die>0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) else 0 end maske_die
+                                                    case when b.inspecteddie>0 and b.maska_die>0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) end maska_die,
+                                                   case when b.inspecteddie>0 and b.maskb_die>0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) end maskb_die,
+                                                   case when b.inspecteddie>0 and b.maskc_die>0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
+                                                   case when b.inspecteddie>0 and b.maskd_die>0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
+                                                   case when b.inspecteddie>0 and b.maske_die>0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
                                                     from wm_waferresult t,wm_identification a,wm_inspectioninfo b
                                                     where t.identificationid=a.identificationid and t.resultid=b.resultid
                                                     and t.resultid='{0}'", resultid);
@@ -1948,7 +1960,7 @@ namespace WR.WCF.Site
                                               from (select id, passid, '{0}' inspid, inspectiontype, swcscoordinates, inspclassifiid,
                                                      size_, majoraxissize, majorminoraxisaspectratio, area_, dieaddress,
                                                      imagename, style, pixelsize,'{0}' resultid,oldresultid, omodifieddefect
-                                                    from em_defectlist order by dbms_random.random)
+                                                    from em_defectlist e inner join em_plan  ep on ep.lid= e.inspid and ep.pid='{1}'order by dbms_random.random)
                                              where rownum <= (select case  p.numdefect when 0 then 200 else p.numdefect end from em_plan p where p.pid='{1}')", model.EID, model.PLANID);
 
                     var cnt = db.ExecuteSqlCommand(sql);
@@ -2133,7 +2145,7 @@ namespace WR.WCF.Site
                                                t.numdefect, t.rightnum, t.errornum, t.eid
                                           from em_examresult t
                                          inner join em_plan p
-                                            on p.pid = t.planid
+                                            on p.pid = t.planid and p.delflag = '0'
                                         inner join tb_user u
                                             on u.id = t.userid
                                          where 1 = 1
@@ -2147,7 +2159,7 @@ namespace WR.WCF.Site
                                                t.numdefect, t.rightnum, t.errornum, t.eid
                                           from em_examresult t
                                          inner join em_plan p
-                                            on p.pid = t.planid
+                                            on p.pid = t.planid and p.delflag = '0'
                                         inner join tb_user u
                                             on u.id = t.userid
                                          where 1 = 1
