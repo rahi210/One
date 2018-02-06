@@ -232,6 +232,19 @@ namespace WR.Client.UI
             IwrService service = wrService.GetService();
             var lst = service.GetWaferResultHis(dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"), GetLot());
 
+            if (DataCache.UserInfo.FilterData)
+            {
+                var newWaferList = ((from w in lst
+                                     group w by new { w.DEVICE, w.LAYER, w.LOT, w.SUBSTRATE_ID } into l
+                                     select new { DEVICE = l.Key.DEVICE, LAYER = l.Key.LAYER, LOT = l.Key.LOT, SUBSTRATE_ID = l.Key.SUBSTRATE_ID, CREATEDDATE = l.Max(s => s.CREATEDDATE) }))
+                                      .ToList();
+
+                lst = (from w in lst
+                       join n in newWaferList
+                       on new { w.DEVICE, w.LAYER, w.LOT, w.SUBSTRATE_ID, w.CREATEDDATE } equals new { n.DEVICE, n.LAYER, n.LOT, n.SUBSTRATE_ID, n.CREATEDDATE }
+                       select w).ToList();
+            }
+
             grdData.AutoGenerateColumns = false;
             grdData.DataSource = lst;
         }

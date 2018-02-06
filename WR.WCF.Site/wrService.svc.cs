@@ -69,8 +69,8 @@ namespace WR.WCF.Site
 
                     var yearMonth = db.SqlQuery<string>(sql).FirstOrDefault();
 
-                    if (!string.IsNullOrEmpty(yearMonth) && yearMonth == DateTime.Now.ToString("yyyyMM"))
-                        yearMonth = string.Empty;
+                    //if (!string.IsNullOrEmpty(yearMonth) && yearMonth == DateTime.Now.ToString("yyyyMM"))
+                    //    yearMonth = string.Empty;
 
                     sql = string.Format(@"select ta.id, ta.description, ta.name, nvl(tb.cnt, 0) Points,'Front' inspectiontype
                                                   from (select a.schemeid, a.id, a.description, b.name,a.itemid
@@ -167,11 +167,11 @@ namespace WR.WCF.Site
                                                     decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
                                                     t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
                                                     t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id,
-                                                   case when b.inspecteddie>0 and b.maska_die>0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) end maska_die,
-                                                   case when b.inspecteddie>0 and b.maskb_die>0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) end maskb_die,
-                                                   case when b.inspecteddie>0 and b.maskc_die>0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
-                                                   case when b.inspecteddie>0 and b.maskd_die>0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
-                                                   case when b.inspecteddie>0 and b.maske_die>0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
+                                                   case when b.inspecteddie>0 and b.maska_die>=0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) end maska_die,
+                                                   case when b.inspecteddie>0 and b.maskb_die>=0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) end maskb_die,
+                                                   case when b.inspecteddie>0 and b.maskc_die>=0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
+                                                   case when b.inspecteddie>0 and b.maskd_die>=0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
+                                                   case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
                                                     from wm_waferresult t,wm_identification a,wm_inspectioninfo b,cmn_relation c
                                                     where t.identificationid=a.identificationid and t.resultid=b.resultid and instr(a.device||'-'||a.layer,c.device||'-'||decode(c.layer,'*','',c.layer))>0 
                                                         and ((t.completiontime>={1} and t.completiontime<={2}) or {3}) and c.userid='{0}' and t.delflag='0' order by a.device,a.layer,a.lot,a.substrate_id",
@@ -184,11 +184,11 @@ namespace WR.WCF.Site
                                                     decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
                                                     t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
                                                     t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id,
-                                                    case when b.inspecteddie>0 and b.maska_die>0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) end maska_die,
-                                                   case when b.inspecteddie>0 and b.maskb_die>0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) end maskb_die,
-                                                   case when b.inspecteddie>0 and b.maskc_die>0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
-                                                   case when b.inspecteddie>0 and b.maskd_die>0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
-                                                   case when b.inspecteddie>0 and b.maske_die>0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
+                                                    case when b.inspecteddie>0 and b.maska_die>=0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) end maska_die,
+                                                   case when b.inspecteddie>0 and b.maskb_die>=0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) end maskb_die,
+                                                   case when b.inspecteddie>0 and b.maskc_die>=0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
+                                                   case when b.inspecteddie>0 and b.maskd_die>=0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
+                                                   case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
                                                     from wm_waferresult t,wm_identification a,wm_inspectioninfo b
                                                     where t.identificationid=a.identificationid and t.resultid=b.resultid
                                                         and ((t.completiontime>={0} and t.completiontime<={1}) or {2}) and t.delflag='0' order by a.device,a.layer,a.lot,a.substrate_id",
@@ -370,8 +370,8 @@ namespace WR.WCF.Site
 
                     var yearMonth = db.SqlQuery<string>(sql).FirstOrDefault();
 
-                    if (!string.IsNullOrEmpty(yearMonth) && yearMonth == DateTime.Now.ToString("yyyyMM"))
-                        yearMonth = string.Empty;
+                    //if (!string.IsNullOrEmpty(yearMonth) && yearMonth == DateTime.Now.ToString("yyyyMM"))
+                    //    yearMonth = string.Empty;
 
                     string ischk = "";
                     if (!string.IsNullOrEmpty(ischecked) && ischecked == "0")
@@ -470,8 +470,8 @@ namespace WR.WCF.Site
 
                     var yearMonth = db.SqlQuery<string>(sql).FirstOrDefault();
 
-                    if (!string.IsNullOrEmpty(yearMonth) && yearMonth == DateTime.Now.ToString("yyyyMM"))
-                        yearMonth = string.Empty;
+                    //if (!string.IsNullOrEmpty(yearMonth) && yearMonth == DateTime.Now.ToString("yyyyMM"))
+                    //    yearMonth = string.Empty;
 
                     sbt.Clear();
                     //更新defect表
@@ -583,11 +583,11 @@ namespace WR.WCF.Site
                                                     decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
                                                     t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
                                                     t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id,
-                                                    case when b.inspecteddie>0 and b.maska_die>0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) end maska_die,
-                                                   case when b.inspecteddie>0 and b.maskb_die>0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) end maskb_die,
-                                                   case when b.inspecteddie>0 and b.maskc_die>0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
-                                                   case when b.inspecteddie>0 and b.maskd_die>0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
-                                                   case when b.inspecteddie>0 and b.maske_die>0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
+                                                    case when b.inspecteddie>0 and b.maska_die>=0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) end maska_die,
+                                                   case when b.inspecteddie>0 and b.maskb_die>=0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) end maskb_die,
+                                                   case when b.inspecteddie>0 and b.maskc_die>=0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
+                                                   case when b.inspecteddie>0 and b.maskd_die>=0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
+                                                   case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
                                                     from wm_waferresult t,wm_identification a,wm_inspectioninfo b
                                                     where t.identificationid=a.identificationid and t.resultid=b.resultid
                                                     and t.resultid='{0}'", resultid);
@@ -701,16 +701,19 @@ namespace WR.WCF.Site
 
                     var date = db.SqlQuery<string>(sql).FirstOrDefault();
 
-                    if (!string.IsNullOrEmpty(date) && date != DateTime.Now.ToString("yyyyMM"))
-                    {
-                        sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist{1} t,wm_dielayout a
+//                    if (!string.IsNullOrEmpty(date) && date != DateTime.Now.ToString("yyyyMM"))
+//                    {
+//                        sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist{1} t,wm_dielayout a
+//                                                    where t.layoutid=a.layoutid and t.layoutid='{0}'", id, date);
+//                    }
+//                    else
+//                    {
+//                        sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist t,wm_dielayout a
+//                                                    where t.layoutid=a.layoutid and t.layoutid='{0}'", id);
+//                    }
+
+                    sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist{1} t,wm_dielayout a
                                                     where t.layoutid=a.layoutid and t.layoutid='{0}'", id, date);
-                    }
-                    else
-                    {
-                        sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist t,wm_dielayout a
-                                                    where t.layoutid=a.layoutid and t.layoutid='{0}'", id);
-                    }
 
                     return db.SqlQuery<WmdielayoutlistEntitiy>(sql).ToList();
                 }
@@ -736,15 +739,15 @@ namespace WR.WCF.Site
 
                 var dateList = GetCompletiontime(stDate, edDate);
                 var list = new List<WmdensityReport>();
-                var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+                //var currentYearMonth = DateTime.Now.ToString("yyyyMM");
                 var isDistinct = isFilter.Equals("1") ? "distinct" : "";
 
                 foreach (var yearMonth in dateList)
                 {
                     var tablename = yearMonth;
 
-                    if (yearMonth == currentYearMonth)
-                        tablename = string.Empty;
+                    //if (yearMonth == currentYearMonth)
+                    //    tablename = string.Empty;
 
                     string sql = string.Format(@"select {4} b.device,b.layer,b.lot,b.substrate_id,a.dieaddress,d.id,d.name description,1 cnt,th.defectdensity,c.completiontime,a.DIEADDRESS 
                                                 from wm_defectlist{3} a,wm_waferresult te,wm_identification b,wm_inspectioninfo c,wm_inspectionpass th,wm_classificationitem d
@@ -786,7 +789,7 @@ namespace WR.WCF.Site
             {
                 var dateList = GetCompletiontime(stDate, edDate);
                 var lst = new List<WmdensityReport>();
-                var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+                //var currentYearMonth = DateTime.Now.ToString("yyyyMM");
 
                 var count = 0;
                 var wafercnt = 0;
@@ -795,8 +798,8 @@ namespace WR.WCF.Site
                 {
                     var tablename = yearMonth;
 
-                    if (yearMonth == currentYearMonth)
-                        tablename = string.Empty;
+                    //if (yearMonth == currentYearMonth)
+                    //    tablename = string.Empty;
 
                     string sql = string.Format(@"select sum(b.inspecteddie) cnt,count(distinct c.resultid) wafercnt 
                                             from wm_inspectioninfo b,wm_waferresult c,wm_identification d
@@ -843,15 +846,15 @@ namespace WR.WCF.Site
             {
                 var dateList = GetCompletiontime(stDate, edDate);
                 var list = new List<WmCategoryReport>();
-                var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+                //var currentYearMonth = DateTime.Now.ToString("yyyyMM");
                 var isDistinct = isFilter.Equals("1") ? "distinct" : "";
 
                 foreach (var yearMonth in dateList)
                 {
                     var tablename = yearMonth;
 
-                    if (yearMonth == currentYearMonth)
-                        tablename = string.Empty;
+                    //if (yearMonth == currentYearMonth)
+                    //    tablename = string.Empty;
 
                     string sql = string.Format(@"select {4} c.device,c.lot,c.layer,b.completiontime,c.substrate_id,a.id,a.name description,b.numdefect defectnum
                                                 from wm_classificationitem a,wm_waferresult b,wm_identification c
@@ -889,15 +892,15 @@ namespace WR.WCF.Site
             {
                 var dateList = GetCompletiontime(stDate, edDate);
                 var list = new List<WmDefectiveDieReport>();
-                var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+                //var currentYearMonth = DateTime.Now.ToString("yyyyMM");
                 var isDistinct = isFilter.Equals("1") ? "distinct" : "";
 
                 foreach (var yearMonth in dateList)
                 {
                     var tablename = yearMonth;
 
-                    if (yearMonth == currentYearMonth)
-                        tablename = string.Empty;
+                    //if (yearMonth == currentYearMonth)
+                    //    tablename = string.Empty;
 
                     string sql = string.Format(@"select {4} b.device,b.layer,b.lot,b.substrate_id,a.dieaddress,d.id,d.name description,c.completiontime,a.area_,a.size_,a.DIEADDRESS 
                                                 from wm_defectlist{3} a,wm_waferresult te,wm_identification b,wm_inspectioninfo c,wm_classificationitem d
@@ -979,15 +982,15 @@ namespace WR.WCF.Site
 
                 var dateList = GetCompletiontime(stDate, edDate);
                 var list = new List<WmInpDieReport>();
-                var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+                //var currentYearMonth = DateTime.Now.ToString("yyyyMM");
                 var isDistinct = isFilter.Equals("1") ? "distinct" : "";
 
                 foreach (var yearMonth in dateList)
                 {
                     var tablename = yearMonth;
 
-                    if (yearMonth == currentYearMonth)
-                        tablename = string.Empty;
+                    //if (yearMonth == currentYearMonth)
+                    //    tablename = string.Empty;
 
                     string sql = string.Format(@"select {4} tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,ta.numdefect defectnum,td.dieqty
                                                 from wm_waferresult ta,wm_identification tb,
@@ -1030,15 +1033,15 @@ namespace WR.WCF.Site
 
                 var dateList = GetCompletiontime(stDate, edDate);
                 var list = new List<WmDefectListReport>();
-                var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+                //var currentYearMonth = DateTime.Now.ToString("yyyyMM");
                 var isDistinct = isFilter.Equals("1") ? "distinct" : "";
 
                 foreach (var yearMonth in dateList)
                 {
                     var tablename = yearMonth;
 
-                    if (yearMonth == currentYearMonth)
-                        tablename = string.Empty;
+                    //if (yearMonth == currentYearMonth)
+                    //    tablename = string.Empty;
 
                     string sql = string.Format(@"select {4} d.lot,d.device,d.layer,d.substrate_id,d.substrate_slot,a.id defectnumber,b.id,b.name description,
                                             a.dieaddress,a.area_,a.size_,c.completiontime,a.DIEADDRESS 
@@ -1077,15 +1080,15 @@ namespace WR.WCF.Site
 
                 var dateList = GetCompletiontime(stDate, edDate);
                 var list = new List<WmGoodDieReport>();
-                var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+                //var currentYearMonth = DateTime.Now.ToString("yyyyMM");
                 var isDistinct = isFilter.Equals("1") ? "distinct" : "";
 
                 foreach (var yearMonth in dateList)
                 {
                     var tablename = yearMonth;
 
-                    if (yearMonth == currentYearMonth)
-                        tablename = string.Empty;
+                    //if (yearMonth == currentYearMonth)
+                    //    tablename = string.Empty;
 
                     string sql = string.Format(@"select {4} tb.lot,tb.device,tb.layer,tb.substrate_id,tb.substrate_slot,ta.completiontime,ta.numdefect defectnum,td.inspecteddie inspcnt,ta.resultid
                                                 from wm_waferresult ta,wm_identification tb,wm_inspectioninfo td
@@ -1202,14 +1205,14 @@ namespace WR.WCF.Site
 
                     var dateList = GetCompletiontime(stDate, edDate);
                     var list = new List<WmItemsSummaryEntity>();
-                    var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+                    //var currentYearMonth = DateTime.Now.ToString("yyyyMM");
 
                     foreach (var yearMonth in dateList)
                     {
                         var tablename = yearMonth;
 
-                        if (yearMonth == currentYearMonth)
-                            tablename = string.Empty;
+                        //if (yearMonth == currentYearMonth)
+                        //    tablename = string.Empty;
 
                         if (lot.EndsWith("|||"))
                             sql = string.Format(@"select c.device, c.layer,c.lot, a.inspclassifiid, c.substrate_id,count(a.id) NumCnt, a.resultid
@@ -1276,14 +1279,14 @@ namespace WR.WCF.Site
 
                     var dateList = GetCompletiontime(stDate, edDate);
                     var list = new List<WmItemsSummaryEntity>();
-                    var currentYearMonth = DateTime.Now.ToString("yyyyMM");
+                    //var currentYearMonth = DateTime.Now.ToString("yyyyMM");
 
                     foreach (var yearMonth in dateList)
                     {
                         var tablename = yearMonth;
 
-                        if (yearMonth == currentYearMonth)
-                            tablename = string.Empty;
+                        //if (yearMonth == currentYearMonth)
+                        //    tablename = string.Empty;
 
                         if (lot.EndsWith("|||"))
                             sql = string.Format(@"select d.device, d.layer, count(a.inspecteddieid) NumCnt

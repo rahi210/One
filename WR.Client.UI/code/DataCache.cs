@@ -185,7 +185,7 @@ namespace WR.Client.UI
             {
                 for (int y = 0; y < cols; y++)
                 {
-                    newList.Add(new WmdielayoutlistEntitiy() { ID = System.Guid.NewGuid().ToString(), DIEADDRESSX = y, DIEADDRESSY = i, LAYOUTID = layoutId, COLUMNS_ = cols, ROWS_ = rows, DISPOSITION = "NotProcess", INSPCLASSIFIID = 0 });
+                    newList.Add(new WmdielayoutlistEntitiy() { ID = System.Guid.NewGuid().ToString(), DIEADDRESSX = y, DIEADDRESSY = i, LAYOUTID = layoutId, COLUMNS_ = cols, ROWS_ = rows, DISPOSITION = "", INSPCLASSIFIID = 0 });
                 }
             }
 

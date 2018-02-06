@@ -2662,10 +2662,10 @@ namespace WR.Client.UI
                     grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.Rows.Count - 1];
 
             }
-            //重新计算良率 
+            //重新计算良率
             //decimal goodCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID == 0);
             decimal defectCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID != 0);
-            decimal dieCnt = _dielayoutlist.Count(s => s.DISPOSITION.Trim().ToLower() != "notexist" || s.DISPOSITION.Trim().ToLower() != "notprocess");
+            decimal dieCnt = _dielayoutlist.Count - _dielayoutlist.Count(s => s.DISPOSITION.Trim().ToLower() == "notprocess");
 
             Oparams[3] = defectCnt.ToString();
             //Oparams[4] = (goodCnt / dieCnt * 100).ToString("0.00");

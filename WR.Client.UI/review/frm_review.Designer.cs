@@ -739,7 +739,7 @@
             this.MaskA_Die.DataPropertyName = "maska_die";
             dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             dataGridViewCellStyle5.Format = "N2";
-            dataGridViewCellStyle5.NullValue = "0";
+            dataGridViewCellStyle5.NullValue = "-";
             this.MaskA_Die.DefaultCellStyle = dataGridViewCellStyle5;
             this.MaskA_Die.HeaderText = "A Yield(%)";
             this.MaskA_Die.Name = "MaskA_Die";
@@ -751,7 +751,7 @@
             this.MaskB_Die.DataPropertyName = "maskb_die";
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             dataGridViewCellStyle6.Format = "N2";
-            dataGridViewCellStyle6.NullValue = "0";
+            dataGridViewCellStyle6.NullValue = "-";
             this.MaskB_Die.DefaultCellStyle = dataGridViewCellStyle6;
             this.MaskB_Die.HeaderText = "B Yield(%)";
             this.MaskB_Die.Name = "MaskB_Die";
@@ -763,7 +763,7 @@
             this.MaskC_Die.DataPropertyName = "maskc_die";
             dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             dataGridViewCellStyle7.Format = "N2";
-            dataGridViewCellStyle7.NullValue = "0";
+            dataGridViewCellStyle7.NullValue = "-";
             this.MaskC_Die.DefaultCellStyle = dataGridViewCellStyle7;
             this.MaskC_Die.HeaderText = "C Yield(%)";
             this.MaskC_Die.Name = "MaskC_Die";
@@ -775,7 +775,7 @@
             this.MaskD_Die.DataPropertyName = "maskd_die";
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             dataGridViewCellStyle8.Format = "N2";
-            dataGridViewCellStyle8.NullValue = "0";
+            dataGridViewCellStyle8.NullValue = "-";
             this.MaskD_Die.DefaultCellStyle = dataGridViewCellStyle8;
             this.MaskD_Die.HeaderText = "D Yield(%)";
             this.MaskD_Die.Name = "MaskD_Die";
@@ -787,7 +787,7 @@
             this.MaskE_Die.DataPropertyName = "maske_die";
             dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             dataGridViewCellStyle9.Format = "N2";
-            dataGridViewCellStyle9.NullValue = "0";
+            dataGridViewCellStyle9.NullValue = "-";
             this.MaskE_Die.DefaultCellStyle = dataGridViewCellStyle9;
             this.MaskE_Die.HeaderText = "E Yield(%)";
             this.MaskE_Die.Name = "MaskE_Die";
