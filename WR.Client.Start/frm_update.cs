@@ -141,7 +141,7 @@ namespace WR.Client.Start
                     progressBarX1.Text = "Upgrade is complete, Starting......";
                     System.Threading.Thread.Sleep(100);
 
-                    return true;
+                    //return true;
                 }
             }
             catch (Exception ex)
@@ -163,7 +163,7 @@ namespace WR.Client.Start
                 }
             }
 
-            return false;
+            return true;
         }
 
         private void timer1_Tick(object sender, EventArgs e)

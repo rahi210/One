@@ -171,10 +171,10 @@ namespace WR.WCF.Contract
         List<WMYIELDSETTING> GetAllYieldSetting();
 
         [OperationContract]
-        int AddYield(string repiceId, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield);
+        int AddYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield);
 
         [OperationContract]
-        int EditYield(string repiceId, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield);
+        int EditYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield);
 
         [OperationContract]
         int DelYield(string repiceId);

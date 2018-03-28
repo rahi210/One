@@ -476,6 +476,66 @@ namespace WR.Client.UI
                         if (yieldModel.MASKE_YIELD > 0)
                             eyield = Convert.ToDouble(yieldModel.MASKE_YIELD);
                     }
+                    else
+                    {
+                        yieldModel = DataCache.YieldSetting.FirstOrDefault(s => s.RECIPE_ID == grdData["Column12", e.RowIndex].Value.ToString());
+
+                        if (yieldModel != null)
+                        {
+                            _lotYield = Convert.ToDouble(yieldModel.LOT_YIELD);
+                            _waferYield = Convert.ToDouble(yieldModel.WAFER_YIELD);
+
+                            if (yieldModel.WAFER_YIELD > 0)
+                            {
+                                ayield = _waferYield;
+                                byield = _waferYield;
+                                cyield = _waferYield;
+                                dyield = _waferYield;
+                                eyield = _waferYield;
+                            }
+
+                            if (yieldModel.MASKA_YIELD > 0)
+                                ayield = Convert.ToDouble(yieldModel.MASKA_YIELD);
+                            if (yieldModel.MASKB_YIELD > 0)
+                                byield = Convert.ToDouble(yieldModel.MASKB_YIELD);
+                            if (yieldModel.MASKC_YIELD > 0)
+                                cyield = Convert.ToDouble(yieldModel.MASKC_YIELD);
+                            if (yieldModel.MASKD_YIELD > 0)
+                                dyield = Convert.ToDouble(yieldModel.MASKD_YIELD);
+                            if (yieldModel.MASKE_YIELD > 0)
+                                eyield = Convert.ToDouble(yieldModel.MASKE_YIELD);
+                        }
+                        else
+                        {
+                            yieldModel = DataCache.YieldSetting.FirstOrDefault(s => s.RECIPE_ID == grdData["Column2", e.RowIndex].Value.ToString());
+
+                            if (yieldModel != null)
+                            {
+                                _lotYield = Convert.ToDouble(yieldModel.LOT_YIELD);
+                                _waferYield = Convert.ToDouble(yieldModel.WAFER_YIELD);
+
+                                if (yieldModel.WAFER_YIELD > 0)
+                                {
+                                    ayield = _waferYield;
+                                    byield = _waferYield;
+                                    cyield = _waferYield;
+                                    dyield = _waferYield;
+                                    eyield = _waferYield;
+                                }
+
+                                if (yieldModel.MASKA_YIELD > 0)
+                                    ayield = Convert.ToDouble(yieldModel.MASKA_YIELD);
+                                if (yieldModel.MASKB_YIELD > 0)
+                                    byield = Convert.ToDouble(yieldModel.MASKB_YIELD);
+                                if (yieldModel.MASKC_YIELD > 0)
+                                    cyield = Convert.ToDouble(yieldModel.MASKC_YIELD);
+                                if (yieldModel.MASKD_YIELD > 0)
+                                    dyield = Convert.ToDouble(yieldModel.MASKD_YIELD);
+                                if (yieldModel.MASKE_YIELD > 0)
+                                    eyield = Convert.ToDouble(yieldModel.MASKE_YIELD);
+                            }
+                        }
+                    }
                 }
 
                 string name = grdData.Columns[e.ColumnIndex].Name;

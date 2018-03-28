@@ -511,18 +511,18 @@ namespace WR.WCF.Site
 
                     //更新masktype
                     sbt.Clear();
-//                    sbt.AppendFormat(@"update wm_inspectioninfo t set (t.maska_defect,t.maskb_defect,t.maskc_defect,t.maskd_defect,t.maske_defect)= 
-//                                    (select sum(case when d.masktype = 'A' and c.id <> 0 then 1 else 0 end) maska_defect , 
-//                                    sum(case when d.masktype = 'B' and c.id <> 0 then 1 else 0 end) maskb_defect , 
-//                                    sum(case when d.masktype = 'C' and c.id <> 0 then 1 else 0 end) maskc_defect , 
-//                                    sum(case when d.masktype = 'D' and c.id <> 0 then 1 else 0 end) maskd_defect , 
-//                                    sum(case when d.masktype = 'E' and c.id <> 0 then 1 else 0 end) maske_defect 
-//                                    from wm_defectlist{0} d 
-//                                    inner join wm_classificationitem c 
-//                                    on c.itemid = d.inspclassifiid 
-//                                    where d.inspid = t.inspid) 
-//                                    where exists(select 1 from wm_defectlist{0} d inner join wm_classificationitem c on c.itemid = d.inspclassifiid 
-//                                    where d.inspid = t.inspid) and t.resultid='{1}' ", yearMonth, resultid);
+                    //                    sbt.AppendFormat(@"update wm_inspectioninfo t set (t.maska_defect,t.maskb_defect,t.maskc_defect,t.maskd_defect,t.maske_defect)= 
+                    //                                    (select sum(case when d.masktype = 'A' and c.id <> 0 then 1 else 0 end) maska_defect , 
+                    //                                    sum(case when d.masktype = 'B' and c.id <> 0 then 1 else 0 end) maskb_defect , 
+                    //                                    sum(case when d.masktype = 'C' and c.id <> 0 then 1 else 0 end) maskc_defect , 
+                    //                                    sum(case when d.masktype = 'D' and c.id <> 0 then 1 else 0 end) maskd_defect , 
+                    //                                    sum(case when d.masktype = 'E' and c.id <> 0 then 1 else 0 end) maske_defect 
+                    //                                    from wm_defectlist{0} d 
+                    //                                    inner join wm_classificationitem c 
+                    //                                    on c.itemid = d.inspclassifiid 
+                    //                                    where d.inspid = t.inspid) 
+                    //                                    where exists(select 1 from wm_defectlist{0} d inner join wm_classificationitem c on c.itemid = d.inspclassifiid 
+                    //                                    where d.inspid = t.inspid) and t.resultid='{1}' ", yearMonth, resultid);
                     sbt.AppendFormat(@"update wm_inspectioninfo t set (t.maska_defect,t.maskb_defect,t.maskc_defect,t.maskd_defect,t.maske_defect)= 
                                     (select nvl(sum(case when d.masktype = 'A' then cnt else 0 end),0) maska_defect,  
                                     nvl(sum(case when d.masktype = 'B' then cnt else 0 end),0) maskb_defect,
@@ -567,18 +567,18 @@ namespace WR.WCF.Site
                     db.ExecuteSqlCommand(sbt.ToString());
 
                     sbt.Clear();
-//                    sbt.AppendFormat(@"select rownum Id,a.device,a.layer,a.lot,a.substrate_slot,a.substrate_id,a.substrate_notchlocation,t.SFIELD,
-//                                                    decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
-//                                                    t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
-//                                                    t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id,
-//                                                    case when b.inspecteddie>0 and b.maska_die>0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) else 0 end maska_die,
-//                                                   case when b.inspecteddie>0 and b.maskb_die>0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) else 0 end maskb_die,
-//                                                   case when b.inspecteddie>0 and b.maskc_die>0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) else 0 end maskc_die,
-//                                                   case when b.inspecteddie>0 and b.maskd_die>0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) else 0 end maskd_die,
-//                                                   case when b.inspecteddie>0 and b.maske_die>0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) else 0 end maske_die
-//                                                    from wm_waferresult t,wm_identification a,wm_inspectioninfo b
-//                                                    where t.identificationid=a.identificationid and t.resultid=b.resultid
-//                                                    and t.resultid='{0}'", resultid);
+                    //                    sbt.AppendFormat(@"select rownum Id,a.device,a.layer,a.lot,a.substrate_slot,a.substrate_id,a.substrate_notchlocation,t.SFIELD,
+                    //                                                    decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
+                    //                                                    t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
+                    //                                                    t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id,
+                    //                                                    case when b.inspecteddie>0 and b.maska_die>0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) else 0 end maska_die,
+                    //                                                   case when b.inspecteddie>0 and b.maskb_die>0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) else 0 end maskb_die,
+                    //                                                   case when b.inspecteddie>0 and b.maskc_die>0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) else 0 end maskc_die,
+                    //                                                   case when b.inspecteddie>0 and b.maskd_die>0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) else 0 end maskd_die,
+                    //                                                   case when b.inspecteddie>0 and b.maske_die>0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) else 0 end maske_die
+                    //                                                    from wm_waferresult t,wm_identification a,wm_inspectioninfo b
+                    //                                                    where t.identificationid=a.identificationid and t.resultid=b.resultid
+                    //                                                    and t.resultid='{0}'", resultid);
                     sbt.AppendFormat(@"select rownum Id,a.device,a.layer,a.lot,a.substrate_slot,a.substrate_id,a.substrate_notchlocation,t.SFIELD,
                                                     decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
                                                     t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
@@ -701,16 +701,16 @@ namespace WR.WCF.Site
 
                     var date = db.SqlQuery<string>(sql).FirstOrDefault();
 
-//                    if (!string.IsNullOrEmpty(date) && date != DateTime.Now.ToString("yyyyMM"))
-//                    {
-//                        sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist{1} t,wm_dielayout a
-//                                                    where t.layoutid=a.layoutid and t.layoutid='{0}'", id, date);
-//                    }
-//                    else
-//                    {
-//                        sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist t,wm_dielayout a
-//                                                    where t.layoutid=a.layoutid and t.layoutid='{0}'", id);
-//                    }
+                    //                    if (!string.IsNullOrEmpty(date) && date != DateTime.Now.ToString("yyyyMM"))
+                    //                    {
+                    //                        sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist{1} t,wm_dielayout a
+                    //                                                    where t.layoutid=a.layoutid and t.layoutid='{0}'", id, date);
+                    //                    }
+                    //                    else
+                    //                    {
+                    //                        sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist t,wm_dielayout a
+                    //                                                    where t.layoutid=a.layoutid and t.layoutid='{0}'", id);
+                    //                    }
 
                     sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist{1} t,wm_dielayout a
                                                     where t.layoutid=a.layoutid and t.layoutid='{0}'", id, date);
@@ -2301,7 +2301,7 @@ namespace WR.WCF.Site
             }
         }
 
-        public int AddYield(string repiceId, decimal layeryield, decimal waferyield,decimal maskayield,decimal maskbyield,decimal maskcyield,decimal maskdyield,decimal maskeyield)
+        public int AddYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield)
         {
             try
             {
@@ -2318,10 +2318,11 @@ namespace WR.WCF.Site
                           LOT_YIELD = layeryield,
                           WAFER_YIELD = waferyield,
                           MASKA_YIELD = maskayield,
-                          MASKB_YIELD=maskbyield,
-                          MASKC_YIELD=maskcyield,
-                          MASKD_YIELD=maskdyield,
-                          MASKE_YIELD=maskeyield
+                          MASKB_YIELD = maskbyield,
+                          MASKC_YIELD = maskcyield,
+                          MASKD_YIELD = maskdyield,
+                          MASKE_YIELD = maskeyield,
+                          YIELD_TYPE = type
                       };
 
                     return db.Insert<WMYIELDSETTING>(entity);
@@ -2334,7 +2335,7 @@ namespace WR.WCF.Site
             }
         }
 
-        public int EditYield(string repiceId, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield)
+        public int EditYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield)
         {
             try
             {
@@ -2349,7 +2350,8 @@ namespace WR.WCF.Site
                         MASKB_YIELD = maskbyield,
                         MASKC_YIELD = maskcyield,
                         MASKD_YIELD = maskdyield,
-                        MASKE_YIELD = maskeyield
+                        MASKE_YIELD = maskeyield,
+                        YIELD_TYPE = type
                     };
 
                     return db.Update<WMYIELDSETTING>(entity);
