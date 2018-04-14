@@ -34,7 +34,7 @@ namespace WR.WCF.Contract
         List<WmwaferResultEntity> GetWaferResult(string operatorid, string fromday, string today, string done);
 
         [OperationContract]
-        Stream GetPic(string filename);
+        Stream GetPic(string filename, int type = 0);
 
         [OperationContract]
         Stream GetXml(string filename);
@@ -171,12 +171,27 @@ namespace WR.WCF.Contract
         List<WMYIELDSETTING> GetAllYieldSetting();
 
         [OperationContract]
-        int AddYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield);
+        int AddYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield,string imagename);
 
         [OperationContract]
-        int EditYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield);
+        int EditYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield, string imagename);
 
         [OperationContract]
         int DelYield(string repiceId);
+
+        [OperationContract]
+        //bool UploadFile(string filename, Stream stream);
+        void UploadFile(UpFile stream);
+    }
+
+    [MessageContract]
+    public class UpFile
+    {
+        //[MessageHeader]
+        //public long FileSize { get; set; }
+        [MessageHeader]
+        public string FileName { get; set; }
+        [MessageBodyMember]
+        public Stream FileStream { get; set; }
     }
 }

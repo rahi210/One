@@ -53,5 +53,24 @@ namespace WR.WCF.Site
         {
             return Path.Combine(paths);
         }
+
+        /// <summary>
+        /// 图片保存路径
+        /// </summary>
+        public static string ImgUploadPath
+        {
+            get
+            {
+                //string path = "/UploadFile/";
+
+                //try
+                //{
+                //    path = ConfigurationManager.AppSettings["UploadFile"].Trim('/');
+                //}
+                //catch { }
+
+                return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UploadFile");
+            }
+        }
     }
 }

@@ -305,8 +305,7 @@ namespace WR.DAL.EF
             //modelBuilder.Entity<bbs>().HasMany(e=>e.Poster).WithMany(e=>e.
 
             //设置Schema
-            //modelBuilder.HasDefaultSchema("WR_OPR");
-            modelBuilder.HasDefaultSchema("IDMP");
+            modelBuilder.HasDefaultSchema("WR_OPR");
 
             base.OnModelCreating(modelBuilder);
         }

@@ -287,6 +287,12 @@ namespace WR.Client.UI
                     //_dielayoutlist = service.GetDielayoutListById(wf.DIELAYOUTID);
                     _dielayoutlist = DataCache.GetAllDielayoutListById(service.GetDielayoutListById(wf.DIELAYOUTID));
 
+                    //获取参照图片
+                    if (this.InvokeRequired)
+                        this.Invoke(new Action(() => { GetRefeImage(wf.DEVICE, wf.LAYER, wf.RECIPE_ID); }));
+                    else
+                        GetRefeImage(wf.DEVICE, wf.LAYER, wf.RECIPE_ID);
+
                     List<CMNDICT> hotkey = DataCache.CmnDict.Where(p => p.DICTID == "2010").ToList();
                     hotkey.Add(new CMNDICT() { DICTID = "2010", CODE = null, NAME = "-" });
 
@@ -3024,6 +3030,35 @@ namespace WR.Client.UI
             }
 
             return isReview;
+        }
+
+        /// <summary>
+        /// 加载缺陷图片
+        /// </summary>
+        /// <param name="filename"></param>
+        private void GetRefeImage(string device, string layer, string recipe)
+        {
+            try
+            {
+                var filename = DataCache.YieldSetting.Where(s => (s.RECIPE_ID == device || s.RECIPE_ID == layer || s.RECIPE_ID == recipe)
+                    && !string.IsNullOrEmpty(s.IMAGE_NAME)).OrderBy(s => s.YIELD_TYPE).Select(s => s.IMAGE_NAME).FirstOrDefault();
+
+                if (string.IsNullOrEmpty(filename))
+                    picReffImage.WrImage = null;
+                else
+                {
+                    IwrService service = wrService.GetService();
+                    Stream st = service.GetPic(filename, 1);
+                    Image pic = Image.FromStream(st, true);
+                    picReffImage.WrImage = pic;
+                    picReffImage.Tag = filename;
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MsgBoxEx.Error("An error occurred while attempting to load image");
+            }
         }
     }
 

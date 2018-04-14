@@ -141,5 +141,27 @@ namespace WR.WCF.Site
             };
             return fstream;
         }
+
+        //public void UploadFile(WR.WCF.Client.Contract.UpFile upFile )
+        //{
+        //    int count = 0;
+        //    int buffersize = 1024;
+        //    byte[] buffer = new byte[buffersize];
+
+        //    if (!Directory.Exists(Utils.ImgUploadPath))
+        //    {
+        //        Directory.CreateDirectory(Utils.ImgUploadPath);
+        //    }
+
+        //    FileStream fstream = new FileStream(Path.Combine(Utils.ImgUploadPath, upFile.FileName), FileMode.Create, FileAccess.Write, FileShare.Write);
+
+        //    while ((count = upFile.FileStream.Read(buffer, 0, buffersize)) > 0)
+        //    {
+        //        fstream.Write(buffer, 0, count);
+        //    }
+
+        //    fstream.Flush();
+        //    fstream.Close();
+        //}
     }
 }

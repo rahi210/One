@@ -144,6 +144,8 @@
             this.Column18 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column19 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.chtDefect = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.picReffImage = new WR.Client.Controls.WrPictureBox();
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.clrDialog = new System.Windows.Forms.ColorDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -173,6 +175,8 @@
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdReport)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chtDefect)).BeginInit();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picReffImage)).BeginInit();
             this.SuspendLayout();
             // 
             // imageList1
@@ -1007,6 +1011,7 @@
             this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tabControl1.ImageList = this.imageList1;
             this.tabControl1.Location = new System.Drawing.Point(0, 368);
@@ -1363,6 +1368,39 @@
             this.chtDefect.Size = new System.Drawing.Size(452, 171);
             this.chtDefect.TabIndex = 3;
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.picReffImage);
+            this.tabPage3.Location = new System.Drawing.Point(4, 26);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(452, 299);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Reference Image";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // picReffImage
+            // 
+            this.picReffImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.picReffImage.ColCnt = 0;
+            this.picReffImage.CurrentDefect = null;
+            this.picReffImage.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picReffImage.DefectList = null;
+            this.picReffImage.DieLayoutList = null;
+            this.picReffImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picReffImage.HasDraw = false;
+            this.picReffImage.Location = new System.Drawing.Point(3, 3);
+            this.picReffImage.Name = "picReffImage";
+            this.picReffImage.RowCnt = 0;
+            this.picReffImage.SelectDefect = ((System.Collections.ArrayList)(resources.GetObject("picReffImage.SelectDefect")));
+            this.picReffImage.SelectRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.picReffImage.Size = new System.Drawing.Size(446, 293);
+            this.picReffImage.Status = "";
+            this.picReffImage.TabIndex = 3;
+            this.picReffImage.TabStop = false;
+            this.picReffImage.WrImage = null;
+            this.picReffImage.ZoomMultiple = 0;
+            // 
             // imageList2
             // 
             this.imageList2.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList2.ImageStream")));
@@ -1450,6 +1488,8 @@
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdReport)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chtDefect)).EndInit();
+            this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picReffImage)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1562,5 +1602,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.DataGridViewTextBoxColumn MaskType;
+        private System.Windows.Forms.TabPage tabPage3;
+        private Controls.WrPictureBox picReffImage;
     }
 }

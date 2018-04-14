@@ -210,11 +210,17 @@ namespace WR.WCF.Site
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        public Stream GetPic(string filename)
+        public Stream GetPic(string filename, int type = 0)
         {
             try
             {
-                string file = Utils.PathCombine(Utils.ImgUpdatePath, filename);
+                string file = string.Empty;
+
+                if (type != 0)
+                    file = Utils.PathCombine(Utils.ImgUploadPath, filename);
+                else
+                    file = Utils.PathCombine(Utils.ImgUpdatePath, filename);
+
                 if (!File.Exists(file))
                     file = AppDomain.CurrentDomain.BaseDirectory + "default.png";
 
@@ -2301,7 +2307,7 @@ namespace WR.WCF.Site
             }
         }
 
-        public int AddYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield)
+        public int AddYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield, string imagename)
         {
             try
             {
@@ -2322,7 +2328,8 @@ namespace WR.WCF.Site
                           MASKC_YIELD = maskcyield,
                           MASKD_YIELD = maskdyield,
                           MASKE_YIELD = maskeyield,
-                          YIELD_TYPE = type
+                          YIELD_TYPE = type,
+                          IMAGE_NAME = imagename
                       };
 
                     return db.Insert<WMYIELDSETTING>(entity);
@@ -2335,7 +2342,7 @@ namespace WR.WCF.Site
             }
         }
 
-        public int EditYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield)
+        public int EditYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield, string imagename)
         {
             try
             {
@@ -2351,7 +2358,8 @@ namespace WR.WCF.Site
                         MASKC_YIELD = maskcyield,
                         MASKD_YIELD = maskdyield,
                         MASKE_YIELD = maskeyield,
-                        YIELD_TYPE = type
+                        YIELD_TYPE = type,
+                        IMAGE_NAME = imagename
                     };
 
                     return db.Update<WMYIELDSETTING>(entity);
@@ -2383,6 +2391,28 @@ namespace WR.WCF.Site
                 log.Error(ex);
                 throw GetFault(ex);
             }
+        }
+
+        public void UploadFile(UpFile upFile)
+        {
+            int count = 0;
+            int buffersize = 1024;
+            byte[] buffer = new byte[buffersize];
+
+            if (!Directory.Exists(Utils.ImgUploadPath))
+            {
+                Directory.CreateDirectory(Utils.ImgUploadPath);
+            }
+
+            FileStream fstream = new FileStream(Path.Combine(Utils.ImgUploadPath, upFile.FileName), FileMode.Create, FileAccess.Write, FileShare.Write);
+
+            while ((count = upFile.FileStream.Read(buffer, 0, buffersize)) > 0)
+            {
+                fstream.Write(buffer, 0, count);
+            }
+
+            fstream.Flush();
+            fstream.Close();
         }
     }
 }
