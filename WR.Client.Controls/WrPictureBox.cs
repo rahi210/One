@@ -18,6 +18,10 @@ namespace WR.Client.Controls
         public ArrayList SelectDefect { get; set; }
         public Rectangle SelectRect { get; set; }
 
+        //public List<DefectCoordinate> GoodDieList { get; set; }
+        public ArrayList SelectGoodDie { get; set; }
+        public string CurrentDie { get; set; }
+
         //缩放后图片
         private Image destImage;
         //灰度、亮度变化副本
@@ -88,6 +92,7 @@ namespace WR.Client.Controls
             this.Cursor = Cursors.Hand;
 
             SelectDefect = new ArrayList();
+            SelectGoodDie = new ArrayList();
         }
 
         protected override void Dispose(bool disposing)
@@ -430,6 +435,9 @@ namespace WR.Client.Controls
         /// <param name="e"></param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            locStartX = 0;
+            locStartY = 0;
+
             if (e.Button == MouseButtons.Left && drag)
             {
                 if (HasDraw)
@@ -491,35 +499,50 @@ namespace WR.Client.Controls
 
             if (e.Button == MouseButtons.Left)
             {
-                if (DefectList != null)
+                SelectDefect.Clear();
+                SelectGoodDie.Clear();
+
+                //if (locX > 0 || locY > 0)
+                //    GetCurrentDefect(new Point(e.X + locX, e.Y + locY));
+                //else
+                //    GetCurrentDefect(new Point(e.X + locStartX, e.Y + locStartY));
+
+                if ((((e.X - locX - this.mousedownpoint.X) / this.ZoomMultiple) + ((e.Y - locY - this.mousedownpoint.Y) / this.ZoomMultiple)) > 12)
                 {
-                    SelectDefect.Clear();
-                    //if (locX > 0 || locY > 0)
-                    //    GetCurrentDefect(new Point(e.X + locX, e.Y + locY));
-                    //else
-                    //    GetCurrentDefect(new Point(e.X + locStartX, e.Y + locStartY));
-
-                    if ((((e.X - locX - this.mousedownpoint.X) / this.ZoomMultiple) + ((e.Y - locY - this.mousedownpoint.Y) / this.ZoomMultiple)) > 12)
+                    //选中的good die
+                    foreach (var die in DieLayoutList)
                     {
-                        foreach (var defect in DefectList)
+                        if (!die.IsDefect & die.Points[0].X <= (e.X) / this.ZoomMultiple & die.Points[2].X >= this.mousedownpoint.X / this.ZoomMultiple
+                            & die.Points[0].Y <= (e.Y) / this.ZoomMultiple & die.Points[2].Y >= this.mousedownpoint.Y / this.ZoomMultiple)
                         {
-                            if (defect.Points[0].X <= (e.X) / this.ZoomMultiple & defect.Points[2].X >= this.mousedownpoint.X / this.ZoomMultiple
-                                & defect.Points[0].Y <= (e.Y) / this.ZoomMultiple & defect.Points[2].Y >= this.mousedownpoint.Y / this.ZoomMultiple)
-                            {
-                                SelectDefect.Add(defect.Location);
-                            }
+                            SelectGoodDie.Add(die.X + "," + die.Y);
                         }
-
-                        if (SelectDefect.Count > 0)
-                            DefectChanged(new EventDefectArg() { Location = SelectDefect[0].ToString() });
-
                     }
-                    else
+
+                    //if (SelectGoodDie.Count > 0)
+                    //    DefectChanged(new EventDefectArg() { Location = SelectGoodDie[0].ToString() });
+                    foreach (var defect in DefectList)
                     {
-                        //MessageBox.Show(e.X.ToString()+","+e.Y.ToString());
-
-                        GetCurrentDefect(new Point((int)e.X / this.ZoomMultiple, (int)e.Y / this.ZoomMultiple));
+                        if (defect.Points[0].X <= (e.X) / this.ZoomMultiple & defect.Points[2].X >= this.mousedownpoint.X / this.ZoomMultiple
+                            & defect.Points[0].Y <= (e.Y) / this.ZoomMultiple & defect.Points[2].Y >= this.mousedownpoint.Y / this.ZoomMultiple)
+                        {
+                            SelectDefect.Add(defect.Location);
+                        }
                     }
+
+                    if (SelectDefect.Count > 0)
+                        DefectChanged(new EventDefectArg() { Location = SelectDefect[0].ToString() });
+                    else if (SelectGoodDie.Count > 0)
+                    {
+                        this.CurrentDefect = SelectGoodDie[0].ToString();
+                        ReDraw();
+                    }
+                }
+                else
+                {
+                    //MessageBox.Show(e.X.ToString()+","+e.Y.ToString());
+
+                    GetCurrentDefect(new Point((int)e.X / this.ZoomMultiple, (int)e.Y / this.ZoomMultiple));
                 }
             }
 
@@ -599,6 +622,24 @@ namespace WR.Client.Controls
                     DefectChanged(new EventDefectArg() { Location = location });
 
                 CurrentDefect = location;
+            }
+            else
+            {
+                index = DieLayoutList.FindIndex(s => s.Points.IsPointInPolygon(start));
+
+                if (index > -1)
+                {
+                    location = DieLayoutList[index].X + "," + DieLayoutList[index].Y;
+
+                    SelectGoodDie.Add(location);
+
+                    if (CurrentDefect != location)
+                    {
+                        CurrentDefect = location;
+                        ReDraw();
+                    }
+                }
+
             }
 
             return location;
@@ -689,6 +730,13 @@ namespace WR.Client.Controls
             //缺陷晶片颜色
             GraphicsPath rp = new GraphicsPath();
 
+            bool lineg = false;
+            int lx = 0;
+            int ly = 0;
+
+            double scaleX = Math.Round(Convert.ToDouble(this.Width) / wd, 8);
+            double scaleY = Math.Round(Convert.ToDouble(this.Height) / hg, 8);
+
             //画出die
             foreach (DieLayout die in _dielayoutlist)
             {
@@ -700,23 +748,31 @@ namespace WR.Client.Controls
 
                 if (string.Format("{0},{1}", die.X, die.Y) == loction)
                 {
+                    lineg = true;
+                    lx = die.X;
+                    ly = row - die.Y;
+
                     //System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.Red, 2);
                     //myPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                     //gc.DrawRectangle(myPen, (die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, ww * this.ZoomMultiple, wh * this.ZoomMultiple);
                     //myPen.Dispose();
-
                 }
+
+                die.Points = new List<Point>() { new Point(Convert.ToInt32((die.X * ww + offsetX) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY) * scaleY))
+                    ,new Point(Convert.ToInt32((die.X * ww + offsetX+ww-1) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY) * scaleY))
+                    ,new Point(Convert.ToInt32((die.X * ww + offsetX+ww-1) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY+wh-1) * scaleY))
+                    ,new Point(Convert.ToInt32((die.X * ww + offsetX) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY+wh-1) * scaleY))};
             }
 
             gc.FillPath(_dPen, bp);
             gc.FillPath(_lPen, wp);
 
-            bool lineg = false;
-            int lx = 0;
-            int ly = 0;
+            //bool lineg = false;
+            //int lx = 0;
+            //int ly = 0;
 
-            double scaleX = Math.Round(Convert.ToDouble(this.Width) / wd, 8);
-            double scaleY = Math.Round(Convert.ToDouble(this.Height) / hg, 8);
+            //double scaleX = Math.Round(Convert.ToDouble(this.Width) / wd, 8);
+            //double scaleY = Math.Round(Convert.ToDouble(this.Height) / hg, 8);
 
             //画出defect
             foreach (DefectCoordinate def in _defectlist)
@@ -765,7 +821,7 @@ namespace WR.Client.Controls
             //Point p3 = new Point(btp.Width / 2 + 6, btp.Height);
             gc.FillPolygon(_egPen, new Point[] { p1, p2, p3 }, System.Drawing.Drawing2D.FillMode.Alternate);
 
-            if (this.Status == "Reclass")
+            if (this.Status == "Reclass" || Status == "ReDie")
             {
                 //System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.Red, 1.5f * this.ZoomMultiple);
                 System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.Red, (float)(1.5 / scaleX));
@@ -773,8 +829,12 @@ namespace WR.Client.Controls
                 gc.DrawRectangle(myPen, (int)((this.mousedownpoint.X) / scaleX), (int)((this.mousedownpoint.Y) / scaleY),
                     (int)((this.locStartX - this.mousedownpoint.X) / scaleX), (int)((this.locStartY - this.mousedownpoint.Y) / scaleY));
 
-                SelectRect = new Rectangle((int)((this.mousedownpoint.X)), (int)((this.mousedownpoint.Y)),
-                    (int)((this.locStartX - this.mousedownpoint.X)), (int)((this.locStartY - this.mousedownpoint.Y)));
+                if (locStartX == 0 || locStartY == 0)
+                    SelectRect = new Rectangle((int)((this.mousedownpoint.X)), (int)((this.mousedownpoint.Y)),
+                    ww * this.ZoomMultiple, wh * this.ZoomMultiple);
+                else
+                    SelectRect = new Rectangle((int)((this.mousedownpoint.X)), (int)((this.mousedownpoint.Y)),
+                        (int)((this.locStartX - this.mousedownpoint.X)), (int)((this.locStartY - this.mousedownpoint.Y)));
 
                 myPen.Dispose();
             }
@@ -848,6 +908,8 @@ namespace WR.Client.Controls
         public string FillColor { get; set; }
 
         public bool IsSelected { get; set; }
+
+        public bool IsAdd { get; set; }
     }
 
     public class DieLayout
@@ -856,6 +918,10 @@ namespace WR.Client.Controls
         public int Y { get; set; }
 
         public string FillColor { get; set; }
+
+        public System.Collections.Generic.List<Point> Points { get; set; }
+
+        public bool IsDefect { get; set; }
     }
 
     public static class PointHelper

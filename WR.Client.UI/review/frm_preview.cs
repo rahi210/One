@@ -487,28 +487,42 @@ namespace WR.Client.UI
 
                     if (cnmReclass.Tag.ToString() == "2")
                     {
-                        var list = DefectSource;
-                        foreach (var def in picWafer.SelectDefect)
+                        if (picWafer.Status == "Reclass")
                         {
-                            var ent = list.FirstOrDefault(s => s.DieAddress == def.ToString() && s.Cclassid != itm.ID);
+                            var list = DefectSource;
+                            foreach (var def in picWafer.SelectDefect)
+                            {
+                                var ent = list.FirstOrDefault(s => s.DieAddress == def.ToString() && s.Cclassid != itm.ID);
 
-                            if (ent == null)
-                                continue;
+                                if (ent == null)
+                                    continue;
 
-                            ent.Cclassid = itm.ID;
-                            ent.InspclassifiId = itm.ITEMID;
-                            ent.ModifiedDefect = ent.INSPID;
-                            ent.Description = itm.NAME;
+                                ent.Cclassid = itm.ID;
+                                ent.InspclassifiId = itm.ITEMID;
+                                ent.ModifiedDefect = ent.INSPID;
+                                if (ent.DataStatus != 0)
+                                    ent.DataStatus = 1;
+                                ent.Description = itm.NAME;
 
-                            UpdateDefectClassification(ent);
+                                UpdateDefectClassification(ent);
 
-                            var index = list.FindIndex(s => s.Id == ent.Id);
-                            grdData.InvalidateRow(index);
+                                var index = list.FindIndex(s => s.Id == ent.Id);
+                                grdData.InvalidateRow(index);
+                            }
+
+                            InitClassList();
+                            picWafer.Status = "";
+                            DrawDefect(picWafer.CurrentDefect);
                         }
+                        else
+                        {
+                            //picWafer.Status == "ReDie"
+                            AddDefect(itm.ITEMID, itm.ID, itm.NAME);
 
-                        InitClassList();
-                        picWafer.Status = "";
-                        DrawDefect(picWafer.CurrentDefect);
+                            InitClassList();
+                            picWafer.Status = "";
+                            DrawDefect(picWafer.SelectGoodDie[0].ToString());
+                        }
                         //grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.CurrentCell.RowIndex + 1];
                     }
                     else
@@ -538,6 +552,8 @@ namespace WR.Client.UI
                             ent.Cclassid = itm.ID;
                             ent.InspclassifiId = itm.ITEMID;
                             ent.ModifiedDefect = ent.INSPID;
+                            if (ent.DataStatus != 0)
+                                ent.DataStatus = 1;
                             ent.Description = itm.NAME;
 
                             grdData.InvalidateRow(grdData.SelectedRows[rowIndex].Index);
@@ -557,24 +573,36 @@ namespace WR.Client.UI
 
                     if (cnmReclass.Tag.ToString() == "2")
                     {
-                        var list = DefectSource;
-                        foreach (var def in picWafer.SelectDefect)
+                        if (picWafer.Status == "Reclass")
                         {
-                            var ent = list.FirstOrDefault(s => s.DieAddress == def.ToString() && s.Cclassid != itm.ID);
+                            var list = DefectSource;
+                            foreach (var def in picWafer.SelectDefect)
+                            {
+                                var ent = list.FirstOrDefault(s => s.DieAddress == def.ToString() && s.Cclassid != itm.ID);
 
-                            if (ent == null)
-                                return;
+                                if (ent == null)
+                                    return;
 
-                            ent.Cclassid = itm.ID;
-                            ent.InspclassifiId = itm.ITEMID;
-                            ent.ModifiedDefect = ent.INSPID;
-                            ent.Description = itm.NAME;
+                                ent.Cclassid = itm.ID;
+                                ent.InspclassifiId = itm.ITEMID;
+                                ent.ModifiedDefect = ent.INSPID;
+                                if (ent.DataStatus != 0)
+                                    ent.DataStatus = 1;
+                                ent.Description = itm.NAME;
 
-                            UpdateDefectClassification(ent);
+                                UpdateDefectClassification(ent);
 
-                            lstView.RedrawItems(lstView.SelectedIndices[0], lstView.SelectedIndices[0], false);
-                            DrawDefect(ent.DieAddress);
+                                lstView.RedrawItems(lstView.SelectedIndices[0], lstView.SelectedIndices[0], false);
+                                DrawDefect(ent.DieAddress);
+                            }
                         }
+                        else
+                        {
+                            //picWafer.Status == "ReDie"
+                            AddDefect(itm.ITEMID, itm.ID, itm.NAME);
+                            DrawDefect(picWafer.SelectGoodDie[0].ToString());
+                        }
+
                     }
                     else
                     {
@@ -583,6 +611,8 @@ namespace WR.Client.UI
                         ent.Cclassid = itm.ID;
                         ent.InspclassifiId = itm.ITEMID;
                         ent.ModifiedDefect = ent.INSPID;
+                        if (ent.DataStatus != 0)
+                            ent.DataStatus = 1;
                         ent.Description = itm.NAME;
 
                         UpdateDefectClassification(ent);
@@ -727,6 +757,8 @@ namespace WR.Client.UI
 
                 timer2.Enabled = true;
             }
+            else
+                GetImage(string.Empty);
             //log.Debug("SelectionChanged End...............");
         }
 
@@ -741,7 +773,7 @@ namespace WR.Client.UI
             int col = _dielayoutlist[0].COLUMNS_;
             int row = _dielayoutlist[0].ROWS_;
 
-            var listDieLayout = _dielayoutlist.Select(s => new DieLayout { X = s.DIEADDRESSX, Y = s.DIEADDRESSY, FillColor = s.DISPOSITION.Trim() == "NotProcess" ? Color.Gray.Name : "" })
+            var listDieLayout = _dielayoutlist.Select(s => new DieLayout { X = s.DIEADDRESSX, Y = s.DIEADDRESSY, FillColor = s.DISPOSITION.Trim() == "NotProcess" ? Color.Gray.Name : "", IsDefect = s.INSPCLASSIFIID != 0 })
             .ToList<DieLayout>(); ;
 
             var items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
@@ -2208,7 +2240,8 @@ namespace WR.Client.UI
                 return "";
 
             //修改后的defect
-            var ms = defs.Where(p => !string.IsNullOrEmpty(p.ModifiedDefect));
+            //var ms = defs.Where(p => !string.IsNullOrEmpty(p.ModifiedDefect));
+            var ms = defs.Where(p => p.DataStatus == 1);
             if (ms == null || ms.Count() < 1)
                 return "";
 
@@ -2217,6 +2250,28 @@ namespace WR.Client.UI
             {
                 var array = item.DieAddress.Split(',');
                 sbt.AppendFormat(";{0},{1},{2},{3},{4},{5},{6}", item.Id, item.PASSID, item.INSPID, item.InspclassifiId, array[0], array[1], item.Cclassid);
+            }
+
+            sbt.Remove(0, 1);
+
+            return sbt.ToString();
+        }
+
+        private string GetAddDefect()
+        {
+            var defs = _defectlist;
+            if (defs == null)
+                return "";
+
+            var ms = defs.Where(p => p.DataStatus == 0);
+            if (ms == null || ms.Count() < 1)
+                return "";
+
+            StringBuilder sbt = new StringBuilder();
+            foreach (var item in ms)
+            {
+                var array = item.DieAddress.Split(',');
+                sbt.AppendFormat(";{0},{1},{2},{3}", item.InspclassifiId, array[0], array[1], item.Cclassid);
             }
 
             sbt.Remove(0, 1);
@@ -2239,7 +2294,8 @@ namespace WR.Client.UI
             ShowLoading(ToopEnum.saving);
 
             IwrService service = wrService.GetService();
-            var res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
+            var res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1", GetAddDefect());
+
             if (res.Id >= 0)
             {
                 //var ent = service.GetWaferResultById(Resultid);
@@ -2280,6 +2336,7 @@ namespace WR.Client.UI
                     DrawDefect(list[lstView.SelectedIndices[0]].DieAddress);
                 }
 
+                _defectlist.ForEach(s => s.DataStatus = 3);
                 IsSave = true;
             }
 
@@ -2307,7 +2364,7 @@ namespace WR.Client.UI
             try
             {
                 IwrService service = wrService.GetService();
-                var res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "2");
+                var res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "2", GetAddDefect());
 
                 if (res.Id >= 0)
                 {
@@ -2341,6 +2398,8 @@ namespace WR.Client.UI
                         var dent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
                         DrawDefect(dent.DieAddress);
                     }
+
+                    _defectlist.ForEach(s => s.DataStatus = 3);
 
                     IsSave = true;
                 }
@@ -2377,6 +2436,7 @@ namespace WR.Client.UI
             if (string.IsNullOrEmpty(picWafer.Status))
             {
                 lblReclass.BorderStyle = BorderStyle.None;
+                lblAddDefect.BorderStyle = BorderStyle.None;
             }
 
             //if (_dieWidth < 0 || _dieHeight < 0)
@@ -2443,6 +2503,8 @@ namespace WR.Client.UI
                                         ent.Cclassid = clf.ID;
                                         ent.InspclassifiId = clf.ITEMID;
                                         ent.ModifiedDefect = ent.INSPID;
+                                        if (ent.DataStatus != 0)
+                                            ent.DataStatus = 1;
                                         ent.Description = clf.NAME;
 
                                         UpdateDefectClassification(ent);
@@ -2455,6 +2517,14 @@ namespace WR.Client.UI
                                     picWafer.Status = "";
                                     DrawDefect(picWafer.CurrentDefect);
                                     //grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.CurrentCell.RowIndex + 1];
+                                }
+                                else if (picWafer.SelectGoodDie.Count > 0 && picWafer.Status == "ReDie")
+                                {
+                                    AddDefect(clf.ITEMID, clf.ID, clf.NAME);
+
+                                    InitClassList();
+                                    picWafer.Status = "";
+                                    DrawDefect(picWafer.SelectGoodDie[0].ToString());
                                 }
                                 else
                                 {
@@ -2484,6 +2554,8 @@ namespace WR.Client.UI
                                                 ent.Cclassid = clf.ID;
                                                 ent.InspclassifiId = clf.ITEMID;
                                                 ent.ModifiedDefect = ent.INSPID;
+                                                if (ent.DataStatus != 0)
+                                                    ent.DataStatus = 1;
                                                 ent.Description = clf.NAME;
                                                 grdData.InvalidateRow(grdData.SelectedRows[rowIndex].Index);
 
@@ -2507,6 +2579,7 @@ namespace WR.Client.UI
                                     ent.Cclassid = clf.ID;
                                     ent.InspclassifiId = clf.ITEMID;
                                     ent.ModifiedDefect = ent.INSPID;
+                                    ent.DataStatus = 1;
                                     ent.Description = clf.NAME;
 
                                     UpdateDefectClassification(ent);
@@ -2607,6 +2680,8 @@ namespace WR.Client.UI
                             list[index].Cclassid = model.Cclassid;
                             list[index].InspclassifiId = model.InspclassifiId;
                             list[index].ModifiedDefect = model.ModifiedDefect;
+                            if (list[index].DataStatus != 0)
+                                list[index].DataStatus = 1;
                             list[index].Description = model.Description;
 
                             UpdateDieLayout(list[index].DieAddress, (int)model.Cclassid);
@@ -2643,6 +2718,8 @@ namespace WR.Client.UI
                     list[index].Cclassid = model.Cclassid;
                     list[index].InspclassifiId = model.InspclassifiId;
                     list[index].ModifiedDefect = model.ModifiedDefect;
+                    if (list[index].DataStatus != 0)
+                        list[index].DataStatus = 1;
                     list[index].Description = model.Description;
 
                     count = index;
@@ -2758,8 +2835,14 @@ namespace WR.Client.UI
                     //log.Debug("SaveResult Start...............");
                     IwrService service = wrService.GetService();
 
+                    var modifyDefect = GetModifyDefect();
+                    var addDefect = GetAddDefect();
+
+                    if (string.IsNullOrEmpty(modifyDefect) && string.IsNullOrEmpty(addDefect))
+                        return;
+
                     //log.Debug("UpdateDefect Start...............");
-                    var res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, GetModifyDefect(), "1");
+                    var res = service.UpdateDefect(Resultid, DataCache.UserInfo.ID, modifyDefect, "1", addDefect);
                     //log.Debug("UpdateDefect End...............");
                     if (res.Id >= 0)
                     {
@@ -2786,6 +2869,7 @@ namespace WR.Client.UI
 
                         lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", Oparams[1], Oparams[2], wf.NUMDEFECT, wf.SFIELD);
 
+                        _defectlist.ForEach(s => s.DataStatus = 3);
                         IsSave = true;
                     }
 
@@ -2934,13 +3018,16 @@ namespace WR.Client.UI
 
         private void picWafer_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right && picWafer.SelectRect != null && (picWafer.Status == "Reclass" || picWafer.Status == "ReDie") && picWafer.SelectDefect.Count > 0)
+            //if (e.Button == MouseButtons.Right && picWafer.SelectRect != null && (picWafer.Status == "Reclass" || picWafer.Status == "ReDie") && (picWafer.SelectDefect.Count > 0 || picWafer.SelectGoodDie.Count > 0))
+            if (e.Button == MouseButtons.Right && picWafer.SelectRect != null && ((picWafer.Status == "Reclass" && picWafer.SelectDefect.Count > 0) || (picWafer.Status == "ReDie") && picWafer.SelectGoodDie.Count > 0))
             {
-                if (picWafer.SelectRect.Contains(e.X, e.Y))
-                {
-                    cnmReclass.Show(MousePosition.X, MousePosition.Y);
-                    cnmReclass.Tag = "2";
-                }
+                //if (picWafer.SelectRect.Contains(e.X, e.Y))
+                //{
+                //    cnmReclass.Show(MousePosition.X, MousePosition.Y);
+                //    cnmReclass.Tag = "2";
+                //}
+                cnmReclass.Show(MousePosition.X, MousePosition.Y);
+                cnmReclass.Tag = "2";
             }
         }
 
@@ -2951,6 +3038,9 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void lblReclass_Click(object sender, EventArgs e)
         {
+            picWafer.Status = "";
+            lblAddDefect.BorderStyle = BorderStyle.None;
+
             if (lblReclass.BorderStyle == BorderStyle.None)
             {
                 picWafer.Status = "Reclass";
@@ -2960,6 +3050,23 @@ namespace WR.Client.UI
             {
                 picWafer.Status = "";
                 lblReclass.BorderStyle = BorderStyle.None;
+            }
+        }
+
+        private void lblAddDefect_Click(object sender, EventArgs e)
+        {
+            picWafer.Status = "";
+            lblReclass.BorderStyle = BorderStyle.None;
+
+            if (lblAddDefect.BorderStyle == BorderStyle.None)
+            {
+                picWafer.Status = "ReDie";
+                lblAddDefect.BorderStyle = BorderStyle.Fixed3D;
+            }
+            else
+            {
+                picWafer.Status = "";
+                lblAddDefect.BorderStyle = BorderStyle.None;
             }
         }
 
@@ -3059,6 +3166,56 @@ namespace WR.Client.UI
                 log.Error(ex);
                 MsgBoxEx.Error("An error occurred while attempting to load image");
             }
+        }
+
+        private void AddDefect(string InspclassifiId, int classid, string name)
+        {
+            IsSave = false;
+
+            var maxId = _defectlist.Max(s => s.Id);
+
+            StringBuilder sbt = new StringBuilder();
+
+            foreach (string die in picWafer.SelectGoodDie)
+            {
+                maxId++;
+
+                var array = die.Split(',');
+                sbt.AppendFormat(";{0},{1},{2},{3}", InspclassifiId, array[0], array[1], classid);
+
+                //sbt.Remove(0, 1);
+
+                _defectlist.Add(new WmdefectlistEntity { Id = maxId, InspclassifiId = InspclassifiId, DieAddress = die, Cclassid = classid, DataStatus = 0, Description = name });
+            }
+
+            //IwrService service = wrService.GetService();
+
+            //var res = service.AddDefect(Resultid, DataCache.UserInfo.ID, sbt.ToString());
+
+            //if (res.Id >= 0)
+            //{
+            //    var wf = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == Resultid);
+            //    wf.ISCHECKED = res.ISCHECKED;
+            //    wf.CHECKEDDATE = res.CHECKEDDATE;
+            //    wf.NUMDEFECT = res.NUMDEFECT;
+            //    wf.SFIELD = res.SFIELD;
+            //    wf.MASKA_DIE = res.MASKA_DIE;
+            //    wf.MASKB_DIE = res.MASKB_DIE;
+            //    wf.MASKC_DIE = res.MASKC_DIE;
+            //    wf.MASKD_DIE = res.MASKD_DIE;
+            //    wf.MASKE_DIE = res.MASKE_DIE;
+
+            //    var lotList = ((from w in DataCache.WaferResultInfo
+            //                    group w by new { w.DEVICE, w.LAYER, w.LOT } into l
+            //                    select new { DEVICE = l.Key.DEVICE, LAYER = l.Key.LAYER, LOT = l.Key.LOT, LFIELD = l.Average(s => s.SFIELD) }))
+            //                   .ToList();
+
+            //    DataCache.WaferResultInfo.ForEach(s => s.LFIELD = lotList.FirstOrDefault(l => l.DEVICE == s.DEVICE && l.LAYER == s.LAYER && l.LOT == s.LOT).LFIELD);
+
+            //    lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", Oparams[1], Oparams[2], wf.NUMDEFECT, wf.SFIELD);
+            //}
+
+            grdData.DataSource = new BindingCollection<WmdefectlistEntity>(_defectlist);
         }
     }
 

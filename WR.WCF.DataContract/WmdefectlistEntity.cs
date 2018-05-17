@@ -83,5 +83,11 @@ namespace WR.WCF.DataContract
         [DataMember]
         public string MaskType
         { get; set; }
+
+        /// <summary>
+        /// 数据的状态 0-新增 1-修改 2-删除
+        /// </summary>
+        public int? DataStatus
+        { get; set; }
     }
 }

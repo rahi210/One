@@ -43,7 +43,7 @@ namespace WR.WCF.Contract
         List<WmdefectlistEntity> GetDefectList(string resultid, string ischecked);
 
         [OperationContract]
-        WmwaferResultEntity UpdateDefect(string resultid, string checkedby, string mclassid, string finish);
+        WmwaferResultEntity UpdateDefect(string resultid, string checkedby, string mclassid, string finish, string addclassid="");
 
         [OperationContract]
         int UpdateClassificationItemUser(string hotkeys, string userid);
@@ -182,6 +182,9 @@ namespace WR.WCF.Contract
         [OperationContract]
         //bool UploadFile(string filename, Stream stream);
         void UploadFile(UpFile stream);
+
+        [OperationContract]
+        WmwaferResultEntity AddDefect(string resultid, string checkedby, string mclassid);
     }
 
     [MessageContract]

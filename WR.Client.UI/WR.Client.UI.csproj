@@ -565,6 +565,7 @@
     <None Include="Resources\examination.png" />
     <Content Include="Resources\export.png" />
     <Content Include="Resources\Physical recovery.png" />
+    <None Include="Resources\preview.png" />
     <Content Include="Resources\re-classify.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
