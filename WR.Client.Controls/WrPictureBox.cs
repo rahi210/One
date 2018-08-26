@@ -10,6 +10,8 @@ namespace WR.Client.Controls
 {
     public class WrPictureBox : PictureBox
     {
+        ToolTip tipGray = new ToolTip();
+
         public List<DefectCoordinate> DefectList { get; set; }
         public List<DieLayout> DieLayoutList { get; set; }
         public int RowCnt { get; set; }
@@ -77,8 +79,14 @@ namespace WR.Client.Controls
 
         //操作状态
         public string Status { get; set; }
-        ////是否需要重绘
+        //是否需要重绘
         public bool HasDraw { get; set; }
+
+        //灰度值
+        //public double GrayValue { get; set; }
+        //是否显示灰度值
+        public bool HasShowGrayValue { get; set; }
+
 
         public delegate void DelegateDefectChanged(EventDefectArg e);
         /// <summary>
@@ -336,6 +344,56 @@ namespace WR.Client.Controls
         }
 
         /// <summary>
+        /// 获取灰度值
+        /// </summary>
+        /// <param name="step"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        private double GetGrayValue(int x, int y, int step = 0)
+        {
+            var gray = 0;
+            int localX = 0;
+            int localY = 0;
+
+            if (HasShowGrayValue)
+            {
+                if (briImage == null)
+                    return gray;
+
+                localX = x - (int)(this.Width - briImage.Width) / 2;
+                localY = y - (int)(this.Height - briImage.Height) / 2;
+
+                if (localX < 0 || localY < 0)
+                    return gray;
+
+                if (localX >= briImage.Width || localY >= briImage.Height)
+                    return gray;
+
+                //if (localX >= briImage.Width)
+                //    localX = briImage.Width - 1;
+
+                //if (localY >= briImage.Height)
+                //    localY = briImage.Height - 1;
+
+                Bitmap bitmap = briImage.Clone() as Bitmap;
+
+                var color = bitmap.GetPixel(localX, localY);
+
+                //if (step != 0)
+                //    gray = color.R;
+                //else
+                //    gray = (int)(color.R * 0.3 + color.G * 0.59 + color.B * 0.11);
+                gray = (int)(color.R * 0.3 + color.G * 0.59 + color.B * 0.11);
+
+                tipGray.SetToolTip(this, string.Format("grey value:{0}", gray));
+                //tipGray.SetToolTip(this, string.Format("灰度值:{4}-{0},{1}-{2},{3}", x, y, localX, localY,gray));
+            }
+
+            return gray;
+        }
+
+        /// <summary>
         /// 全灰度处理
         /// </summary>
         public void MkBrightness(int step)
@@ -438,6 +496,8 @@ namespace WR.Client.Controls
             locStartX = 0;
             locStartY = 0;
 
+            GetGrayValue(e.Location.X, e.Location.Y);
+
             if (e.Button == MouseButtons.Left && drag)
             {
                 if (HasDraw)
@@ -497,7 +557,7 @@ namespace WR.Client.Controls
         {
             drag = false;
 
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left && this.ZoomMultiple > 0)
             {
                 SelectDefect.Clear();
                 SelectGoodDie.Clear();
@@ -609,6 +669,8 @@ namespace WR.Client.Controls
             //根据偏移量计算坐标
             //start.X = Convert.ToInt32(start.X * scaleX);
             //start.Y = Convert.ToInt32(start.Y * scaleY);
+            if (DefectList == null)
+                return location;
 
             var index = DefectList.FindIndex(s => s.Points.IsPointInPolygon(start));
 

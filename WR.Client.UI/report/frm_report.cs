@@ -457,16 +457,16 @@ namespace WR.Client.UI
             IwrService service = wrService.GetService();
             var lst = service.GetDieInspDieReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"), DataCache.UserInfo.FilterData ? "1" : "0");
 
-            lst.ForEach((p) =>
-            {
-                if (!p.DIEQTY.HasValue || p.DIEQTY.Value < 1)
-                    p.Yield = 0;
-                else
-                {
-                    //p.Yield = Math.Round((p.DIEQTY.Value - p.DEFECTNUM.Value) / (p.DIEQTY.Value * 1.0m), 4) * 100;
-                    p.Yield = Math.Truncate((p.DIEQTY.Value - p.DEFECTNUM.Value) / (p.DIEQTY.Value * 1.0m) * 100000) / 1000;
-                }
-            });
+            //lst.ForEach((p) =>
+            //{
+            //    if (!p.DIEQTY.HasValue || p.DIEQTY.Value < 1)
+            //        p.Yield = 0;
+            //    else
+            //    {
+            //        //p.Yield = Math.Round((p.DIEQTY.Value - p.DEFECTNUM.Value) / (p.DIEQTY.Value * 1.0m), 4) * 100;
+            //        p.Yield = Math.Truncate((p.DIEQTY.Value - p.DEFECTNUM.Value) / (p.DIEQTY.Value * 1.0m) * 100000) / 1000;
+            //    }
+            //});
 
             var blst = new BindingCollection<WmInpDieReport>(lst);
             grdInspDie.DataSource = blst;

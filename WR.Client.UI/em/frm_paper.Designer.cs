@@ -721,6 +721,7 @@
             this.PicShow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.PicShow.ColCnt = 0;
             this.PicShow.CurrentDefect = null;
+            this.PicShow.CurrentDie = null;
             this.PicShow.Cursor = System.Windows.Forms.Cursors.Hand;
             this.PicShow.DefectList = null;
             this.PicShow.DieLayoutList = null;
@@ -729,6 +730,7 @@
             this.PicShow.Name = "PicShow";
             this.PicShow.RowCnt = 0;
             this.PicShow.SelectDefect = ((System.Collections.ArrayList)(resources.GetObject("PicShow.SelectDefect")));
+            this.PicShow.SelectGoodDie = ((System.Collections.ArrayList)(resources.GetObject("PicShow.SelectGoodDie")));
             this.PicShow.SelectRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             this.PicShow.Size = new System.Drawing.Size(745, 447);
             this.PicShow.Status = "";
@@ -1194,6 +1196,7 @@
             this.picWafer.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.picWafer.ColCnt = 0;
             this.picWafer.CurrentDefect = null;
+            this.picWafer.CurrentDie = null;
             this.picWafer.Cursor = System.Windows.Forms.Cursors.Hand;
             this.picWafer.DefectList = null;
             this.picWafer.DieLayoutList = null;
@@ -1202,6 +1205,7 @@
             this.picWafer.Name = "picWafer";
             this.picWafer.RowCnt = 0;
             this.picWafer.SelectDefect = ((System.Collections.ArrayList)(resources.GetObject("picWafer.SelectDefect")));
+            this.picWafer.SelectGoodDie = ((System.Collections.ArrayList)(resources.GetObject("picWafer.SelectGoodDie")));
             this.picWafer.SelectRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             this.picWafer.Size = new System.Drawing.Size(330, 325);
             this.picWafer.Status = "";

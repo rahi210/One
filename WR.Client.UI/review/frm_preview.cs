@@ -774,7 +774,7 @@ namespace WR.Client.UI
             int row = _dielayoutlist[0].ROWS_;
 
             var listDieLayout = _dielayoutlist.Select(s => new DieLayout { X = s.DIEADDRESSX, Y = s.DIEADDRESSY, FillColor = s.DISPOSITION.Trim() == "NotProcess" ? Color.Gray.Name : "", IsDefect = s.INSPCLASSIFIID != 0 })
-            .ToList<DieLayout>(); ;
+            .ToList<DieLayout>();
 
             var items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
 

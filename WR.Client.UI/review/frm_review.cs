@@ -13,6 +13,7 @@ using WR.Utils;
 using WR.WCF.Contract;
 using WR.WCF.DataContract;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace WR.Client.UI
 {
@@ -26,6 +27,11 @@ namespace WR.Client.UI
 
         private double waferYield = 0;
         private double lotYield = 0;
+
+        Thread threadSound;
+        private bool hasPlay = false;
+        [DllImport("winmm.dll", SetLastError = true)]
+        static extern bool PlaySound(string pszSound, UIntPtr hmod, uint fdwSound);
 
         public frm_review()
         {
@@ -103,6 +109,11 @@ namespace WR.Client.UI
 
             lotYield = double.Parse(DataCache.CmnDict.FirstOrDefault(s => s.DICTID == "3010" && s.CODE == "0").VALUE);
             waferYield = double.Parse(DataCache.CmnDict.FirstOrDefault(s => s.DICTID == "3010" && s.CODE == "0").VALUE);
+
+            ckPlay.Checked = true;
+            threadSound = new Thread(new ThreadStart(PlayWarning));
+            threadSound.IsBackground = true;
+            threadSound.Start();
         }
 
         /// <summary>
@@ -569,49 +580,79 @@ namespace WR.Client.UI
                         if (e.Value != null)
                         {
                             if (double.Parse(e.Value.ToString()) < _waferYield)
-                                e.CellStyle.ForeColor = Color.Red;
+                            {
+                                //e.CellStyle.ForeColor = Color.Red;
+                                //e.CellStyle.SelectionForeColor = Color.Red;
+                                e.CellStyle.BackColor = Color.Red;
+                                e.CellStyle.SelectionBackColor = Color.Red;
+                                hasPlay = true;
+                            }
                         }
                         break;
                     case "Column19":
                         if (e.Value != null)
                         {
                             if (double.Parse(e.Value.ToString()) < _lotYield)
-                                e.CellStyle.ForeColor = Color.Red;
+                            {
+                                //e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.BackColor = Color.Red;
+                                e.CellStyle.SelectionBackColor = Color.Red;
+                            }
                         }
                         break;
                     case "MaskA_Die":
                         if (e.Value != null)
                         {
                             if (double.Parse(e.Value.ToString()) < ayield)
-                                e.CellStyle.ForeColor = Color.Red;
+                            {
+                                //e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.BackColor = Color.Red;
+                                e.CellStyle.SelectionBackColor = Color.Red;
+                            }
                         }
                         break;
                     case "MaskB_Die":
                         if (e.Value != null)
                         {
                             if (double.Parse(e.Value.ToString()) < byield)
-                                e.CellStyle.ForeColor = Color.Red;
+                            {
+                                //e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.BackColor = Color.Red;
+                                e.CellStyle.SelectionBackColor = Color.Red;
+                            }
                         }
                         break;
                     case "MaskC_Die":
                         if (e.Value != null)
                         {
                             if (double.Parse(e.Value.ToString()) < cyield)
-                                e.CellStyle.ForeColor = Color.Red;
+                            {
+                                //e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.BackColor = Color.Red;
+                                e.CellStyle.SelectionBackColor = Color.Red;
+                            }
                         }
                         break;
                     case "MaskD_Die":
                         if (e.Value != null)
                         {
                             if (double.Parse(e.Value.ToString()) < dyield)
-                                e.CellStyle.ForeColor = Color.Red;
+                            {
+                                //e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.BackColor = Color.Red;
+                                e.CellStyle.SelectionBackColor = Color.Red;
+                            }
                         }
                         break;
                     case "MaskE_Die":
                         if (e.Value != null)
                         {
                             if (double.Parse(e.Value.ToString()) < eyield)
-                                e.CellStyle.ForeColor = Color.Red;
+                            {
+                                //e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.BackColor = Color.Red;
+                                e.CellStyle.SelectionBackColor = Color.Red;
+                            }
                         }
                         break;
                     default:
@@ -1611,5 +1652,65 @@ namespace WR.Client.UI
 
             return isReview;
         }
+
+        /// <summary>
+        /// 播放警报
+        /// </summary>
+        private void PlayWarning()
+        {
+            while (true)
+            {
+                try
+                {
+                    if (hasPlay && ckPlay.Checked)
+                    {
+                        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "error.wav");
+
+                        PlaySound(filePath, UIntPtr.Zero,
+                           (uint)(SoundFlags.SND_FILENAME | SoundFlags.SND_SYNC | SoundFlags.SND_NOSTOP));
+
+                        if (this.InvokeRequired)
+                            this.Invoke(new Action(() => { ckPlay.Checked = false; }));
+                        else
+                            ckPlay.Checked = false;
+                    }
+
+                    Thread.Sleep(1000);
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                }
+            }
+        }
+    }
+
+    [Flags]
+    public enum SoundFlags
+    {
+        /// <summary>play synchronously (default)</summary>
+        SND_SYNC = 0x0000,
+        /// <summary>play asynchronously</summary>
+        SND_ASYNC = 0x0001,
+        /// <summary>silence (!default) if sound not found</summary>
+        SND_NODEFAULT = 0x0002,
+        /// <summary>pszSound points to a memory file</summary>
+        SND_MEMORY = 0x0004,
+        /// <summary>loop the sound until next sndPlaySound</summary>
+        SND_LOOP = 0x0008,
+        /// <summary>don’t stop any currently playing sound</summary>
+        SND_NOSTOP = 0x0010,
+        /// <summary>Stop Playing Wave</summary>
+        SND_PURGE = 0x40,
+        /// <summary>don’t wait if the driver is busy</summary>
+        SND_NOWAIT = 0x00002000,
+        /// <summary>name is a registry alias</summary>
+        SND_ALIAS = 0x00010000,
+        /// <summary>alias is a predefined id</summary>
+        SND_ALIAS_ID = 0x00110000,
+        /// <summary>name is file name</summary>
+        SND_FILENAME = 0x00020000,
+        /// <summary>name is resource name or atom</summary>
+        SND_RESOURCE = 0x00040004
     }
 }

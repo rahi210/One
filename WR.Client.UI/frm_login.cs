@@ -44,7 +44,18 @@ namespace WR.Client.UI
 
             lblMsg.Visible = true;
 
-            var thr = new Thread(() => { Login(userid, pwd); });
+            var thr = new Thread(() =>
+            {
+                try
+                {
+                    Login(userid, pwd);
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                    //MsgBoxEx.Error(ex.Message);
+                }
+            });
             thr.Start();
         }
 

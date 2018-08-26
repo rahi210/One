@@ -45,5 +45,21 @@ namespace WR.WCF.DataContract
         [DataMember]
         public Decimal? COMPLETIONTIME
         { get; set; }
+
+        [DataMember]
+        public decimal? MASKA_DIE
+        { get; set; }
+        [DataMember]
+        public decimal? MASKB_DIE
+        { get; set; }
+        [DataMember]
+        public decimal? MASKC_DIE
+        { get; set; }
+        [DataMember]
+        public decimal? MASKD_DIE
+        { get; set; }
+        [DataMember]
+        public decimal? MASKE_DIE
+        { get; set; }
     }
 }

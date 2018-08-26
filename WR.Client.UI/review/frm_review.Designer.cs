@@ -120,6 +120,7 @@
             this.btnMergeSinf = new System.Windows.Forms.ToolStripButton();
             this.trList = new System.Windows.Forms.TreeView();
             this.grdData = new CRD.WinUI.Editors.WrDataGridView();
+            this.ckPlay = new System.Windows.Forms.CheckBox();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -661,6 +662,16 @@
             this.grdData.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.grdData_DataError);
             this.grdData.SelectionChanged += new System.EventHandler(this.grdData_SelectionChanged);
             // 
+            // ckPlay
+            // 
+            this.ckPlay.AutoSize = true;
+            this.ckPlay.Location = new System.Drawing.Point(841, 34);
+            this.ckPlay.Name = "ckPlay";
+            this.ckPlay.Size = new System.Drawing.Size(96, 16);
+            this.ckPlay.TabIndex = 4;
+            this.ckPlay.Text = "开启声音提醒";
+            this.ckPlay.UseVisualStyleBackColor = true;
+            // 
             // Column1
             // 
             this.Column1.DataPropertyName = "Id";
@@ -721,7 +732,7 @@
             this.Column10.HeaderText = "WaferYield(%)";
             this.Column10.Name = "Column10";
             this.Column10.ReadOnly = true;
-            this.Column10.Width = 75;
+            this.Column10.Width = 85;
             // 
             // Column19
             // 
@@ -944,6 +955,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1497, 540);
+            this.Controls.Add(this.ckPlay);
             this.Controls.Add(this.lstData);
             this.Controls.Add(this.grdData);
             this.Controls.Add(this.tlsMenu);
@@ -1001,6 +1013,7 @@
         private System.Windows.Forms.ToolStripButton btnSearch;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton btnMergeSinf;
+        private System.Windows.Forms.CheckBox ckPlay;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
