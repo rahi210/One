@@ -747,9 +747,10 @@ namespace WR.Client.Controls
 
             if (col == row)
             {
-                ww = 5;
-                wh = 5;
-                hg = row * wh + 20;
+                ww = 4;
+                wh = 4;
+               
+                hg = row * wh + 60;
             }
             else if (col < row)
             {

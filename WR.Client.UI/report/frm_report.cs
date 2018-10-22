@@ -455,7 +455,8 @@ namespace WR.Client.UI
         private void ShowInspDie()
         {
             IwrService service = wrService.GetService();
-            var lst = service.GetDieInspDieReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"), DataCache.UserInfo.FilterData ? "1" : "0");
+            var lst = service.GetDieInspDieReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"), DataCache.UserInfo.FilterData ? "1" : "0")
+                .OrderBy(s => s.LOT).ThenBy(s => s.SUBSTRATE_ID).ToList();
 
             //lst.ForEach((p) =>
             //{

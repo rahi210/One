@@ -49,6 +49,7 @@
     <Compile Include="BindingCollection.cs" />
     <Compile Include="DrawHelper.cs" />
     <Compile Include="EndPointEx.cs" />
+    <Compile Include="GridViewStyleHelper.cs" />
     <Compile Include="MessageConst.cs" />
     <Compile Include="MsgBoxEx.cs">
       <SubType>Form</SubType>

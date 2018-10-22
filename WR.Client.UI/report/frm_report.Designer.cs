@@ -229,6 +229,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.dateTo = new System.Windows.Forms.DateTimePicker();
             this.dtDate = new System.Windows.Forms.DateTimePicker();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -238,7 +239,6 @@
             this.maskc_die = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.maskd_die = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.maske_die = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column31 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column32 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -1108,6 +1108,7 @@
             this.grdInspDie.ColumnHeadersHeight = 26;
             this.grdInspDie.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.grdInspDie.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column3,
             this.Column1,
             this.Column2,
             this.Column6,
@@ -1117,7 +1118,6 @@
             this.maskc_die,
             this.maskd_die,
             this.maske_die,
-            this.Column3,
             this.Column5,
             this.Column31,
             this.Column32,
@@ -2152,6 +2152,14 @@
             this.dtDate.TabIndex = 8;
             this.dtDate.Leave += new System.EventHandler(this.dtDate_Leave);
             // 
+            // Column3
+            // 
+            this.Column3.DataPropertyName = "LOT";
+            this.Column3.HeaderText = "LOT";
+            this.Column3.Name = "Column3";
+            this.Column3.ReadOnly = true;
+            this.Column3.Width = 180;
+            // 
             // Column1
             // 
             this.Column1.DataPropertyName = "SUBSTRATE_ID";
@@ -2239,14 +2247,6 @@
             this.maske_die.HeaderText = "E Yield(%)";
             this.maske_die.Name = "maske_die";
             this.maske_die.ReadOnly = true;
-            // 
-            // Column3
-            // 
-            this.Column3.DataPropertyName = "LOT";
-            this.Column3.HeaderText = "LOT";
-            this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
-            this.Column3.Visible = false;
             // 
             // Column5
             // 
@@ -2477,6 +2477,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column43;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column44;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
@@ -2486,7 +2487,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn maskc_die;
         private System.Windows.Forms.DataGridViewTextBoxColumn maskd_die;
         private System.Windows.Forms.DataGridViewTextBoxColumn maske_die;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column31;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column32;

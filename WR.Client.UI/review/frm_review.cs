@@ -103,6 +103,7 @@ namespace WR.Client.UI
                 lstRe_view.Click += new EventHandler(itmRe2_Click);
             }
 
+            GridViewStyleHelper.LoadDataGridViewStyle(grdData);
             grdData.AutoGenerateColumns = false;
 
             LoadData();
@@ -410,11 +411,6 @@ namespace WR.Client.UI
                     }
                 }
             }
-        }
-
-        private void grdData_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
 
         private void grdData_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

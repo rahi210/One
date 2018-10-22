@@ -655,7 +655,7 @@
             this.grdData.ShowRowErrors = false;
             this.grdData.Size = new System.Drawing.Size(1250, 240);
             this.grdData.TabIndex = 2;
-            this.grdData.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdData_CellClick);
+            //this.grdData.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdData_CellClick);
             this.grdData.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdData_CellDoubleClick);
             this.grdData.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grdData_CellFormatting);
             this.grdData.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.grdData_CellMouseClick);
