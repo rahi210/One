@@ -763,7 +763,7 @@ namespace WR.Client.Controls
             else if ((col - row) > 30)
             {
                 wh = 6;
-                hg = row * wh + 20;
+                hg = row * wh + 80;
             }
             else if ((col - row) < 10)
             {

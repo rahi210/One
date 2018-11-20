@@ -103,7 +103,7 @@ namespace WR.Client.UI
                 lstRe_view.Click += new EventHandler(itmRe2_Click);
             }
 
-            GridViewStyleHelper.LoadDataGridViewStyle(grdData);
+            //GridViewStyleHelper.LoadDataGridViewStyle(grdData);
             grdData.AutoGenerateColumns = false;
 
             LoadData();
@@ -1029,6 +1029,13 @@ namespace WR.Client.UI
                 lstRe_view.Enabled = true;
                 grdRe_view.Enabled = true;
             }
+            //var cnt = DataCache.WaferResultInfo.Count(p => (p.RESULTID == id || p.LOT == id) && p.ISCHECKED == "2");
+
+            //if (cnt > 0)
+            //{
+            //    lstRe_view.Enabled = true;
+            //    grdRe_view.Enabled = true;
+            //}
         }
 
         #region 报表菜单跳转

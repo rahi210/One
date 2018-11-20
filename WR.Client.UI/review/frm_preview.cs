@@ -762,6 +762,13 @@ namespace WR.Client.UI
             //log.Debug("SelectionChanged End...............");
         }
 
+        private int GetINSPCLASSIFIID(int x, int y)
+        {
+            var id = _defectlist.Where(s => s.DieAddress == x + "," + y).Max(s => s.Cclassid);
+
+            return id.HasValue ? id.Value : 0;
+        }
+
         /// <summary>
         /// 画图
         /// </summary>
@@ -773,6 +780,7 @@ namespace WR.Client.UI
             int col = _dielayoutlist[0].COLUMNS_;
             int row = _dielayoutlist[0].ROWS_;
 
+            _dielayoutlist.ForEach(s => s.INSPCLASSIFIID = GetINSPCLASSIFIID(s.DIEADDRESSX, s.DIEADDRESSY));
             var listDieLayout = _dielayoutlist.Select(s => new DieLayout { X = s.DIEADDRESSX, Y = s.DIEADDRESSY, FillColor = s.DISPOSITION.Trim() == "NotProcess" ? Color.Gray.Name : "", IsDefect = s.INSPCLASSIFIID != 0 })
             .ToList<DieLayout>();
 
@@ -1969,6 +1977,14 @@ namespace WR.Client.UI
             var ent = DataCache.WaferResultInfo[nextid];
             Resultid = ent.RESULTID;
 
+            if (!Oparams[1].Equals(ent.LOT))
+            {
+                var dialog = MsgBoxEx.ConfirmYesNo("This lot has been completed,Are you sure to continue?");
+
+                if (dialog == System.Windows.Forms.DialogResult.No)
+                    return;
+            }
+
             var isReview = GetWaferResultIsReview(ent.RESULTID);
             if (isReview)
                 return;
@@ -2029,6 +2045,14 @@ namespace WR.Client.UI
 
             var ent = DataCache.WaferResultInfo[nextid];
             Resultid = ent.RESULTID;
+
+            if (!Oparams[1].Equals(ent.LOT))
+            {
+                var dialog = MsgBoxEx.ConfirmYesNo("This lot has been completed,Are you sure to continue?");
+
+                if (dialog == System.Windows.Forms.DialogResult.No)
+                    return;
+            }
 
             var isReview = GetWaferResultIsReview(ent.RESULTID);
             if (isReview)
