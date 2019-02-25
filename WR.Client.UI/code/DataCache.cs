@@ -5,6 +5,12 @@ using WR.Client.WCF;
 using WR.WCF.Contract;
 using WR.WCF.DataContract;
 
+using System.Runtime.Serialization.Json;
+using System.IO;
+using System.Text;
+using Newtonsoft.Json;
+using System.Runtime.Serialization.Formatters.Binary;
+
 namespace WR.Client.UI
 {
     public class DataCache
@@ -23,6 +29,10 @@ namespace WR.Client.UI
         }
 
         public static string SinfPath { get; set; }
+
+        public static string SinfType { get; set; }
+
+        public static string BinCodeType { get; set; }
 
         public static UserInfoEntity UserInfo;
 
@@ -201,12 +211,52 @@ namespace WR.Client.UI
                             DIEADDRESSY = n.DIEADDRESSY,
                             LAYOUTID = layoutId,
                             DISPOSITION = t == null ? n.DISPOSITION : t.DISPOSITION,
-                            INSPCLASSIFIID = t == null ? n.INSPCLASSIFIID : t.INSPCLASSIFIID,
+                            //INSPCLASSIFIID = t == null ? n.INSPCLASSIFIID : t.INSPCLASSIFIID,
+                            INSPCLASSIFIID = 0,
                             ROWS_ = rows,
                             COLUMNS_ = cols
                         }).Where(s => !s.DISPOSITION.Trim().Equals("NotExist")).ToList();
 
             return list;
+        }
+
+        /// <summary>
+        /// 根据
+        /// </summary>
+        /// <param name="layoutId"></param>
+        /// <returns></returns>
+        public static List<WmdielayoutlistEntitiy> GetDielayoutListById(string layoutId)
+        {
+            IwrService service = wrService.GetService();
+
+            //return service.GetDielayoutListById(layoutId);
+
+            var layoutList = new List<WmdielayoutlistEntitiy>();
+            var serializer = new JsonSerializer();
+
+            var byteArray = service.GetDielayoutListById(layoutId);
+
+            if (byteArray.Count > 0 && byteArray[0].Layoutdetails != null)
+            {
+                var json = System.Text.Encoding.Default.GetString(byteArray[0].Layoutdetails);
+                var sr = new StringReader(json);
+
+                object o = serializer.Deserialize(new JsonTextReader(sr), typeof(List<WmdielayoutlistEntitiy>));
+
+                layoutList = o as List<WmdielayoutlistEntitiy>;
+
+                if (layoutList.Count > 0)
+                {
+                    layoutList[0].ROWS_ = byteArray[0].ROWS_;
+                    layoutList[0].COLUMNS_ = byteArray[0].COLUMNS_;
+                }
+            }
+            else
+            {
+                layoutList = byteArray;
+            }
+
+            return layoutList;
         }
     }
 }

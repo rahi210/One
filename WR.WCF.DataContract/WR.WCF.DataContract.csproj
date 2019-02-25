@@ -71,6 +71,7 @@
     <Compile Include="WMINSPECTEDDIELIST.cs" />
     <Compile Include="WMINSPECTIONINFO.cs" />
     <Compile Include="WMINSPECTIONPASS.cs" />
+    <Compile Include="WmLotReport.cs" />
     <Compile Include="WMWAFERRESULT.cs" />
     <Compile Include="WmClassificationItemEntity.cs" />
     <Compile Include="WmidentificationEntity.cs" />

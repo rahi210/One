@@ -130,7 +130,18 @@ namespace WR.Client.UI
 
             txtArchiveDate.Text = DataCache.CmnDict.Where(s => s.DICTID == "3021" && s.CODE == "0").Select(s => s.VALUE).FirstOrDefault();
 
-            ArchiveDate();
+            //ArchiveDate();
+
+            var dbList = service.GetTableSpaceList();
+            chartDb.Series[0].Points.Clear();
+            chartDb.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+
+            if (dbList.Count > 0)
+            {
+                chartDb.Series[0].Points.AddXY("Free Space(GB)", Math.Round(dbList[0].FreeSpace / 1024 / 1024 / 1024, 1));
+                chartDb.Series[0].Points.AddXY("Used Space(GB)", Math.Round(dbList[0].UsedSpace / 1024 / 1024 / 1024, 1));
+                chartDb.Series[0].IsValueShownAsLabel = true;
+            }
         }
 
         private void ArchiveDate()
@@ -252,8 +263,8 @@ namespace WR.Client.UI
                 chartDisk.Series[0].Points.Clear();
                 chartDisk.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
 
-                chartDisk.Series[0].Points.AddXY("Free Space", diskList[cbxDisk.SelectedIndex].FreeSpace);
-                chartDisk.Series[0].Points.AddXY("Used Space", diskList[cbxDisk.SelectedIndex].UsedSpace);
+                chartDisk.Series[0].Points.AddXY("Free Space(GB)", diskList[cbxDisk.SelectedIndex].FreeSpace);
+                chartDisk.Series[0].Points.AddXY("Used Space(GB)", diskList[cbxDisk.SelectedIndex].UsedSpace);
                 chartDisk.Series[0].IsValueShownAsLabel = true;
 
                 //alter

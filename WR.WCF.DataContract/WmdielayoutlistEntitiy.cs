@@ -46,5 +46,8 @@ namespace WR.WCF.DataContract
         [DataMember]
         public int ROWS_
         { get; set; }
+
+        [DataMember]
+        public byte[] Layoutdetails { get; set; }
     }
 }

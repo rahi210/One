@@ -87,6 +87,7 @@ namespace WR.Client.UI
 
         private void frm_review_Load(object sender, EventArgs e)
         {
+            log.Error("start frm_review_Load");
             grdData.Dock = DockStyle.Fill;
             grdData.Visible = true;
             lstData.Visible = false;
@@ -103,7 +104,14 @@ namespace WR.Client.UI
                 lstRe_view.Click += new EventHandler(itmRe2_Click);
             }
 
-            //GridViewStyleHelper.LoadDataGridViewStyle(grdData);
+            //判断用户是否有权限变更布局
+            var isLayoutRole = DataCache.Tbmenus.Count(s => s.MENUCODE == "40003") > 0;
+
+            if (isLayoutRole)
+            {
+                GridViewStyleHelper.LoadDataGridViewStyle(grdData);
+            }
+
             grdData.AutoGenerateColumns = false;
 
             LoadData();
@@ -115,6 +123,8 @@ namespace WR.Client.UI
             threadSound = new Thread(new ThreadStart(PlayWarning));
             threadSound.IsBackground = true;
             threadSound.Start();
+
+            log.Error("end frm_review_Load");
         }
 
         /// <summary>
@@ -230,7 +240,17 @@ namespace WR.Client.UI
                 trList.EndUpdate();
                 trList.CollapseAll();
 
+                var selectIndex = 0;
+
                 grdData.DataSource = new BindingCollection<WmwaferResultEntity>(lotlist);
+
+                if (!string.IsNullOrEmpty(old_selectedid))
+                    selectIndex = lotlist.FindIndex(s => s.RESULTID == old_selectedid);
+
+                if (selectIndex <= 0)
+                    selectIndex = 0;
+                else
+                    grdData.CurrentCell = grdData[0, selectIndex];
 
                 //if (lstData.Visible)
                 {
@@ -249,7 +269,7 @@ namespace WR.Client.UI
                         if (lstData.Visible)
                             trList.CollapseAll();
 
-                        lstData.Items[0].Selected = true;
+                        lstData.Items[selectIndex].Selected = true;
                     }
                 }
             }
@@ -291,6 +311,19 @@ namespace WR.Client.UI
                 var ent = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == trList.SelectedNode.Tag.ToString());
                 if (ent != null)
                     Re_review(ent);
+            }
+            else if (trList.SelectedNode.Level == 2)
+            {
+                //批量review
+                foreach (TreeNode node in trList.SelectedNode.Nodes)
+                {
+                    if (node.Level == 3 || node.Level == 4)
+                    {
+                        var ent = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == node.Tag.ToString());
+                        if (ent != null)
+                            Re_review(ent);
+                    }
+                }
             }
         }
 
@@ -677,6 +710,7 @@ namespace WR.Client.UI
         }
 
         private bool refreshing = false;
+        private string old_selectedid = string.Empty;
         /// <summary>
         /// 刷新数据
         /// </summary>
@@ -684,7 +718,8 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void tlRefresh_Click(object sender, EventArgs e)
         {
-            selectedid = string.Empty;
+            //selectedid = string.Empty;
+            old_selectedid = selectedid;
 
             if (refreshing)
                 return;
@@ -773,7 +808,7 @@ namespace WR.Client.UI
                         SelectID(node.Tag.ToString(), true);
                     trList.SelectedNode = node;
 
-                    if (node.Level != 4 && lstRe_view != null)
+                    if ((node.Level != 2 && node.Level != 4) && lstRe_view != null)
                         lstRe_view.Enabled = false;
                     else if (node.Level == 4)
                         CheckItem(node.Tag.ToString());
@@ -1020,22 +1055,22 @@ namespace WR.Client.UI
             lstRe_view.Enabled = false;
             grdRe_view.Enabled = false;
 
-            var ent = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == id);
-            if (ent == null)
-                return;
+            //var ent = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == id);
+            //if (ent == null)
+            //    return;
 
-            if (ent.ISCHECKED == "2")
-            {
-                lstRe_view.Enabled = true;
-                grdRe_view.Enabled = true;
-            }
-            //var cnt = DataCache.WaferResultInfo.Count(p => (p.RESULTID == id || p.LOT == id) && p.ISCHECKED == "2");
-
-            //if (cnt > 0)
+            //if (ent.ISCHECKED == "2")
             //{
             //    lstRe_view.Enabled = true;
             //    grdRe_view.Enabled = true;
             //}
+            var cnt = DataCache.WaferResultInfo.Count(p => (p.RESULTID == id || p.LOT == id) && p.ISCHECKED == "2");
+
+            if (cnt > 0)
+            {
+                lstRe_view.Enabled = true;
+                grdRe_view.Enabled = true;
+            }
         }
 
         #region 报表菜单跳转
@@ -1135,6 +1170,40 @@ namespace WR.Client.UI
 
                 fs.Flush();
                 fs.Close();
+            }
+            finally
+            {
+                CloseLoading();
+            }
+        }
+
+        /// <summary>
+        /// 下载Image
+        /// </summary>
+        /// <param name="srcfile"></param>
+        private void DownloadImage(string srcfile, string filename)
+        {
+            ShowLoading(ToopEnum.downloading);
+
+            try
+            {
+                IwrService service = wrService.GetService();
+
+                Stream st = service.GetImages(srcfile);
+
+                using (FileStream fs = File.Create(filename))
+                {
+                    byte[] buff = new byte[1024];
+
+                    while (st.CanRead)
+                    {
+                        int rd = st.Read(buff, 0, buff.Length);
+                        if (rd <= 0)
+                            break;
+
+                        fs.Write(buff, 0, rd);
+                    };
+                }
             }
             finally
             {
@@ -1320,7 +1389,7 @@ namespace WR.Client.UI
 
                 IwrService service = wrService.GetService();
                 var dielayout = service.GetDielayoutById(result.DIELAYOUTID);
-                var dielist = DataCache.GetAllDielayoutListById(service.GetDielayoutListById(result.DIELAYOUTID));
+                var dielist = DataCache.GetAllDielayoutListById(DataCache.GetDielayoutListById(result.DIELAYOUTID));
                 var defectlit = service.GetDefectList(result.RESULTID, "");
                 CHGSinf sinf = new CHGSinf();
                 bool res = sinf.Export(filename, result.RECIPE_ID, result.LOT, result.SUBSTRATE_ID, result.SUBSTRATE_NOTCHLOCATION, dielayout, dielist, defectlit);
@@ -1374,7 +1443,7 @@ namespace WR.Client.UI
                         }
 
                         var dielayout = service.GetDielayoutById(result.DIELAYOUTID);
-                        var dielist = DataCache.GetAllDielayoutListById(service.GetDielayoutListById(result.DIELAYOUTID));
+                        var dielist = DataCache.GetAllDielayoutListById(DataCache.GetDielayoutListById(result.DIELAYOUTID));
                         var defectlit = service.GetDefectList(result.RESULTID, "");
 
                         CHGSinf sinf = new CHGSinf();
@@ -1607,13 +1676,40 @@ namespace WR.Client.UI
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
+            //if (txtId.Text == "Please input layer or repice id or lot id or wafer id")
+            //    grdData.DataSource = new BindingCollection<WmwaferResultEntity>(DataCache.WaferResultInfo).ToList();
+            //else
+            //    grdData.DataSource = new BindingCollection<WmwaferResultEntity>(DataCache.WaferResultInfo.Where(p => p.RECIPE_ID.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
+            //        || p.LOT.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
+            //        || p.SUBSTRATE_ID.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
+            //        || p.LAYER.ToLower().IndexOf(txtId.Text.ToLower()) >= 0).ToList());
+
+            var list = new List<WmwaferResultEntity>();
+
             if (txtId.Text == "Please input layer or repice id or lot id or wafer id")
-                grdData.DataSource = new BindingCollection<WmwaferResultEntity>(DataCache.WaferResultInfo).ToList();
+                list = DataCache.WaferResultInfo;
             else
-                grdData.DataSource = new BindingCollection<WmwaferResultEntity>(DataCache.WaferResultInfo.Where(p => p.RECIPE_ID.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
+                list = DataCache.WaferResultInfo.Where(p => p.RECIPE_ID.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
                     || p.LOT.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
                     || p.SUBSTRATE_ID.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
-                    || p.LAYER.ToLower().IndexOf(txtId.Text.ToLower()) >= 0).ToList());
+                    || p.LAYER.ToLower().IndexOf(txtId.Text.ToLower()) >= 0).ToList();
+
+            switch (cbxOrderBy.SelectedIndex)
+            {
+                case 0:
+                    list = list.OrderBy(s => s.COMPLETIONTIME).ToList();
+                    break;
+                case 1:
+                    list = list.OrderBy(s => s.CHECKEDDATE).ToList();
+                    break;
+                case 2:
+                    list = list.OrderBy(s => s.LOT).ToList();
+                    break;
+                default:
+                    break;
+            }
+
+            grdData.DataSource = new BindingCollection<WmwaferResultEntity>(list);
         }
 
         /// <summary>
@@ -1685,6 +1781,62 @@ namespace WR.Client.UI
                     log.Error(ex);
                 }
             }
+        }
+
+        private void tlImage_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                TreeNode node = trList.SelectedNode;
+                if (node == null || node.Tag == null || (node.Level != 4 && node.Level != 3))
+                {
+                    MsgBoxEx.Info("Please select a wafer record.");
+                    return;
+                }
+
+                SaveFileDialog sd = new SaveFileDialog();
+                sd.FileName = node.Tag.ToString();
+                sd.Filter = "JPEG 图像 (.jpg)|*.jpg";
+                if (sd.ShowDialog() == DialogResult.OK)
+                {
+                    DownloadXml(node.Tag.ToString(), sd.FileName);
+
+                    MsgBoxEx.Info("Image file is complete.");
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MsgBoxEx.Error("An error occurred while attempting to load image");
+            }
+        }
+
+        private void tsImage_Click(object sender, EventArgs e)
+        {
+            if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0)
+            {
+                try
+                {
+                    var ent = grdData.SelectedRows[0].DataBoundItem as WmwaferResultEntity;
+
+                    SaveFileDialog sd = new SaveFileDialog();
+                    sd.FileName = ent.RESULTID;
+                    sd.Filter = "压缩(zipped)文件夹 (.zip)|*.zip";
+                    if (sd.ShowDialog() == DialogResult.OK)
+                    {
+                        DownloadImage(ent.RESULTID, sd.FileName);
+
+                        MsgBoxEx.Info("Image file is complete.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                    MsgBoxEx.Error("An error occurred while attempting to load image");
+                }
+            }
+            else
+                MsgBoxEx.Info("Please select a wafer record.");
         }
     }
 

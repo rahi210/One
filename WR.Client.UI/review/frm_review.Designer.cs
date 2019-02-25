@@ -30,65 +30,66 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_review));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("RESULT.xml", 0);
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("RESULT.xml", 1);
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("RESULT.xml", 2);
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("RESULT.xml", 3);
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("RESULT.xml", 4);
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Result.xml", 3, 3);
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("L-5186015-21-C2", 5, 5, new System.Windows.Forms.TreeNode[] {
-            treeNode1});
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Result.xml", 3, 3);
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("L-5186015-22-E5", 5, 5, new System.Windows.Forms.TreeNode[] {
-            treeNode3});
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("TIF5392460", 5, 5, new System.Windows.Forms.TreeNode[] {
-            treeNode2,
-            treeNode4});
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Result.xml", 3, 3);
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("L-5184013-08-B0", 5, 5, new System.Windows.Forms.TreeNode[] {
-            treeNode6});
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Result.xml", 3, 3);
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("L-5184013-09-D3", 5, 5, new System.Windows.Forms.TreeNode[] {
-            treeNode8});
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Result.xml", 3, 3);
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("L-5184013-20-H2", 5, 5, new System.Windows.Forms.TreeNode[] {
-            treeNode10});
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("TIF5391170", 5, 5, new System.Windows.Forms.TreeNode[] {
-            treeNode7,
-            treeNode9,
-            treeNode11});
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("TL-SLL-LSN240XA2(L)", 5, 5, new System.Windows.Forms.TreeNode[] {
-            treeNode5,
-            treeNode12});
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("UBM", 5, 5, new System.Windows.Forms.TreeNode[] {
-            treeNode13});
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("All Surface Review List", 6, 7, new System.Windows.Forms.TreeNode[] {
-            treeNode14});
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("RESULT.xml", 0);
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("RESULT.xml", 1);
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("RESULT.xml", 2);
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("RESULT.xml", 3);
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("RESULT.xml", 4);
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Result.xml", 3, 3);
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("L-5186015-21-C2", 5, 5, new System.Windows.Forms.TreeNode[] {
+            treeNode16});
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Result.xml", 3, 3);
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("L-5186015-22-E5", 5, 5, new System.Windows.Forms.TreeNode[] {
+            treeNode18});
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("TIF5392460", 5, 5, new System.Windows.Forms.TreeNode[] {
+            treeNode17,
+            treeNode19});
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Result.xml", 3, 3);
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("L-5184013-08-B0", 5, 5, new System.Windows.Forms.TreeNode[] {
+            treeNode21});
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Result.xml", 3, 3);
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("L-5184013-09-D3", 5, 5, new System.Windows.Forms.TreeNode[] {
+            treeNode23});
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Result.xml", 3, 3);
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("L-5184013-20-H2", 5, 5, new System.Windows.Forms.TreeNode[] {
+            treeNode25});
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("TIF5391170", 5, 5, new System.Windows.Forms.TreeNode[] {
+            treeNode22,
+            treeNode24,
+            treeNode26});
+            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("TL-SLL-LSN240XA2(L)", 5, 5, new System.Windows.Forms.TreeNode[] {
+            treeNode20,
+            treeNode27});
+            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("UBM", 5, 5, new System.Windows.Forms.TreeNode[] {
+            treeNode28});
+            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("All Surface Review List", 6, 7, new System.Windows.Forms.TreeNode[] {
+            treeNode29});
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle33 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle34 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cnsList = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tlsLPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tlsLLoad = new System.Windows.Forms.ToolStripMenuItem();
             this.tlslxml = new System.Windows.Forms.ToolStripMenuItem();
             this.tlsinf = new System.Windows.Forms.ToolStripMenuItem();
+            this.tlImage = new System.Windows.Forms.ToolStripMenuItem();
             this.tlsLDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tlsLReport = new System.Windows.Forms.ToolStripMenuItem();
@@ -106,6 +107,7 @@
             this.tlsGrdload = new System.Windows.Forms.ToolStripMenuItem();
             this.tsxml = new System.Windows.Forms.ToolStripMenuItem();
             this.tsinf = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsImage = new System.Windows.Forms.ToolStripMenuItem();
             this.tlsGrdDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.lstData = new System.Windows.Forms.ListView();
@@ -115,12 +117,12 @@
             this.tlRefresh = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.txtId = new System.Windows.Forms.ToolStripTextBox();
+            this.cbxOrderBy = new System.Windows.Forms.ToolStripComboBox();
             this.btnSearch = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnMergeSinf = new System.Windows.Forms.ToolStripButton();
             this.trList = new System.Windows.Forms.TreeView();
             this.grdData = new CRD.WinUI.Editors.WrDataGridView();
-            this.ckPlay = new System.Windows.Forms.CheckBox();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -150,6 +152,7 @@
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Layer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RECIPE_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ckPlay = new System.Windows.Forms.CheckBox();
             this.cnsList.SuspendLayout();
             this.cnsGrd.SuspendLayout();
             this.tlsMenu.SuspendLayout();
@@ -186,7 +189,8 @@
             // 
             this.tlsLLoad.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tlslxml,
-            this.tlsinf});
+            this.tlsinf,
+            this.tlImage});
             this.tlsLLoad.Image = global::WR.Client.UI.Properties.Resources.export24;
             this.tlsLLoad.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tlsLLoad.Name = "tlsLLoad";
@@ -196,16 +200,23 @@
             // tlslxml
             // 
             this.tlslxml.Name = "tlslxml";
-            this.tlslxml.Size = new System.Drawing.Size(103, 22);
+            this.tlslxml.Size = new System.Drawing.Size(113, 22);
             this.tlslxml.Text = "XML";
             this.tlslxml.Click += new System.EventHandler(this.tlslxml_Click);
             // 
             // tlsinf
             // 
             this.tlsinf.Name = "tlsinf";
-            this.tlsinf.Size = new System.Drawing.Size(103, 22);
+            this.tlsinf.Size = new System.Drawing.Size(113, 22);
             this.tlsinf.Text = "SINF";
             this.tlsinf.Click += new System.EventHandler(this.tlsinf_Click);
+            // 
+            // tlImage
+            // 
+            this.tlImage.Name = "tlImage";
+            this.tlImage.Size = new System.Drawing.Size(113, 22);
+            this.tlImage.Text = "Image";
+            this.tlImage.Click += new System.EventHandler(this.tlImage_Click);
             // 
             // tlsLDelete
             // 
@@ -329,7 +340,8 @@
             // 
             this.tlsGrdload.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsxml,
-            this.tsinf});
+            this.tsinf,
+            this.tsImage});
             this.tlsGrdload.Image = global::WR.Client.UI.Properties.Resources.export24;
             this.tlsGrdload.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tlsGrdload.Name = "tlsGrdload";
@@ -339,16 +351,23 @@
             // tsxml
             // 
             this.tsxml.Name = "tsxml";
-            this.tsxml.Size = new System.Drawing.Size(103, 22);
+            this.tsxml.Size = new System.Drawing.Size(113, 22);
             this.tsxml.Text = "XML";
             this.tsxml.Click += new System.EventHandler(this.tsxml_Click);
             // 
             // tsinf
             // 
             this.tsinf.Name = "tsinf";
-            this.tsinf.Size = new System.Drawing.Size(103, 22);
+            this.tsinf.Size = new System.Drawing.Size(113, 22);
             this.tsinf.Text = "SINF";
             this.tsinf.Click += new System.EventHandler(this.tsinf_Click);
+            // 
+            // tsImage
+            // 
+            this.tsImage.Name = "tsImage";
+            this.tsImage.Size = new System.Drawing.Size(113, 22);
+            this.tsImage.Text = "Image";
+            this.tsImage.Click += new System.EventHandler(this.tsImage_Click);
             // 
             // tlsGrdDelete
             // 
@@ -381,11 +400,11 @@
             this.lstData.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lstData.HideSelection = false;
             this.lstData.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5});
+            listViewItem6,
+            listViewItem7,
+            listViewItem8,
+            listViewItem9,
+            listViewItem10});
             this.lstData.LargeImageList = this.imageList2;
             this.lstData.Location = new System.Drawing.Point(351, 285);
             this.lstData.MultiSelect = false;
@@ -406,6 +425,7 @@
             this.tlRefresh,
             this.toolStripSeparator3,
             this.txtId,
+            this.cbxOrderBy,
             this.btnSearch,
             this.toolStripSeparator4,
             this.btnMergeSinf});
@@ -466,6 +486,16 @@
             this.txtId.Enter += new System.EventHandler(this.txtId_Enter);
             this.txtId.Leave += new System.EventHandler(this.txtId_Leave);
             // 
+            // cbxOrderBy
+            // 
+            this.cbxOrderBy.DropDownWidth = 200;
+            this.cbxOrderBy.Items.AddRange(new object[] {
+            "Order by CompletionTime",
+            "Order by ReviewTime",
+            "Order by Lot"});
+            this.cbxOrderBy.Name = "cbxOrderBy";
+            this.cbxOrderBy.Size = new System.Drawing.Size(180, 56);
+            // 
             // btnSearch
             // 
             this.btnSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -506,68 +536,68 @@
             this.trList.LineColor = System.Drawing.Color.Maroon;
             this.trList.Location = new System.Drawing.Point(0, 0);
             this.trList.Name = "trList";
-            treeNode1.ImageIndex = 3;
-            treeNode1.Name = "节点0";
-            treeNode1.SelectedImageIndex = 3;
-            treeNode1.Text = "Result.xml";
-            treeNode2.ImageIndex = 5;
-            treeNode2.Name = "节点6";
-            treeNode2.SelectedImageIndex = 5;
-            treeNode2.Text = "L-5186015-21-C2";
-            treeNode3.ImageIndex = 3;
-            treeNode3.Name = "节点1";
-            treeNode3.SelectedImageIndex = 3;
-            treeNode3.Text = "Result.xml";
-            treeNode4.ImageIndex = 5;
-            treeNode4.Name = "节点7";
-            treeNode4.SelectedImageIndex = 5;
-            treeNode4.Text = "L-5186015-22-E5";
-            treeNode5.ImageIndex = 5;
-            treeNode5.Name = "节点0";
-            treeNode5.SelectedImageIndex = 5;
-            treeNode5.Text = "TIF5392460";
-            treeNode6.ImageIndex = 3;
-            treeNode6.Name = "节点2";
-            treeNode6.SelectedImageIndex = 3;
-            treeNode6.Text = "Result.xml";
-            treeNode7.ImageIndex = 5;
-            treeNode7.Name = "节点8";
-            treeNode7.SelectedImageIndex = 5;
-            treeNode7.Text = "L-5184013-08-B0";
-            treeNode8.ImageIndex = 3;
-            treeNode8.Name = "节点3";
-            treeNode8.SelectedImageIndex = 3;
-            treeNode8.Text = "Result.xml";
-            treeNode9.ImageIndex = 5;
-            treeNode9.Name = "节点9";
-            treeNode9.SelectedImageIndex = 5;
-            treeNode9.Text = "L-5184013-09-D3";
-            treeNode10.ImageIndex = 3;
-            treeNode10.Name = "节点4";
-            treeNode10.SelectedImageIndex = 3;
-            treeNode10.Text = "Result.xml";
-            treeNode11.ImageIndex = 5;
-            treeNode11.Name = "节点10";
-            treeNode11.SelectedImageIndex = 5;
-            treeNode11.Text = "L-5184013-20-H2";
-            treeNode12.ImageIndex = 5;
-            treeNode12.Name = "节点1";
-            treeNode12.SelectedImageIndex = 5;
-            treeNode12.Text = "TIF5391170";
-            treeNode13.ImageIndex = 5;
-            treeNode13.Name = "节点0";
-            treeNode13.SelectedImageIndex = 5;
-            treeNode13.Text = "TL-SLL-LSN240XA2(L)";
-            treeNode14.ImageIndex = 5;
-            treeNode14.Name = "节点1";
-            treeNode14.SelectedImageIndex = 5;
-            treeNode14.Text = "UBM";
-            treeNode15.ImageIndex = 6;
-            treeNode15.Name = "节点0";
-            treeNode15.SelectedImageIndex = 7;
-            treeNode15.Text = "All Surface Review List";
+            treeNode16.ImageIndex = 3;
+            treeNode16.Name = "节点0";
+            treeNode16.SelectedImageIndex = 3;
+            treeNode16.Text = "Result.xml";
+            treeNode17.ImageIndex = 5;
+            treeNode17.Name = "节点6";
+            treeNode17.SelectedImageIndex = 5;
+            treeNode17.Text = "L-5186015-21-C2";
+            treeNode18.ImageIndex = 3;
+            treeNode18.Name = "节点1";
+            treeNode18.SelectedImageIndex = 3;
+            treeNode18.Text = "Result.xml";
+            treeNode19.ImageIndex = 5;
+            treeNode19.Name = "节点7";
+            treeNode19.SelectedImageIndex = 5;
+            treeNode19.Text = "L-5186015-22-E5";
+            treeNode20.ImageIndex = 5;
+            treeNode20.Name = "节点0";
+            treeNode20.SelectedImageIndex = 5;
+            treeNode20.Text = "TIF5392460";
+            treeNode21.ImageIndex = 3;
+            treeNode21.Name = "节点2";
+            treeNode21.SelectedImageIndex = 3;
+            treeNode21.Text = "Result.xml";
+            treeNode22.ImageIndex = 5;
+            treeNode22.Name = "节点8";
+            treeNode22.SelectedImageIndex = 5;
+            treeNode22.Text = "L-5184013-08-B0";
+            treeNode23.ImageIndex = 3;
+            treeNode23.Name = "节点3";
+            treeNode23.SelectedImageIndex = 3;
+            treeNode23.Text = "Result.xml";
+            treeNode24.ImageIndex = 5;
+            treeNode24.Name = "节点9";
+            treeNode24.SelectedImageIndex = 5;
+            treeNode24.Text = "L-5184013-09-D3";
+            treeNode25.ImageIndex = 3;
+            treeNode25.Name = "节点4";
+            treeNode25.SelectedImageIndex = 3;
+            treeNode25.Text = "Result.xml";
+            treeNode26.ImageIndex = 5;
+            treeNode26.Name = "节点10";
+            treeNode26.SelectedImageIndex = 5;
+            treeNode26.Text = "L-5184013-20-H2";
+            treeNode27.ImageIndex = 5;
+            treeNode27.Name = "节点1";
+            treeNode27.SelectedImageIndex = 5;
+            treeNode27.Text = "TIF5391170";
+            treeNode28.ImageIndex = 5;
+            treeNode28.Name = "节点0";
+            treeNode28.SelectedImageIndex = 5;
+            treeNode28.Text = "TL-SLL-LSN240XA2(L)";
+            treeNode29.ImageIndex = 5;
+            treeNode29.Name = "节点1";
+            treeNode29.SelectedImageIndex = 5;
+            treeNode29.Text = "UBM";
+            treeNode30.ImageIndex = 6;
+            treeNode30.Name = "节点0";
+            treeNode30.SelectedImageIndex = 7;
+            treeNode30.Text = "All Surface Review List";
             this.trList.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode15});
+            treeNode30});
             this.trList.SelectedImageIndex = 1;
             this.trList.Size = new System.Drawing.Size(247, 540);
             this.trList.TabIndex = 0;
@@ -584,14 +614,14 @@
             this.grdData.AllowUserToResizeRows = false;
             this.grdData.BackgroundColor = System.Drawing.SystemColors.Window;
             this.grdData.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(246)))), ((int)(((byte)(239)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle20.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(246)))), ((int)(((byte)(239)))));
+            dataGridViewCellStyle20.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle20;
             this.grdData.ColumnHeadersHeight = 26;
             this.grdData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.grdData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -624,14 +654,14 @@
             this.Column5,
             this.Layer,
             this.RECIPE_ID});
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle18.ForeColor = System.Drawing.Color.SaddleBrown;
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.Color.Wheat;
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.Color.DarkSlateBlue;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.grdData.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle37.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle37.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle37.ForeColor = System.Drawing.Color.SaddleBrown;
+            dataGridViewCellStyle37.SelectionBackColor = System.Drawing.Color.Wheat;
+            dataGridViewCellStyle37.SelectionForeColor = System.Drawing.Color.DarkSlateBlue;
+            dataGridViewCellStyle37.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdData.DefaultCellStyle = dataGridViewCellStyle37;
             this.grdData.Dock = System.Windows.Forms.DockStyle.Top;
             this.grdData.EnableHeadersVisualStyles = false;
             this.grdData.GridColor = System.Drawing.SystemColors.GradientActiveCaption;
@@ -640,14 +670,14 @@
             this.grdData.Name = "grdData";
             this.grdData.ReadOnly = true;
             this.grdData.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.Color.Salmon;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdData.RowHeadersDefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle38.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle38.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle38.ForeColor = System.Drawing.Color.Salmon;
+            dataGridViewCellStyle38.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle38.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle38.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdData.RowHeadersDefaultCellStyle = dataGridViewCellStyle38;
             this.grdData.RowHeadersVisible = false;
             this.grdData.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.grdData.RowTemplate.Height = 23;
@@ -655,22 +685,11 @@
             this.grdData.ShowRowErrors = false;
             this.grdData.Size = new System.Drawing.Size(1250, 240);
             this.grdData.TabIndex = 2;
-            //this.grdData.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdData_CellClick);
             this.grdData.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdData_CellDoubleClick);
             this.grdData.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grdData_CellFormatting);
             this.grdData.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.grdData_CellMouseClick);
             this.grdData.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.grdData_DataError);
             this.grdData.SelectionChanged += new System.EventHandler(this.grdData_SelectionChanged);
-            // 
-            // ckPlay
-            // 
-            this.ckPlay.AutoSize = true;
-            this.ckPlay.Location = new System.Drawing.Point(841, 34);
-            this.ckPlay.Name = "ckPlay";
-            this.ckPlay.Size = new System.Drawing.Size(96, 16);
-            this.ckPlay.TabIndex = 4;
-            this.ckPlay.Text = "开启声音提醒";
-            this.ckPlay.UseVisualStyleBackColor = true;
             // 
             // Column1
             // 
@@ -707,8 +726,8 @@
             // Column8
             // 
             this.Column8.DataPropertyName = "SUBSTRATE_SLOT";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column8.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column8.DefaultCellStyle = dataGridViewCellStyle21;
             this.Column8.HeaderText = "SlotId";
             this.Column8.Name = "Column8";
             this.Column8.ReadOnly = true;
@@ -725,10 +744,10 @@
             // Column10
             // 
             this.Column10.DataPropertyName = "SFIELD";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.Format = "N2";
-            dataGridViewCellStyle3.NullValue = null;
-            this.Column10.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle22.Format = "N2";
+            dataGridViewCellStyle22.NullValue = null;
+            this.Column10.DefaultCellStyle = dataGridViewCellStyle22;
             this.Column10.HeaderText = "WaferYield(%)";
             this.Column10.Name = "Column10";
             this.Column10.ReadOnly = true;
@@ -737,9 +756,9 @@
             // Column19
             // 
             this.Column19.DataPropertyName = "LFIELD";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "N2";
-            this.Column19.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle23.Format = "N2";
+            this.Column19.DefaultCellStyle = dataGridViewCellStyle23;
             this.Column19.HeaderText = "LotYield(%)";
             this.Column19.Name = "Column19";
             this.Column19.ReadOnly = true;
@@ -748,10 +767,10 @@
             // MaskA_Die
             // 
             this.MaskA_Die.DataPropertyName = "maska_die";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle5.Format = "N2";
-            dataGridViewCellStyle5.NullValue = "-";
-            this.MaskA_Die.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle24.Format = "N2";
+            dataGridViewCellStyle24.NullValue = "-";
+            this.MaskA_Die.DefaultCellStyle = dataGridViewCellStyle24;
             this.MaskA_Die.HeaderText = "A Yield(%)";
             this.MaskA_Die.Name = "MaskA_Die";
             this.MaskA_Die.ReadOnly = true;
@@ -760,10 +779,10 @@
             // MaskB_Die
             // 
             this.MaskB_Die.DataPropertyName = "maskb_die";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "N2";
-            dataGridViewCellStyle6.NullValue = "-";
-            this.MaskB_Die.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle25.Format = "N2";
+            dataGridViewCellStyle25.NullValue = "-";
+            this.MaskB_Die.DefaultCellStyle = dataGridViewCellStyle25;
             this.MaskB_Die.HeaderText = "B Yield(%)";
             this.MaskB_Die.Name = "MaskB_Die";
             this.MaskB_Die.ReadOnly = true;
@@ -772,10 +791,10 @@
             // MaskC_Die
             // 
             this.MaskC_Die.DataPropertyName = "maskc_die";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "N2";
-            dataGridViewCellStyle7.NullValue = "-";
-            this.MaskC_Die.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle26.Format = "N2";
+            dataGridViewCellStyle26.NullValue = "-";
+            this.MaskC_Die.DefaultCellStyle = dataGridViewCellStyle26;
             this.MaskC_Die.HeaderText = "C Yield(%)";
             this.MaskC_Die.Name = "MaskC_Die";
             this.MaskC_Die.ReadOnly = true;
@@ -784,10 +803,10 @@
             // MaskD_Die
             // 
             this.MaskD_Die.DataPropertyName = "maskd_die";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.Format = "N2";
-            dataGridViewCellStyle8.NullValue = "-";
-            this.MaskD_Die.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle27.Format = "N2";
+            dataGridViewCellStyle27.NullValue = "-";
+            this.MaskD_Die.DefaultCellStyle = dataGridViewCellStyle27;
             this.MaskD_Die.HeaderText = "D Yield(%)";
             this.MaskD_Die.Name = "MaskD_Die";
             this.MaskD_Die.ReadOnly = true;
@@ -796,10 +815,10 @@
             // MaskE_Die
             // 
             this.MaskE_Die.DataPropertyName = "maske_die";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle9.Format = "N2";
-            dataGridViewCellStyle9.NullValue = "-";
-            this.MaskE_Die.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle28.Format = "N2";
+            dataGridViewCellStyle28.NullValue = "-";
+            this.MaskE_Die.DefaultCellStyle = dataGridViewCellStyle28;
             this.MaskE_Die.HeaderText = "E Yield(%)";
             this.MaskE_Die.Name = "MaskE_Die";
             this.MaskE_Die.ReadOnly = true;
@@ -808,8 +827,8 @@
             // Column15
             // 
             this.Column15.DataPropertyName = "NUMDEFECT";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.Column15.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Column15.DefaultCellStyle = dataGridViewCellStyle29;
             this.Column15.HeaderText = "NumDefects";
             this.Column15.Name = "Column15";
             this.Column15.ReadOnly = true;
@@ -818,8 +837,8 @@
             // ColFileStatus
             // 
             this.ColFileStatus.DataPropertyName = "ISCHECKED";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ColFileStatus.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ColFileStatus.DefaultCellStyle = dataGridViewCellStyle30;
             this.ColFileStatus.HeaderText = "FileStatus";
             this.ColFileStatus.Name = "ColFileStatus";
             this.ColFileStatus.ReadOnly = true;
@@ -834,9 +853,9 @@
             // Column18
             // 
             this.Column18.DataPropertyName = "COMPLETIONTIME";
-            dataGridViewCellStyle12.Format = "G";
-            dataGridViewCellStyle12.NullValue = null;
-            this.Column18.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle31.Format = "G";
+            dataGridViewCellStyle31.NullValue = null;
+            this.Column18.DefaultCellStyle = dataGridViewCellStyle31;
             this.Column18.HeaderText = "FileTime";
             this.Column18.Name = "Column18";
             this.Column18.ReadOnly = true;
@@ -845,9 +864,9 @@
             // Column11
             // 
             this.Column11.DataPropertyName = "CHECKEDDATE";
-            dataGridViewCellStyle13.Format = "G";
-            dataGridViewCellStyle13.NullValue = null;
-            this.Column11.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle32.Format = "G";
+            dataGridViewCellStyle32.NullValue = null;
+            this.Column11.DefaultCellStyle = dataGridViewCellStyle32;
             this.Column11.HeaderText = "ReviewTime";
             this.Column11.Name = "Column11";
             this.Column11.ReadOnly = true;
@@ -856,8 +875,8 @@
             // Column13
             // 
             this.Column13.DataPropertyName = "CREATEDDATE";
-            dataGridViewCellStyle14.Format = "G";
-            this.Column13.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle33.Format = "G";
+            this.Column13.DefaultCellStyle = dataGridViewCellStyle33;
             this.Column13.HeaderText = "ResultTime";
             this.Column13.Name = "Column13";
             this.Column13.ReadOnly = true;
@@ -866,9 +885,9 @@
             // Column14
             // 
             this.Column14.DataPropertyName = "FILETYPE";
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle15.Format = "G";
-            this.Column14.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle34.Format = "G";
+            this.Column14.DefaultCellStyle = dataGridViewCellStyle34;
             this.Column14.HeaderText = "FileType";
             this.Column14.Name = "Column14";
             this.Column14.ReadOnly = true;
@@ -877,8 +896,8 @@
             // Column17
             // 
             this.Column17.DataPropertyName = "DISPOSITION";
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column17.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column17.DefaultCellStyle = dataGridViewCellStyle35;
             this.Column17.HeaderText = "WaferStatus";
             this.Column17.Name = "Column17";
             this.Column17.ReadOnly = true;
@@ -887,10 +906,10 @@
             // Column16
             // 
             this.Column16.DataPropertyName = "DEFECTDENSITY";
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle17.Format = "N2";
-            dataGridViewCellStyle17.NullValue = null;
-            this.Column16.DefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle36.Format = "N2";
+            dataGridViewCellStyle36.NullValue = null;
+            this.Column16.DefaultCellStyle = dataGridViewCellStyle36;
             this.Column16.HeaderText = "Density";
             this.Column16.Name = "Column16";
             this.Column16.ReadOnly = true;
@@ -949,6 +968,16 @@
             this.RECIPE_ID.HeaderText = "Recipe Id";
             this.RECIPE_ID.Name = "RECIPE_ID";
             this.RECIPE_ID.ReadOnly = true;
+            // 
+            // ckPlay
+            // 
+            this.ckPlay.AutoSize = true;
+            this.ckPlay.Location = new System.Drawing.Point(1032, 34);
+            this.ckPlay.Name = "ckPlay";
+            this.ckPlay.Size = new System.Drawing.Size(96, 16);
+            this.ckPlay.TabIndex = 4;
+            this.ckPlay.Text = "开启声音提醒";
+            this.ckPlay.UseVisualStyleBackColor = true;
             // 
             // frm_review
             // 
@@ -1043,6 +1072,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Layer;
         private System.Windows.Forms.DataGridViewTextBoxColumn RECIPE_ID;
+        private System.Windows.Forms.ToolStripMenuItem tlImage;
+        private System.Windows.Forms.ToolStripMenuItem tsImage;
+        private System.Windows.Forms.ToolStripComboBox cbxOrderBy;
 
     }
 }

@@ -28,6 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
@@ -43,6 +46,7 @@
             this.cbxFiles = new System.Windows.Forms.ComboBox();
             this.btnDbImp = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.btnTableSpaceAdd = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -75,7 +79,10 @@
             this.btnArchive = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.dtpAto = new System.Windows.Forms.DateTimePicker();
-            this.label11 = new System.Windows.Forms.Label();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.chartDb = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -86,6 +93,9 @@
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartDb)).BeginInit();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -104,11 +114,12 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.groupBox8);
             this.groupBox6.Controls.Add(this.groupBox7);
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox6.Location = new System.Drawing.Point(0, 590);
+            this.groupBox6.Location = new System.Drawing.Point(0, 200);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(984, 172);
+            this.groupBox6.Size = new System.Drawing.Size(984, 562);
             this.groupBox6.TabIndex = 7;
             this.groupBox6.TabStop = false;
             // 
@@ -119,25 +130,25 @@
             this.groupBox7.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox7.Location = new System.Drawing.Point(3, 17);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(488, 152);
+            this.groupBox7.Size = new System.Drawing.Size(488, 542);
             this.groupBox7.TabIndex = 0;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Disk";
             // 
             // chartDisk
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartDisk.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.chartDisk.ChartAreas.Add(chartArea2);
             this.chartDisk.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chartDisk.Legends.Add(legend1);
+            legend2.Name = "Legend1";
+            this.chartDisk.Legends.Add(legend2);
             this.chartDisk.Location = new System.Drawing.Point(3, 55);
             this.chartDisk.Name = "chartDisk";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chartDisk.Series.Add(series1);
-            this.chartDisk.Size = new System.Drawing.Size(482, 94);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chartDisk.Series.Add(series2);
+            this.chartDisk.Size = new System.Drawing.Size(482, 484);
             this.chartDisk.TabIndex = 6;
             this.chartDisk.Text = "chart1";
             // 
@@ -166,7 +177,7 @@
             this.groupBox5.Controls.Add(this.cbxFiles);
             this.groupBox5.Controls.Add(this.btnDbImp);
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox5.Location = new System.Drawing.Point(0, 490);
+            this.groupBox5.Location = new System.Drawing.Point(0, 100);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(984, 100);
             this.groupBox5.TabIndex = 6;
@@ -217,12 +228,22 @@
             this.groupBox4.Controls.Add(this.label11);
             this.groupBox4.Controls.Add(this.btnTableSpaceAdd);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox4.Location = new System.Drawing.Point(0, 390);
+            this.groupBox4.Location = new System.Drawing.Point(0, 0);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(984, 100);
             this.groupBox4.TabIndex = 5;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Database Manage";
+            // 
+            // label11
+            // 
+            this.label11.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label11.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label11.Location = new System.Drawing.Point(160, 30);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(300, 55);
+            this.label11.TabIndex = 29;
+            this.label11.Text = "Description: Create a tablespace file. Notes:This action cannot be rolled back.";
             // 
             // btnTableSpaceAdd
             // 
@@ -245,7 +266,6 @@
             this.groupBox3.Controls.Add(this.label6);
             this.groupBox3.Controls.Add(this.dtpDto);
             this.groupBox3.Controls.Add(this.btnDelete);
-            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox3.Location = new System.Drawing.Point(0, 260);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(984, 130);
@@ -347,7 +367,6 @@
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.dtpRto);
             this.groupBox2.Controls.Add(this.btnRecovery);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox2.Location = new System.Drawing.Point(0, 130);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(984, 130);
@@ -441,7 +460,6 @@
             this.groupBox1.Controls.Add(this.btnArchive);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.dtpAto);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(984, 130);
@@ -550,15 +568,52 @@
             this.dtpAto.Size = new System.Drawing.Size(114, 21);
             this.dtpAto.TabIndex = 16;
             // 
-            // label11
+            // groupBox8
             // 
-            this.label11.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label11.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label11.Location = new System.Drawing.Point(160, 30);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(300, 55);
-            this.label11.TabIndex = 29;
-            this.label11.Text = "Description: Create a tablespace file. Notes:This action cannot be rolled back.";
+            this.groupBox8.Controls.Add(this.chartDb);
+            this.groupBox8.Controls.Add(this.panel3);
+            this.groupBox8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox8.Location = new System.Drawing.Point(491, 17);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(490, 542);
+            this.groupBox8.TabIndex = 7;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Database";
+            // 
+            // chartDb
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chartDb.ChartAreas.Add(chartArea1);
+            this.chartDb.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend1.Name = "Legend1";
+            this.chartDb.Legends.Add(legend1);
+            this.chartDb.Location = new System.Drawing.Point(3, 55);
+            this.chartDb.Name = "chartDb";
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartDb.Series.Add(series1);
+            this.chartDb.Size = new System.Drawing.Size(484, 484);
+            this.chartDb.TabIndex = 6;
+            this.chartDb.Text = "chart1";
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.comboBox1);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(3, 17);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(484, 38);
+            this.panel3.TabIndex = 5;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(23, 12);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(75, 20);
+            this.comboBox1.TabIndex = 4;
+            this.comboBox1.Visible = false;
             // 
             // frm_Archive
             // 
@@ -583,6 +638,9 @@
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chartDb)).EndInit();
+            this.panel3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -634,5 +692,9 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Button btnTableSpaceAdd;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartDb;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

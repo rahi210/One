@@ -214,6 +214,10 @@ namespace WR.Client.UI
                     grdPolat.DataSource = null;
                     chartPolat.Series.Clear();
                     break;
+                case "tabLotYield":
+                    grdLotCode.DataSource = null;
+                    grdLotWaferCode.DataSource = null;
+                    break;
                 default:
                     break;
             }
@@ -240,7 +244,7 @@ namespace WR.Client.UI
             }
 
             //必须选中lot
-            if (tabReport.SelectedTab == tabPolat && cbxLot.SelectedIndex < 1)
+            if ((tabReport.SelectedTab == tabPolat || tabReport.SelectedTab == tabLotYield) && cbxLot.SelectedIndex < 1)
             {
                 cbxLot.Focus();
                 MsgBoxEx.Info("Please input lot");
@@ -277,6 +281,9 @@ namespace WR.Client.UI
                         break;
                     case "tabPolat":
                         ShowPolat();
+                        break;
+                    case "tabLotYield":
+                        ShowLotYield();
                         break;
                     default:
                         break;
@@ -944,6 +951,9 @@ namespace WR.Client.UI
                 case "tabPolat":
                     sd.FileName = "Defect Polat Report.xls";//string.Format("Summary Of Good Die By For ({0}).xls", cbxLot.Text.Trim());
                     break;
+                case "tabLotYield":
+                    sd.FileName = "Lot Report.xls";//string.Format("Summary Of Good Die By For ({0}).xls", cbxLot.Text.Trim());
+                    break;
                 default:
                     break;
             }
@@ -1072,6 +1082,15 @@ namespace WR.Client.UI
                     chartPolat.SaveImage(img, ChartImageFormat.Bmp);
 
                     NpoiHelper.GridToExcelPolat(tmpfile2, sd.FileName, dtMc, img);
+                    break;
+                case "tabLotYield":
+                    NpoiHelper.GridToExcelByNPOI("Lot Yield", cbxLot.Text.Trim(),
+                        string.Format("{0:yyyy/MM/dd}-{1:yyyy/MM/dd}", dtDate.Value, dateTo.Value),
+                        new string[] { "Inspection Date:", lblInspectionDate.Text, "Operator:", lblOperator.Text },
+                        new string[] { "Lot Code:", lblLotCode.Text, "Machine ID:", lblMachineId.Text },
+                        new string[] { "Job:", lblJob.Text, "Recipe:", lblRecipe.Text },
+                        grdLotWaferCode, sd.FileName, true, new string[] { "Wafers:", lblWafers.Text, "Total Dice:", lblTotalDice.Text, "Scanned Dice:", lblScannedDice.Text, "Good Dice:",
+                            lblGoodDice.Text, "Bad Dice:", lblBadDice.Text, "Ink Dice:", lblInkDice.Text  }, grdLotCode);
                     break;
                 default:
                     break;
@@ -1531,5 +1550,139 @@ namespace WR.Client.UI
             if (dateFlag)
                 UpdateInfo(dateTo);
         }
+
+        private void ShowLotYield()
+        {
+            IwrService service = wrService.GetService();
+            var lst = service.GetLotReport(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"), DataCache.UserInfo.FilterData ? "1" : "0");
+            //var blst = new BindingCollection<WmLotReport>(lst);
+            //grdDensity.DataSource = blst;
+
+            var headInfo = lst.FirstOrDefault();
+
+            if (headInfo != null)
+            {
+                lblInspectionDate.Text = headInfo.COMPLETIONTIME.ToString();
+                lblOperator.Text = headInfo.USERID;
+                lblLotCode.Text = headInfo.LOT;
+                lblMachineId.Text = headInfo.MASTERTOOLCOMPUTERNAME;
+                lblJob.Text = headInfo.LAYER;
+                lblRecipe.Text = headInfo.RECIPE_ID;
+            }
+
+            var waferInfo = (from l in lst
+                             group l by new { l.LOT, l.SUBSTRATE_ID } into t
+                             select new LotInfo { TotalDice = t.Max(s => s.INSPECTEDDIE), GoodDice = t.Max(s => s.GOODDIE), BadDice = t.Max(s => s.NUMDEFECT) }).ToList();
+
+
+            if (waferInfo != null)
+            {
+                lblWafers.Text = lst.Select(s => s.SUBSTRATE_ID).Distinct().Count().ToString();
+                lblTotalDice.Text = waferInfo.Sum(s => s.TotalDice).ToString();
+                lblScannedDice.Text = lblTotalDice.Text;
+                lblGoodDice.Text = waferInfo.Sum(s => s.GoodDice).ToString();
+                lblBadDice.Text = waferInfo.Sum(s => s.BadDice).ToString();
+                //lblInkDice.Text = "0";
+            }
+
+            var codeInfo = new List<LotCodeInfo>();
+
+            var waferCodeInfo = (from l in lst
+                                 group l by new { l.LOT, l.SUBSTRATE_ID, l.ITEMID, l.NAME } into t
+                                 select new LotWaferCodeInfo
+                                 {
+                                     Lot = t.Key.LOT,
+                                     WaferId = t.Key.SUBSTRATE_ID,
+                                     Code = t.Key.ITEMID,
+                                     Category = t.Key.NAME,
+                                     InspectedDie = t.Max(s => s.INSPECTEDDIE),
+                                     TotalDefects = t.Count()
+                                 }).ToList();
+
+            var waferCodeDistinctInfo = (from l in lst.Distinct()
+                                         group l by new { l.LOT, l.SUBSTRATE_ID, l.ITEMID, l.NAME } into t
+                                         select new LotWaferCodeInfo
+                                         {
+                                             Lot = t.Key.LOT,
+                                             WaferId = t.Key.SUBSTRATE_ID,
+                                             Code = t.Key.ITEMID,
+                                             Category = t.Key.NAME,
+                                             InspectedDie = t.Max(s => s.INSPECTEDDIE),
+                                             DieQuantity = t.Count()
+                                         }).ToList();
+
+            var newWaferCodeInfo = (from w in waferCodeInfo
+                                    join d in waferCodeDistinctInfo on new { w.Lot, w.WaferId, w.Code, w.Category } equals new { d.Lot, d.WaferId, d.Code, d.Category }
+                                    select new LotWaferCodeInfo
+                                    {
+                                        Lot = w.Lot,
+                                        WaferId = w.WaferId,
+                                        Code = w.Code,
+                                        Category = w.Category,
+                                        InspectedDie = w.InspectedDie,
+                                        TotalDefects = w.TotalDefects,
+                                        DieQuantity = d.DieQuantity
+                                    }).OrderBy(s => s.WaferId).ToList();
+
+
+            double lotDefects = 0;
+
+            if (newWaferCodeInfo != null)
+            {
+                lotDefects = newWaferCodeInfo.Sum(s => s.TotalDefects);
+
+                newWaferCodeInfo.ForEach(s => s.Pareto = Math.Round(s.TotalDefects * 100 / lotDefects, 2));
+                newWaferCodeInfo.ForEach(s => s.YieldLoss = Math.Round(s.DieQuantity * 100 / s.InspectedDie, 2));
+
+                codeInfo = (from w in newWaferCodeInfo
+                            group w by w.Code into t
+                            select new LotCodeInfo
+                            {
+                                Code = t.Key,
+                                Category = t.Max(s => s.Category),
+                                //InspectedDie = t.Max(s => s.InspectedDie),
+                                TotalDefects = t.Sum(s => s.TotalDefects),
+                                DieQuantity = t.Sum(s => s.DieQuantity),
+                                Pareto = Math.Round(t.Average(s => s.Pareto), 2),
+                                YieldLoss = Math.Round(t.Average(s => s.YieldLoss), 2)
+                            }).OrderBy(s => s.Code).ToList();
+            }
+
+            grdLotCode.DataSource = new BindingCollection<LotCodeInfo>(codeInfo);
+            grdLotWaferCode.DataSource = new BindingCollection<LotWaferCodeInfo>(newWaferCodeInfo);
+        }
+    }
+
+    public class LotInfo
+    {
+        public int WaferCnt { get; set; }
+        public int TotalDice { get; set; }
+        public int ScannedDice { get; set; }
+        public int GoodDice { get; set; }
+        public int BadDice { get; set; }
+        public int InkDice { get; set; }
+    }
+
+    public class LotCodeInfo
+    {
+        public int Code { get; set; }
+        public double TotalDefects { get; set; }
+        public double DieQuantity { get; set; }
+        public string Category { get; set; }
+        public double Pareto { get; set; }
+        public double YieldLoss { get; set; }
+    }
+
+    public class LotWaferCodeInfo
+    {
+        public string Lot { get; set; }
+        public string WaferId { get; set; }
+        public int InspectedDie { get; set; }
+        public int Code { get; set; }
+        public double TotalDefects { get; set; }
+        public double DieQuantity { get; set; }
+        public string Category { get; set; }
+        public double Pareto { get; set; }
+        public double YieldLoss { get; set; }
     }
 }

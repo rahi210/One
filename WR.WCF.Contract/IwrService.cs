@@ -185,6 +185,15 @@ namespace WR.WCF.Contract
 
         [OperationContract]
         WmwaferResultEntity AddDefect(string resultid, string checkedby, string mclassid);
+
+        [OperationContract]
+        List<DiskInfoEntity> GetTableSpaceList();
+
+        [OperationContract]
+        Stream GetImages(string resultId);
+
+        [OperationContract]
+        List<WmLotReport> GetLotReport(string lot, string stDate, string edDate, string isFilter);
     }
 
     [MessageContract]

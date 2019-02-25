@@ -33,19 +33,14 @@
             this.pnlContext = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.cnsHelp = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tlsConn = new System.Windows.Forms.ToolStripMenuItem();
+            this.tlsAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlLeft = new System.Windows.Forms.Panel();
-            this.mnuExam = new WR.Client.Controls.WrMenuItem();
-            this.mnuArchive = new WR.Client.Controls.WrMenuItem();
-            this.mnuLogout = new WR.Client.Controls.WrMenuItem();
-            this.mnuSelection = new WR.Client.Controls.WrMenuItem();
             this.lblLeftRole = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
             this.lblLeftPwd = new System.Windows.Forms.Label();
             this.lblLeftOptions = new System.Windows.Forms.Label();
             this.lblLeftUser = new System.Windows.Forms.Label();
-            this.mnuReview = new WR.Client.Controls.WrMenuItem();
-            this.mnuSetting = new WR.Client.Controls.WrMenuItem();
-            this.mnuSelect = new WR.Client.Controls.WrMenuItem();
             this.lblArrow = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblConnction = new System.Windows.Forms.Label();
@@ -57,8 +52,13 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.tlsConn = new System.Windows.Forms.ToolStripMenuItem();
-            this.tlsAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuExam = new WR.Client.Controls.WrMenuItem();
+            this.mnuArchive = new WR.Client.Controls.WrMenuItem();
+            this.mnuLogout = new WR.Client.Controls.WrMenuItem();
+            this.mnuSelection = new WR.Client.Controls.WrMenuItem();
+            this.mnuReview = new WR.Client.Controls.WrMenuItem();
+            this.mnuSetting = new WR.Client.Controls.WrMenuItem();
+            this.mnuSelect = new WR.Client.Controls.WrMenuItem();
             this.cnsHelp.SuspendLayout();
             this.pnlLeft.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -89,6 +89,22 @@
             this.cnsHelp.Name = "cnsHelp";
             this.cnsHelp.Size = new System.Drawing.Size(191, 48);
             // 
+            // tlsConn
+            // 
+            this.tlsConn.Image = global::WR.Client.UI.Properties.Resources.connection;
+            this.tlsConn.Name = "tlsConn";
+            this.tlsConn.Size = new System.Drawing.Size(190, 22);
+            this.tlsConn.Text = "Connection settings";
+            this.tlsConn.Click += new System.EventHandler(this.tlsConn_Click);
+            // 
+            // tlsAbout
+            // 
+            this.tlsAbout.Image = global::WR.Client.UI.Properties.Resources.about;
+            this.tlsAbout.Name = "tlsAbout";
+            this.tlsAbout.Size = new System.Drawing.Size(190, 22);
+            this.tlsAbout.Text = "About me";
+            this.tlsAbout.Click += new System.EventHandler(this.tlsAbout_Click);
+            // 
             // pnlLeft
             // 
             this.pnlLeft.BackgroundImage = global::WR.Client.UI.Properties.Resources.left;
@@ -110,63 +126,6 @@
             this.pnlLeft.Name = "pnlLeft";
             this.pnlLeft.Size = new System.Drawing.Size(235, 640);
             this.pnlLeft.TabIndex = 1;
-            // 
-            // mnuExam
-            // 
-            this.mnuExam.BackColor = System.Drawing.Color.Transparent;
-            this.mnuExam.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.mnuExam.ItemBgColor = System.Drawing.Color.Transparent;
-            this.mnuExam.ItemImage = global::WR.Client.UI.Properties.Resources.examination;
-            this.mnuExam.Location = new System.Drawing.Point(-5, 310);
-            this.mnuExam.Name = "mnuExam";
-            this.mnuExam.Size = new System.Drawing.Size(255, 57);
-            this.mnuExam.TabIndex = 9;
-            this.mnuExam.Tag = "50002";
-            this.mnuExam.Visible = false;
-            this.mnuExam.WrText = "Exam Manage";
-            this.mnuExam.ItemClick += new System.EventHandler(this.mnuSelect_ItemClick);
-            // 
-            // mnuArchive
-            // 
-            this.mnuArchive.BackColor = System.Drawing.Color.Transparent;
-            this.mnuArchive.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.mnuArchive.ItemBgColor = System.Drawing.Color.Transparent;
-            this.mnuArchive.ItemImage = global::WR.Client.UI.Properties.Resources.Archive;
-            this.mnuArchive.Location = new System.Drawing.Point(0, 247);
-            this.mnuArchive.Name = "mnuArchive";
-            this.mnuArchive.Size = new System.Drawing.Size(255, 57);
-            this.mnuArchive.TabIndex = 8;
-            this.mnuArchive.Tag = "50001";
-            this.mnuArchive.Visible = false;
-            this.mnuArchive.WrText = "Data Manage";
-            this.mnuArchive.ItemClick += new System.EventHandler(this.mnuSelect_ItemClick);
-            // 
-            // mnuLogout
-            // 
-            this.mnuLogout.BackColor = System.Drawing.Color.Transparent;
-            this.mnuLogout.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.mnuLogout.ItemBgColor = System.Drawing.Color.Transparent;
-            this.mnuLogout.ItemImage = global::WR.Client.UI.Properties.Resources.logout;
-            this.mnuLogout.Location = new System.Drawing.Point(4, 570);
-            this.mnuLogout.Name = "mnuLogout";
-            this.mnuLogout.Size = new System.Drawing.Size(255, 57);
-            this.mnuLogout.TabIndex = 7;
-            this.mnuLogout.WrText = "Logout";
-            this.mnuLogout.ItemClick += new System.EventHandler(this.mnuSelect_ItemClick);
-            // 
-            // mnuSelection
-            // 
-            this.mnuSelection.BackColor = System.Drawing.Color.Transparent;
-            this.mnuSelection.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.mnuSelection.ItemBgColor = System.Drawing.Color.Transparent;
-            this.mnuSelection.ItemImage = global::WR.Client.UI.Properties.Resources.selection;
-            this.mnuSelection.Location = new System.Drawing.Point(4, 58);
-            this.mnuSelection.Name = "mnuSelection";
-            this.mnuSelection.Size = new System.Drawing.Size(255, 57);
-            this.mnuSelection.TabIndex = 6;
-            this.mnuSelection.Tag = "30001";
-            this.mnuSelection.WrText = "Wafer Selection";
-            this.mnuSelection.ItemClick += new System.EventHandler(this.mnuSelect_ItemClick);
             // 
             // lblLeftRole
             // 
@@ -242,47 +201,6 @@
             this.lblLeftUser.Text = "- User";
             this.lblLeftUser.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lblLeftUser.Click += new System.EventHandler(this.lblLeftUser_Click);
-            // 
-            // mnuReview
-            // 
-            this.mnuReview.BackColor = System.Drawing.Color.Transparent;
-            this.mnuReview.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.mnuReview.ItemBgColor = System.Drawing.Color.Transparent;
-            this.mnuReview.ItemImage = global::WR.Client.UI.Properties.Resources.review;
-            this.mnuReview.Location = new System.Drawing.Point(4, 121);
-            this.mnuReview.Name = "mnuReview";
-            this.mnuReview.Size = new System.Drawing.Size(255, 57);
-            this.mnuReview.TabIndex = 4;
-            this.mnuReview.Tag = "30002";
-            this.mnuReview.WrText = "Wafer Review";
-            this.mnuReview.ItemClick += new System.EventHandler(this.mnuSelect_ItemClick);
-            // 
-            // mnuSetting
-            // 
-            this.mnuSetting.BackColor = System.Drawing.Color.Transparent;
-            this.mnuSetting.Cursor = System.Windows.Forms.Cursors.Default;
-            this.mnuSetting.ItemBgColor = System.Drawing.Color.Transparent;
-            this.mnuSetting.ItemImage = global::WR.Client.UI.Properties.Resources.settings;
-            this.mnuSetting.Location = new System.Drawing.Point(4, 376);
-            this.mnuSetting.Name = "mnuSetting";
-            this.mnuSetting.Size = new System.Drawing.Size(255, 57);
-            this.mnuSetting.TabIndex = 4;
-            this.mnuSetting.Tag = "20000";
-            this.mnuSetting.WrText = "System Settings";
-            // 
-            // mnuSelect
-            // 
-            this.mnuSelect.BackColor = System.Drawing.Color.Transparent;
-            this.mnuSelect.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.mnuSelect.ItemBgColor = System.Drawing.Color.Transparent;
-            this.mnuSelect.ItemImage = global::WR.Client.UI.Properties.Resources.select;
-            this.mnuSelect.Location = new System.Drawing.Point(4, 184);
-            this.mnuSelect.Name = "mnuSelect";
-            this.mnuSelect.Size = new System.Drawing.Size(255, 57);
-            this.mnuSelect.TabIndex = 4;
-            this.mnuSelect.Tag = "30003";
-            this.mnuSelect.WrText = "Defect Report";
-            this.mnuSelect.ItemClick += new System.EventHandler(this.mnuSelect_ItemClick);
             // 
             // lblArrow
             // 
@@ -421,21 +339,102 @@
             this.label4.TabIndex = 0;
             this.label4.Text = "2015/08/12 09:30:23";
             // 
-            // tlsConn
+            // mnuExam
             // 
-            this.tlsConn.Image = global::WR.Client.UI.Properties.Resources.connection;
-            this.tlsConn.Name = "tlsConn";
-            this.tlsConn.Size = new System.Drawing.Size(190, 22);
-            this.tlsConn.Text = "Connection settings";
-            this.tlsConn.Click += new System.EventHandler(this.tlsConn_Click);
+            this.mnuExam.BackColor = System.Drawing.Color.Transparent;
+            this.mnuExam.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.mnuExam.ItemBgColor = System.Drawing.Color.Transparent;
+            this.mnuExam.ItemImage = global::WR.Client.UI.Properties.Resources.examination;
+            this.mnuExam.Location = new System.Drawing.Point(-5, 310);
+            this.mnuExam.Name = "mnuExam";
+            this.mnuExam.Size = new System.Drawing.Size(255, 57);
+            this.mnuExam.TabIndex = 9;
+            this.mnuExam.Tag = "50002";
+            this.mnuExam.Visible = false;
+            this.mnuExam.WrText = "Exam Manage";
+            this.mnuExam.ItemClick += new System.EventHandler(this.mnuSelect_ItemClick);
             // 
-            // tlsAbout
+            // mnuArchive
             // 
-            this.tlsAbout.Image = global::WR.Client.UI.Properties.Resources.about;
-            this.tlsAbout.Name = "tlsAbout";
-            this.tlsAbout.Size = new System.Drawing.Size(190, 22);
-            this.tlsAbout.Text = "About me";
-            this.tlsAbout.Click += new System.EventHandler(this.tlsAbout_Click);
+            this.mnuArchive.BackColor = System.Drawing.Color.Transparent;
+            this.mnuArchive.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.mnuArchive.ItemBgColor = System.Drawing.Color.Transparent;
+            this.mnuArchive.ItemImage = global::WR.Client.UI.Properties.Resources.Archive;
+            this.mnuArchive.Location = new System.Drawing.Point(0, 247);
+            this.mnuArchive.Name = "mnuArchive";
+            this.mnuArchive.Size = new System.Drawing.Size(255, 57);
+            this.mnuArchive.TabIndex = 8;
+            this.mnuArchive.Tag = "50001";
+            this.mnuArchive.WrText = "Data Manage";
+            this.mnuArchive.ItemClick += new System.EventHandler(this.mnuSelect_ItemClick);
+            // 
+            // mnuLogout
+            // 
+            this.mnuLogout.BackColor = System.Drawing.Color.Transparent;
+            this.mnuLogout.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.mnuLogout.ItemBgColor = System.Drawing.Color.Transparent;
+            this.mnuLogout.ItemImage = global::WR.Client.UI.Properties.Resources.logout;
+            this.mnuLogout.Location = new System.Drawing.Point(4, 570);
+            this.mnuLogout.Name = "mnuLogout";
+            this.mnuLogout.Size = new System.Drawing.Size(255, 57);
+            this.mnuLogout.TabIndex = 7;
+            this.mnuLogout.WrText = "Logout";
+            this.mnuLogout.ItemClick += new System.EventHandler(this.mnuSelect_ItemClick);
+            // 
+            // mnuSelection
+            // 
+            this.mnuSelection.BackColor = System.Drawing.Color.Transparent;
+            this.mnuSelection.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.mnuSelection.ItemBgColor = System.Drawing.Color.Transparent;
+            this.mnuSelection.ItemImage = global::WR.Client.UI.Properties.Resources.selection;
+            this.mnuSelection.Location = new System.Drawing.Point(4, 58);
+            this.mnuSelection.Name = "mnuSelection";
+            this.mnuSelection.Size = new System.Drawing.Size(255, 57);
+            this.mnuSelection.TabIndex = 6;
+            this.mnuSelection.Tag = "30001";
+            this.mnuSelection.WrText = "Wafer Selection";
+            this.mnuSelection.ItemClick += new System.EventHandler(this.mnuSelect_ItemClick);
+            // 
+            // mnuReview
+            // 
+            this.mnuReview.BackColor = System.Drawing.Color.Transparent;
+            this.mnuReview.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.mnuReview.ItemBgColor = System.Drawing.Color.Transparent;
+            this.mnuReview.ItemImage = global::WR.Client.UI.Properties.Resources.review;
+            this.mnuReview.Location = new System.Drawing.Point(4, 121);
+            this.mnuReview.Name = "mnuReview";
+            this.mnuReview.Size = new System.Drawing.Size(255, 57);
+            this.mnuReview.TabIndex = 4;
+            this.mnuReview.Tag = "30002";
+            this.mnuReview.WrText = "Wafer Review";
+            this.mnuReview.ItemClick += new System.EventHandler(this.mnuSelect_ItemClick);
+            // 
+            // mnuSetting
+            // 
+            this.mnuSetting.BackColor = System.Drawing.Color.Transparent;
+            this.mnuSetting.Cursor = System.Windows.Forms.Cursors.Default;
+            this.mnuSetting.ItemBgColor = System.Drawing.Color.Transparent;
+            this.mnuSetting.ItemImage = global::WR.Client.UI.Properties.Resources.settings;
+            this.mnuSetting.Location = new System.Drawing.Point(4, 376);
+            this.mnuSetting.Name = "mnuSetting";
+            this.mnuSetting.Size = new System.Drawing.Size(255, 57);
+            this.mnuSetting.TabIndex = 4;
+            this.mnuSetting.Tag = "20000";
+            this.mnuSetting.WrText = "System Settings";
+            // 
+            // mnuSelect
+            // 
+            this.mnuSelect.BackColor = System.Drawing.Color.Transparent;
+            this.mnuSelect.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.mnuSelect.ItemBgColor = System.Drawing.Color.Transparent;
+            this.mnuSelect.ItemImage = global::WR.Client.UI.Properties.Resources.select;
+            this.mnuSelect.Location = new System.Drawing.Point(4, 184);
+            this.mnuSelect.Name = "mnuSelect";
+            this.mnuSelect.Size = new System.Drawing.Size(255, 57);
+            this.mnuSelect.TabIndex = 4;
+            this.mnuSelect.Tag = "30003";
+            this.mnuSelect.WrText = "Defect Report";
+            this.mnuSelect.ItemClick += new System.EventHandler(this.mnuSelect_ItemClick);
             // 
             // frm_main
             // 
@@ -479,7 +478,6 @@
         private Controls.WrMenuItem mnuSetting;
         private System.Windows.Forms.Label lblLeftRole;
         private System.Windows.Forms.Label lblLeftUser;
-        private Controls.WrMenuItem mnuSelection;
         private Controls.WrMenuItem mnuLogout;
         private System.Windows.Forms.Label lblLeftOptions;
         public Controls.WrMenuItem mnuReview;
@@ -495,5 +493,6 @@
         private System.Windows.Forms.Label lblConnction;
         public Controls.WrMenuItem mnuArchive;
         public Controls.WrMenuItem mnuExam;
+        public Controls.WrMenuItem mnuSelection;
     }
 }

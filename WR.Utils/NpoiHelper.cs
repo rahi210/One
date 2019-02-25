@@ -17,11 +17,11 @@ namespace WR.Utils
         /// <param name="xlsname"></param>
         /// <param name="dtSrc"></param>
         /// <param name="dtSum"></param>
-        public static void GridToExcelYield(string xlstpmname, string xlsname, DataTable dtSrc,DataTable dtSum)
+        public static void GridToExcelYield(string xlstpmname, string xlsname, DataTable dtSrc, DataTable dtSum)
         {
             FileStream file = new FileStream(xlstpmname, FileMode.Open, FileAccess.Read);
             HSSFWorkbook hssfworkbook = new HSSFWorkbook(file);
-           
+
             //create a entry of DocumentSummaryInformation
             NPOI.HPSF.DocumentSummaryInformation dsi = NPOI.HPSF.PropertySetFactory.CreateDocumentSummaryInformation();
             dsi.Company = "SMEE";
@@ -242,11 +242,13 @@ namespace WR.Utils
         }
 
         public static void GridToExcelByNPOI(string sheetname, string lotid, string date,
-            string[] summ1, string[] summ2, string[] summ3, DataGridView gv, string strExcelFileName, bool summflag)
+            string[] summ1, string[] summ2, string[] summ3, DataGridView gv, string strExcelFileName, bool summflag, string[] summ4 = null, DataGridView gv1 = null)
         {
             HSSFWorkbook workbook = new HSSFWorkbook();
             try
             {
+                var rIndex = 0;
+
                 ISheet sheet = workbook.CreateSheet(sheetname);
 
                 //汇总栏
@@ -326,6 +328,34 @@ namespace WR.Utils
                         cell_44.SetCellValue(summ3[3]);
                         cell_44.CellStyle = SummStyle;
                     }
+
+                    if (summ4 != null)
+                    {
+                        IRow r = sheet.CreateRow(4);
+                        r.Height = 20 * 20;
+
+                        IRow r4 = null;
+
+                        for (int i = 0; i < summ4.Length; i++)
+                        {
+                            var cIndex = 1;
+
+                            if (i % 2 == 0)
+                            {
+                                r4 = sheet.CreateRow(5 + rIndex);
+                                r4.Height = 20 * 20;
+
+                                cIndex = 0;
+
+                                rIndex++;
+                            }
+
+                            ICell c = r4.CreateCell(cIndex);
+                            c.SetCellValue(summ4[i]);
+                            c.CellStyle = SummStyle;
+                        }
+                        rIndex++;
+                    }
                 }
 
                 //表格头
@@ -344,10 +374,67 @@ namespace WR.Utils
                 HeadercellStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.Black.Index;
                 HeadercellStyle.FillBackgroundColor = NPOI.HSSF.Util.HSSFColor.Lavender.Index;
 
+                if (gv1 != null)
+                {
+                    int icolIndex1 = 0;
+                    int ridx1 = (summflag ? 4 + rIndex : 1 + rIndex);
+                    IRow headerRow1 = sheet.CreateRow(ridx1); rIndex++;
+                    headerRow1.Height = 20 * 20;
+                    foreach (DataGridViewColumn item in gv1.Columns)
+                    {
+                        if (!item.Visible)
+                            continue;
+
+                        ICell cell = headerRow1.CreateCell(icolIndex1);
+                        sheet.SetColumnWidth(icolIndex1, item.Width * 50);
+                        cell.SetCellValue(item.HeaderText);
+                        cell.CellStyle = HeadercellStyle;
+                        icolIndex1++;
+                    }
+
+                    ICellStyle cellStyle1 = workbook.CreateCellStyle();
+
+                    //为避免日期格式被Excel自动替换，所以设定 format 为 『@』 表示一率当成text來看
+                    cellStyle1.DataFormat = HSSFDataFormat.GetBuiltinFormat("@");
+                    cellStyle1.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+                    cellStyle1.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+                    cellStyle1.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+                    cellStyle1.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+
+                    NPOI.SS.UserModel.IFont cellfont1 = workbook.CreateFont();
+                    cellfont1.Boldweight = (short)FontBoldWeight.Normal;
+                    cellStyle1.SetFont(cellfont1);
+
+                    //建立内容行
+                    int iRowIndex1 = (summflag ? 5 + rIndex : 2 + rIndex);
+                    int iCellIndex1 = 0;
+                    if (gv1.Rows.Count > 0)
+                    {
+                        foreach (DataGridViewRow Rowitem in gv1.Rows)
+                        {
+                            IRow DataRow = sheet.CreateRow(iRowIndex1);
+                            foreach (DataGridViewColumn Colitem in gv1.Columns)
+                            {
+                                if (Colitem.Visible)
+                                {
+                                    ICell cell = DataRow.CreateCell(iCellIndex1);
+                                    cell.SetCellValue(Rowitem.Cells[Colitem.Name].FormattedValue.ToString());
+                                    cell.CellStyle = cellStyle1;
+                                    iCellIndex1++;
+                                }
+                            }
+                            iCellIndex1 = 0;
+                            iRowIndex1++;
+                            rIndex++;
+                        }
+                    }
+                    rIndex++;
+                }
+
                 //用column name 作为列名
                 int icolIndex = 0;
-                int ridx = (summflag ? 4 : 1);
-                IRow headerRow = sheet.CreateRow(ridx);
+                int ridx = (summflag ? 4 + rIndex : 1 + rIndex);
+                IRow headerRow = sheet.CreateRow(ridx); rIndex++;
                 headerRow.Height = 20 * 20;
                 foreach (DataGridViewColumn item in gv.Columns)
                 {
@@ -375,7 +462,7 @@ namespace WR.Utils
                 cellStyle.SetFont(cellfont);
 
                 //建立内容行
-                int iRowIndex = (summflag ? 5 : 2);
+                int iRowIndex = (summflag ? 5 + rIndex : 2 + rIndex);
                 int iCellIndex = 0;
                 if (gv.Rows.Count > 0)
                 {
@@ -394,6 +481,7 @@ namespace WR.Utils
                         }
                         iCellIndex = 0;
                         iRowIndex++;
+                        rIndex++;
                     }
 
                     ////自适应列宽度

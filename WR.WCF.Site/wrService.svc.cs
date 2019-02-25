@@ -811,7 +811,21 @@ namespace WR.WCF.Site
             StringBuilder sbt = new StringBuilder();
             using (BFdbContext db = new BFdbContext())
             {
-                sbt.AppendFormat("update wm_waferresult set ischecked='{0}' where resultid='{1}'", status, waferid);
+                //sbt.AppendFormat("update wm_waferresult set ischecked='{0}' where resultid='{1}'", status, waferid);
+                sbt.AppendFormat(@"update wm_waferresult t
+                                   set ischecked = '{0}',
+                                       numdefect = nvl((select f.defectivedie
+                                                         from wm_inspectioninfo f
+                                                        where f.resultid = t.resultid),
+                                                       0),
+                                       t.sfield  = nvl((select round((f.inspecteddie - f.defectivedie) /
+                                                                     f.inspecteddie,
+                                                                     2)
+                                                         from wm_inspectioninfo f
+                                                        where f.resultid = t.resultid),
+                                                       0)
+                                 where resultid = '{1}'", status, waferid);
+
                 return db.ExecuteSqlCommand(sbt.ToString());
             }
         }
@@ -876,7 +890,16 @@ namespace WR.WCF.Site
                     sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist{1} t,wm_dielayout a
                                                     where t.layoutid=a.layoutid and t.layoutid='{0}'", id, date);
 
-                    return db.SqlQuery<WmdielayoutlistEntitiy>(sql).ToList();
+                    var list = db.SqlQuery<WmdielayoutlistEntitiy>(sql).ToList();
+
+                    if (list.Count == 0)
+                    {
+                        sql = string.Format("select t.columns_,t.rows_, t.layoutdetails from WM_DIELAYOUT t where t.layoutid='{0}'", id);
+
+                        list = db.SqlQuery<WmdielayoutlistEntitiy>(sql).ToList();
+                    }
+
+                    return list;
                 }
             }
             catch (Exception ex)
@@ -1758,6 +1781,7 @@ namespace WR.WCF.Site
             }
         }
 
+
         #region 考试系统
 
         public List<EMCLASSIFICATIONMARK> GetCLASSIFICATIONMARK(string filter)
@@ -2596,6 +2620,144 @@ namespace WR.WCF.Site
 
             fstream.Flush();
             fstream.Close();
+        }
+
+        public List<DiskInfoEntity> GetTableSpaceList()
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    string sql = @"select t.TABLESPACE_NAME Name, sum(t.BYTES) UsedSpace,
+                                       sum(t.MAXBYTES) TotalSize, sum(t.MAXBYTES) - sum(t.BYTES) FreeSpace
+                                  from dba_data_files t
+                                 where t.TABLESPACE_NAME = 'USERS'
+                                 group by t.TABLESPACE_NAME";
+
+                    return db.SqlQuery<DiskInfoEntity>(sql).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        /// <summary>
+        /// 下载图片
+        /// </summary>
+        /// <param name="resultId"></param>
+        /// <returns></returns>
+        public Stream GetImages(string resultId)
+        {
+            try
+            {
+                //var path = Utils.PathCombine(Utils.ImgUpdatePath, resultId, "Front");
+                var path = Utils.PathCombine(Utils.ImgUpdatePath, resultId);
+                var imageDir = Utils.PathCombine(AppDomain.CurrentDomain.BaseDirectory.Split('\\')[0] + "\\", "SMEE_Tmp");
+
+                if (!Directory.Exists(path))
+                    throw new FaultException("非法请求。");
+
+                if (!Directory.Exists(imageDir))
+                    Directory.CreateDirectory(imageDir);
+
+                ZipHelper zipHelper = new ZipHelper();
+
+                var zipFileName = Utils.PathCombine(imageDir, resultId + ".zip");
+
+                zipHelper.CreateZip(zipFileName, path, true, ".jpg");
+
+                //var files = Directory.GetFiles(Utils.PathCombine(Utils.ImgUpdatePath, filename), "*.zip");
+                //if (files.Length == 0)
+                //    throw new FaultException("非法请求。");
+
+                FileStream fstream = new FileStream(zipFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+                var incomingRequest = WebOperationContext.Current.IncomingRequest;
+                var outgoingResponse = WebOperationContext.Current.OutgoingResponse;
+                long offset = 0, count = fstream.Length;
+
+                if (incomingRequest.Headers.AllKeys.Contains("Range"))
+                {
+                    var match = System.Text.RegularExpressions.Regex.Match(incomingRequest.Headers["Range"], @"(?<=bytes\b*=)(\d*)-(\d*)");
+                    if (match.Success)
+                    {
+                        outgoingResponse.StatusCode = System.Net.HttpStatusCode.PartialContent;
+                        string v1 = match.Groups[1].Value;
+                        string v2 = match.Groups[2].Value;
+                        if (!match.NextMatch().Success)
+                        {
+                            if (v1 == "" && v2 != "")
+                            {
+                                var r2 = long.Parse(v2);
+                                offset = count - r2;
+                                count = r2;
+                            }
+                            else if (v1 != "" && v2 == "")
+                            {
+                                var r1 = long.Parse(v1);
+                                offset = r1;
+                                count -= r1;
+                            }
+                            else if (v1 != "" && v2 != "")
+                            {
+                                var r1 = long.Parse(v1);
+                                var r2 = long.Parse(v2);
+                                offset = r1;
+                                count -= r2 - r1 + 1;
+                            }
+                            else
+                            {
+                                outgoingResponse.StatusCode = System.Net.HttpStatusCode.OK;
+                            }
+                        }
+                    }
+                    outgoingResponse.ContentType = "application/force-download";
+                    outgoingResponse.ContentLength = count;
+
+                    StreamReaderEx fs = new StreamReaderEx(fstream, offset, count);
+                    fs.Position = 0;
+                }
+
+                return fstream;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public List<WmLotReport> GetLotReport(string lot, string stDate, string edDate, string isFilter)
+        {
+            using (BFdbContext db = new BFdbContext())
+            {
+                var dateList = GetCompletiontime(stDate, edDate);
+                var list = new List<WmLotReport>();
+
+                foreach (var yearMonth in dateList)
+                {
+                    var tablename = yearMonth;
+                    var sql = string.Format(@"select a.device, a.layer, a.lot, a.substrate_id, b.recipe_id, c.id itemid, c.name,
+                                       b.completiontime, d.mastertoolcomputername, b.inspecteddie,
+                                       d.numdefect, b.inspecteddie - d.numdefect gooddie, t.dieaddress,
+                                       e.userid
+                                  from wm_defectlist{3} t, wm_identification a, wm_inspectioninfo b,
+                                       wm_classificationitem c, wm_waferresult d, tb_user e
+                                 where c.itemid = t.inspclassifiid
+                                   and t.resultid = d.resultid
+                                   and a.identificationid = d.identificationid
+                                   and b.resultid = d.resultid
+                                   and e.id(+) = d.checkedby
+                                   and instr(a.device||'|'||a.layer||'|'||a.lot||'|','{0}')>0 and d.completiontime>={1} and d.completiontime<={2}", lot, stDate, edDate, tablename);
+
+                    list.AddRange(db.SqlQuery<WmLotReport>(sql).ToList());
+                }
+
+                return list;
+            }
         }
     }
 }

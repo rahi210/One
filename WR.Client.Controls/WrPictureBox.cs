@@ -6,6 +6,8 @@ using System;
 using System.Drawing.Drawing2D;
 using System.Collections;
 
+using System.Linq;
+
 namespace WR.Client.Controls
 {
     public class WrPictureBox : PictureBox
@@ -502,7 +504,7 @@ namespace WR.Client.Controls
             {
                 if (HasDraw)
                 {
-                    if (this.Status != "Reclass")
+                    if (this.Status != "Reclass" && this.Status != "ReDie")
                     {
                         //locX = locX - (int)((e.Location.X - mousedownpoint.X) / scaleX);
                         //locY = locY - (int)((e.Location.Y - mousedownpoint.Y) / scaleY);
@@ -749,7 +751,7 @@ namespace WR.Client.Controls
             {
                 ww = 4;
                 wh = 4;
-               
+
                 hg = row * wh + 60;
             }
             else if (col < row)
@@ -799,33 +801,54 @@ namespace WR.Client.Controls
 
             double scaleX = Math.Round(Convert.ToDouble(this.Width) / wd, 8);
             double scaleY = Math.Round(Convert.ToDouble(this.Height) / hg, 8);
+            var log = WR.Utils.LogService.Getlog(this.GetType());
 
+            log.Debug("画出die start");
             //画出die
-            foreach (DieLayout die in _dielayoutlist)
-            {
-                bp.AddRectangle(new Rectangle((die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, ww * this.ZoomMultiple, wh * this.ZoomMultiple));
-                wp.AddRectangle(new Rectangle((die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple, (wh - 1) * this.ZoomMultiple));
+            var bpRectangles = _dielayoutlist.Select(die => new Rectangle((die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, ww * this.ZoomMultiple, wh * this.ZoomMultiple)).ToArray();
+            var wpRectangles = _dielayoutlist.Select(die => new Rectangle((die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple, (wh - 1) * this.ZoomMultiple)).ToArray();
+            var gcFillRectangles = _dielayoutlist.Where(die => !string.IsNullOrEmpty(die.FillColor)).Select(die => new Rectangle((die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple, (wh - 1) * this.ZoomMultiple)).ToArray();
 
-                if (!string.IsNullOrEmpty(die.FillColor))
-                    gc.FillRectangle(new SolidBrush(ConvterColor(Color.Gray.Name)), (die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple);
+            if (bpRectangles.Length > 0)
+                bp.AddRectangles(bpRectangles);
 
-                if (string.Format("{0},{1}", die.X, die.Y) == loction)
-                {
-                    lineg = true;
-                    lx = die.X;
-                    ly = row - die.Y;
+            if (wpRectangles.Length > 0)
+                wp.AddRectangles(wpRectangles);
 
-                    //System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.Red, 2);
-                    //myPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-                    //gc.DrawRectangle(myPen, (die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, ww * this.ZoomMultiple, wh * this.ZoomMultiple);
-                    //myPen.Dispose();
-                }
+            if (gcFillRectangles.Length > 0)
+                gc.FillRectangles(new SolidBrush(ConvterColor(Color.Gray.Name)), gcFillRectangles);
 
-                die.Points = new List<Point>() { new Point(Convert.ToInt32((die.X * ww + offsetX) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY) * scaleY))
+            _dielayoutlist.ForEach(die => die.Points = new List<Point>() { new Point(Convert.ToInt32((die.X * ww + offsetX) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY) * scaleY))
                     ,new Point(Convert.ToInt32((die.X * ww + offsetX+ww-1) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY) * scaleY))
                     ,new Point(Convert.ToInt32((die.X * ww + offsetX+ww-1) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY+wh-1) * scaleY))
-                    ,new Point(Convert.ToInt32((die.X * ww + offsetX) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY+wh-1) * scaleY))};
-            }
+                    ,new Point(Convert.ToInt32((die.X * ww + offsetX) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY+wh-1) * scaleY))});
+            //foreach (DieLayout die in _dielayoutlist)
+            //{
+            //    bp.AddRectangle(new Rectangle((die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, ww * this.ZoomMultiple, wh * this.ZoomMultiple));
+            //    wp.AddRectangle(new Rectangle((die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple, (wh - 1) * this.ZoomMultiple));
+
+            //    if (!string.IsNullOrEmpty(die.FillColor))
+            //        gc.FillRectangle(new SolidBrush(ConvterColor(Color.Gray.Name)), (die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple);
+
+            //    if (string.Format("{0},{1}", die.X, die.Y) == loction)
+            //    {
+            //        lineg = true;
+            //        lx = die.X;
+            //        ly = row - die.Y;
+
+            //        //System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.Red, 2);
+            //        //myPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+            //        //gc.DrawRectangle(myPen, (die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, ww * this.ZoomMultiple, wh * this.ZoomMultiple);
+            //        //myPen.Dispose();
+            //    }
+
+            //    die.Points = new List<Point>() { new Point(Convert.ToInt32((die.X * ww + offsetX) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY) * scaleY))
+            //        ,new Point(Convert.ToInt32((die.X * ww + offsetX+ww-1) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY) * scaleY))
+            //        ,new Point(Convert.ToInt32((die.X * ww + offsetX+ww-1) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY+wh-1) * scaleY))
+            //        ,new Point(Convert.ToInt32((die.X * ww + offsetX) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY+wh-1) * scaleY))};
+            //}
+
+            log.Debug("画出die start");
 
             gc.FillPath(_dPen, bp);
             gc.FillPath(_lPen, wp);
@@ -838,6 +861,7 @@ namespace WR.Client.Controls
             //double scaleY = Math.Round(Convert.ToDouble(this.Height) / hg, 8);
 
             //画出defect
+            log.Debug("画出defect start");
             foreach (DefectCoordinate def in _defectlist)
             {
                 if (string.IsNullOrEmpty(def.Location))
@@ -867,6 +891,7 @@ namespace WR.Client.Controls
                     //myPen.Dispose();
                 }
             }
+            log.Debug("画出defect end");
 
             //定位画线
             if (lineg)

@@ -54,6 +54,12 @@
             this.cbxNotdone = new System.Windows.Forms.CheckBox();
             this.btnOK = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.rbnThreeByte = new System.Windows.Forms.RadioButton();
+            this.rbnTwoByte = new System.Windows.Forms.RadioButton();
+            this.label9 = new System.Windows.Forms.Label();
+            this.rbnHexadecimal = new System.Windows.Forms.RadioButton();
+            this.rbnDecimal = new System.Windows.Forms.RadioButton();
+            this.label8 = new System.Windows.Forms.Label();
             this.btnSinfPath = new System.Windows.Forms.Button();
             this.txtSinfPath = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -71,6 +77,8 @@
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.panel7 = new System.Windows.Forms.Panel();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -90,6 +98,8 @@
             this.panel5.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.panel6.SuspendLayout();
+            this.panel7.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -379,6 +389,10 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.panel7);
+            this.tabPage2.Controls.Add(this.panel6);
+            this.tabPage2.Controls.Add(this.label9);
+            this.tabPage2.Controls.Add(this.label8);
             this.tabPage2.Controls.Add(this.btnSinfPath);
             this.tabPage2.Controls.Add(this.txtSinfPath);
             this.tabPage2.Controls.Add(this.label4);
@@ -389,6 +403,72 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "SINF Options";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // rbnThreeByte
+            // 
+            this.rbnThreeByte.AutoSize = true;
+            this.rbnThreeByte.Location = new System.Drawing.Point(44, 3);
+            this.rbnThreeByte.Name = "rbnThreeByte";
+            this.rbnThreeByte.Size = new System.Drawing.Size(41, 16);
+            this.rbnThreeByte.TabIndex = 8;
+            this.rbnThreeByte.TabStop = true;
+            this.rbnThreeByte.Text = "000";
+            this.rbnThreeByte.UseVisualStyleBackColor = true;
+            this.rbnThreeByte.CheckedChanged += new System.EventHandler(this.rbnThreeByte_CheckedChanged);
+            // 
+            // rbnTwoByte
+            // 
+            this.rbnTwoByte.AutoSize = true;
+            this.rbnTwoByte.Location = new System.Drawing.Point(3, 3);
+            this.rbnTwoByte.Name = "rbnTwoByte";
+            this.rbnTwoByte.Size = new System.Drawing.Size(35, 16);
+            this.rbnTwoByte.TabIndex = 7;
+            this.rbnTwoByte.TabStop = true;
+            this.rbnTwoByte.Text = "00";
+            this.rbnTwoByte.UseVisualStyleBackColor = true;
+            this.rbnTwoByte.CheckedChanged += new System.EventHandler(this.rbnTwoByte_CheckedChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(48, 73);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(65, 12);
+            this.label9.TabIndex = 6;
+            this.label9.Text = "Sinf Type:";
+            // 
+            // rbnHexadecimal
+            // 
+            this.rbnHexadecimal.AutoSize = true;
+            this.rbnHexadecimal.Location = new System.Drawing.Point(69, 5);
+            this.rbnHexadecimal.Name = "rbnHexadecimal";
+            this.rbnHexadecimal.Size = new System.Drawing.Size(95, 16);
+            this.rbnHexadecimal.TabIndex = 5;
+            this.rbnHexadecimal.TabStop = true;
+            this.rbnHexadecimal.Text = "hexadecimal ";
+            this.rbnHexadecimal.UseVisualStyleBackColor = true;
+            this.rbnHexadecimal.CheckedChanged += new System.EventHandler(this.rbnHexadecimal_CheckedChanged);
+            // 
+            // rbnDecimal
+            // 
+            this.rbnDecimal.AutoSize = true;
+            this.rbnDecimal.Location = new System.Drawing.Point(3, 5);
+            this.rbnDecimal.Name = "rbnDecimal";
+            this.rbnDecimal.Size = new System.Drawing.Size(65, 16);
+            this.rbnDecimal.TabIndex = 4;
+            this.rbnDecimal.TabStop = true;
+            this.rbnDecimal.Text = "decimal";
+            this.rbnDecimal.UseVisualStyleBackColor = true;
+            this.rbnDecimal.CheckedChanged += new System.EventHandler(this.rbnDecimal_CheckedChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(24, 51);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(89, 12);
+            this.label8.TabIndex = 3;
+            this.label8.Text = "Bin Code Type:";
             // 
             // btnSinfPath
             // 
@@ -561,6 +641,24 @@
             this.tabPage6.Text = "Yield Setting";
             this.tabPage6.UseVisualStyleBackColor = true;
             // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.rbnDecimal);
+            this.panel6.Controls.Add(this.rbnHexadecimal);
+            this.panel6.Location = new System.Drawing.Point(119, 44);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(200, 23);
+            this.panel6.TabIndex = 9;
+            // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.rbnTwoByte);
+            this.panel7.Controls.Add(this.rbnThreeByte);
+            this.panel7.Location = new System.Drawing.Point(119, 71);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(200, 24);
+            this.panel7.TabIndex = 10;
+            // 
             // frm_config
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -595,6 +693,10 @@
             this.panel5.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -644,6 +746,14 @@
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.RadioButton rbnHexadecimal;
+        private System.Windows.Forms.RadioButton rbnDecimal;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.RadioButton rbnThreeByte;
+        private System.Windows.Forms.RadioButton rbnTwoByte;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Panel panel6;
 
     }
 }

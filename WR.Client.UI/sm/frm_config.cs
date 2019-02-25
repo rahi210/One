@@ -84,6 +84,16 @@ namespace WR.Client.UI
 
             txtSinfPath.Text = DataCache.SinfPath;
 
+            if (DataCache.BinCodeType == "10")
+                rbnDecimal.Checked = true;
+            else
+                rbnHexadecimal.Checked = true;
+
+            if (DataCache.SinfType == "000")
+                rbnThreeByte.Checked = true;
+            else
+                rbnTwoByte.Checked = true;
+
             InitWaferOption(service);
 
             InitSystemOption(service);
@@ -438,6 +448,58 @@ namespace WR.Client.UI
             service.UpdateDict(list);
 
             MsgBoxEx.Info("Save success, please refresh the data.");
+        }
+
+        private void rbnDecimal_CheckedChanged(object sender, EventArgs e)
+        {
+            System.Configuration.Configuration config = WR.Utils.Config.GetConfig();
+            config.AppSettings.Settings.Remove("binCodeType");
+            config.AppSettings.Settings.Add("binCodeType", "10");
+
+            config.Save();
+
+            WR.Utils.Config.Refresh();
+
+            DataCache.BinCodeType = "10";
+        }
+
+        private void rbnHexadecimal_CheckedChanged(object sender, EventArgs e)
+        {
+            System.Configuration.Configuration config = WR.Utils.Config.GetConfig();
+            config.AppSettings.Settings.Remove("binCodeType");
+            config.AppSettings.Settings.Add("binCodeType", "16");
+
+            config.Save();
+
+            WR.Utils.Config.Refresh();
+
+            DataCache.BinCodeType = "16";
+        }
+
+        private void rbnTwoByte_CheckedChanged(object sender, EventArgs e)
+        {
+            System.Configuration.Configuration config = WR.Utils.Config.GetConfig();
+            config.AppSettings.Settings.Remove("sinfType");
+            config.AppSettings.Settings.Add("sinfType", "00");
+
+            config.Save();
+
+            WR.Utils.Config.Refresh();
+
+            DataCache.SinfType = "00";
+        }
+
+        private void rbnThreeByte_CheckedChanged(object sender, EventArgs e)
+        {
+            System.Configuration.Configuration config = WR.Utils.Config.GetConfig();
+            config.AppSettings.Settings.Remove("sinfType");
+            config.AppSettings.Settings.Add("sinfType", "000");
+
+            config.Save();
+
+            WR.Utils.Config.Refresh();
+
+            DataCache.SinfType = "000";
         }
         //private void btnYieldSettings_Click(object sender, EventArgs e)
         //{

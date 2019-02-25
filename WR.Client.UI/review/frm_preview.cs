@@ -230,7 +230,7 @@ namespace WR.Client.UI
         /// <summary>
         /// 数据加载
         /// </summary>
-        private void InitData()
+        private void InitData(bool isSameLot = false)
         {
             if (freshing)
                 return;
@@ -285,7 +285,29 @@ namespace WR.Client.UI
 
                     service.UpdateWaferResultToReadOnly(Resultid, "1");
                     //_dielayoutlist = service.GetDielayoutListById(wf.DIELAYOUTID);
-                    _dielayoutlist = DataCache.GetAllDielayoutListById(service.GetDielayoutListById(wf.DIELAYOUTID));
+
+                    if (!isSameLot)
+                        //_dielayoutlist = DataCache.GetAllDielayoutListById(service.GetDielayoutListById(wf.DIELAYOUTID));
+                        _dielayoutlist = DataCache.GetAllDielayoutListById(DataCache.GetDielayoutListById(wf.DIELAYOUTID));
+                    else
+                    {
+                        //_dielayoutlist.ForEach(s => s.INSPCLASSIFIID = 0);
+                        var deflayout = _dielayoutlist.Where(s => s.INSPCLASSIFIID != 0);
+
+                        foreach (var d in deflayout)
+                        {
+                            var index = _dielayoutlist.FindIndex(s => s.ID == d.ID);
+
+                            if (index != -1)
+                                _dielayoutlist[index].INSPCLASSIFIID = 0;
+                        }
+                    }
+
+                    //更新布局缺陷
+                    foreach (var d in defList)
+                    {
+                        UpdateDieLayout(d.DieAddress, (int)d.Cclassid);
+                    }
 
                     //获取参照图片
                     if (this.InvokeRequired)
@@ -706,30 +728,46 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void grdData_SelectionChanged(object sender, EventArgs e)
         {
-            //log.Debug("SelectionChanged Start...............");
+            log.Debug("SelectionChanged Start...............");
             if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0 && grdData.Visible)
             {
                 timer2.Enabled = false;
 
                 ResetTck();
-                //log.Debug("GetImage Start...............");
-                GetImage(grdData.SelectedRows[0].Cells["ColImageName"].Value as string);
+                log.Debug("GetImage Start...............");
+                //GetImage(grdData.SelectedRows[0].Cells["ColImageName"].Value as string);
+                System.Threading.Tasks.Task.Factory.StartNew(() =>
+                {
+                    if (this.InvokeRequired)
+                    {
+                        this.BeginInvoke(new Action(() =>
+                        {
+                            GetImage(grdData.SelectedRows[0].Cells["ColImageName"].Value as string);
+                        }));
+                    }
+                    else
+                    {
+                        GetImage(grdData.SelectedRows[0].Cells["ColImageName"].Value as string);
+                    }
+                });
+
                 //picWafer.Invalidate();
-                //log.Debug("GetImage End...............");
+                log.Debug("GetImage End...............");
+
                 var ent = grdData.SelectedRows[0].DataBoundItem as WmdefectlistEntity;
 
                 stopWatch.Stop();
                 //int seconds = (DateTime.Now - lastRunTime).Milliseconds;
                 long seconds = stopWatch.ElapsedMilliseconds;
 
-                //log.Debug(seconds);
-                if (seconds > 1000)
+                log.Debug(seconds);
+                if (seconds > 2000)
                 {
-                    //log.Debug("DrawDefect Start...............");
+                    log.Debug("DrawDefect Start...............");
                     DrawDefect(ent.DieAddress);
+                    log.Debug("DrawDefect End...............");
 
-                    //log.Debug("DrawDefect End...............");
-                    //var thr = new Thread(() =>
+                    //System.Threading.Tasks.Task.Factory.StartNew(() =>
                     //{
                     //    if (this.InvokeRequired)
                     //    {
@@ -743,7 +781,6 @@ namespace WR.Client.UI
                     //        DrawDefect(ent.DieAddress);
                     //    }
                     //});
-                    //thr.Start();
                 }
                 else
                 {
@@ -752,14 +789,17 @@ namespace WR.Client.UI
                         timer3.Enabled = true;
                 }
 
+                //log.Debug("stopWatch.Restart() Start...............");
                 lastRunTime = DateTime.Now;
-                stopWatch.Restart();
-
+                stopWatch.Reset();
+                stopWatch.Start();
+                //log.Debug("stopWatch.Restart() end...............");
                 timer2.Enabled = true;
             }
             else
                 GetImage(string.Empty);
-            //log.Debug("SelectionChanged End...............");
+
+            log.Debug("SelectionChanged End...............");
         }
 
         private int GetINSPCLASSIFIID(int x, int y)
@@ -780,7 +820,7 @@ namespace WR.Client.UI
             int col = _dielayoutlist[0].COLUMNS_;
             int row = _dielayoutlist[0].ROWS_;
 
-            _dielayoutlist.ForEach(s => s.INSPCLASSIFIID = GetINSPCLASSIFIID(s.DIEADDRESSX, s.DIEADDRESSY));
+            //_dielayoutlist.ForEach(s => s.INSPCLASSIFIID = GetINSPCLASSIFIID(s.DIEADDRESSX, s.DIEADDRESSY));
             var listDieLayout = _dielayoutlist.Select(s => new DieLayout { X = s.DIEADDRESSX, Y = s.DIEADDRESSY, FillColor = s.DISPOSITION.Trim() == "NotProcess" ? Color.Gray.Name : "", IsDefect = s.INSPCLASSIFIID != 0 })
             .ToList<DieLayout>();
 
@@ -853,7 +893,9 @@ namespace WR.Client.UI
             picWafer.HasDraw = true;
 
             //picWafer.ReDraw(col, row, loction, listDieLayout, picWafer.DefectList);
+            log.Debug("picWafer.ReDraw...............");
             picWafer.ReDraw();
+            log.Debug("picWafer.ReDraw End...............");
         }
 
         // <summary>
@@ -1468,6 +1510,10 @@ namespace WR.Client.UI
 
                 ChtShow(list);
             }
+            else if (tabControl1.SelectedTab == tabPage4)
+            {
+                ChtSizeShow();
+            }
         }
 
         /// <summary>
@@ -1494,6 +1540,36 @@ namespace WR.Client.UI
                     xValue = list[i].DESCRIPTION;
                 p.SetValueXY(xValue, list[i].Points);
                 p.Label = list[i].Points.ToString();
+
+                serie.Points.Add(p);
+            }
+        }
+
+        private void ChtSizeShow()
+        {
+            var list = GetItemSum();
+            var serie = chtDefectSize.Series[0];
+            serie.Points.Clear();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].Points < 1)
+                    continue;
+
+                DataPoint p = new DataPoint();
+
+                var xValue = string.Empty;
+
+                if (!string.IsNullOrEmpty(list[i].DESCRIPTION))
+                    xValue = list[i].DESCRIPTION;
+
+                var value = _defectlist.Where(s => s.Cclassid == list[0].ID)
+                    .Select(s => Math.Round(Math.Sqrt(Math.Pow(double.Parse(s.Size_.Split(',')[0]), 2) + Math.Pow(double.Parse(s.Size_.Split(',')[1]), 2)), 2))
+                    .Average();
+
+                p.SetValueXY(xValue, Math.Round(value, 2));
+
+                p.Label = value.ToString("0.00");
 
                 serie.Points.Add(p);
             }
@@ -1975,6 +2051,7 @@ namespace WR.Client.UI
                 nextid = currid - 1;
 
             var ent = DataCache.WaferResultInfo[nextid];
+            var isSameLot = false;
             Resultid = ent.RESULTID;
 
             if (!Oparams[1].Equals(ent.LOT))
@@ -1982,7 +2059,18 @@ namespace WR.Client.UI
                 var dialog = MsgBoxEx.ConfirmYesNo("This lot has been completed,Are you sure to continue?");
 
                 if (dialog == System.Windows.Forms.DialogResult.No)
-                    return;
+                {
+                    frm_main frm = this.Tag as frm_main;
+                    if (frm != null)
+                    {
+                        frm.mnuSelect_ItemClick(frm.mnuSelection, null);
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                isSameLot = true;
             }
 
             var isReview = GetWaferResultIsReview(ent.RESULTID);
@@ -1997,7 +2085,7 @@ namespace WR.Client.UI
             hasDraw = true;
             IsSave = true;
             picWafer.ZoomMultiple = 1;
-            InitData();
+            InitData(isSameLot);
 
             SetClsMenu();
 
@@ -2044,6 +2132,7 @@ namespace WR.Client.UI
                 nextid = currid + 1;
 
             var ent = DataCache.WaferResultInfo[nextid];
+            var isSameLot = false;
             Resultid = ent.RESULTID;
 
             if (!Oparams[1].Equals(ent.LOT))
@@ -2051,7 +2140,19 @@ namespace WR.Client.UI
                 var dialog = MsgBoxEx.ConfirmYesNo("This lot has been completed,Are you sure to continue?");
 
                 if (dialog == System.Windows.Forms.DialogResult.No)
-                    return;
+                {
+                    frm_main frm = this.Tag as frm_main;
+
+                    if (frm != null)
+                    {
+                        frm.mnuSelect_ItemClick(frm.mnuSelection, null);
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                isSameLot = true;
             }
 
             var isReview = GetWaferResultIsReview(ent.RESULTID);
@@ -2067,7 +2168,7 @@ namespace WR.Client.UI
             IsSave = true;
 
             picWafer.ZoomMultiple = 1;
-            InitData();
+            InitData(isSameLot);
 
             SetClsMenu();
 
@@ -2794,7 +2895,9 @@ namespace WR.Client.UI
             int y = int.Parse(array[1]);
             var index = _dielayoutlist.FindIndex(s => s.DIEADDRESSX == x && s.DIEADDRESSY == y);
 
-            if (index != -1)
+            //if (index != -1 && _dielayoutlist[index].INSPCLASSIFIID < cclassid)
+            //    _dielayoutlist[index].INSPCLASSIFIID = cclassid;
+            if (index != -1 && (_dielayoutlist[index].INSPCLASSIFIID < cclassid || cclassid == 0))
                 _dielayoutlist[index].INSPCLASSIFIID = cclassid;
         }
 

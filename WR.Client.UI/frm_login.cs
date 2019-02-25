@@ -199,6 +199,12 @@ namespace WR.Client.UI
                     ent.today = tday;
                 else
                     ent.today = int.Parse(DateTime.Today.ToString("yyyyMMdd"));
+
+                if (fromday == today)
+                {
+                    ent.fromday = int.Parse(DateTime.Today.ToString("yyyyMMdd"));
+                    ent.today = int.Parse(DateTime.Today.ToString("yyyyMMdd"));
+                }
             }
 
             //时间间隔
@@ -224,6 +230,18 @@ namespace WR.Client.UI
             {
                 DataCache.SinfPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SINF");
             }
+
+            string binCodeType = WR.Utils.Config.GetAppSetting("binCodeType");
+            if (!string.IsNullOrEmpty(binCodeType))
+                DataCache.BinCodeType = binCodeType;
+            else
+                DataCache.BinCodeType = "16";
+
+            string sinfType = WR.Utils.Config.GetAppSetting("sinfType");
+            if (!string.IsNullOrEmpty(sinfType))
+                DataCache.SinfType = sinfType;
+            else
+                DataCache.SinfType = "00";
         }
 
         private void frm_login_Load(object sender, EventArgs e)

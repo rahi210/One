@@ -45,6 +45,9 @@
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.lstView = new System.Windows.Forms.ListView();
@@ -147,6 +150,8 @@
             this.chtDefect = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.picReffImage = new WR.Client.Controls.WrPictureBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.chtDefectSize = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.clrDialog = new System.Windows.Forms.ColorDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -178,6 +183,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.chtDefect)).BeginInit();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picReffImage)).BeginInit();
+            this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chtDefectSize)).BeginInit();
             this.SuspendLayout();
             // 
             // imageList1
@@ -1032,6 +1039,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tabControl1.ImageList = this.imageList1;
             this.tabControl1.Location = new System.Drawing.Point(0, 368);
@@ -1424,6 +1432,40 @@
             this.picReffImage.WrImage = null;
             this.picReffImage.ZoomMultiple = 0;
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.chtDefectSize);
+            this.tabPage4.Location = new System.Drawing.Point(4, 26);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(452, 299);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Defect Size";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // chtDefectSize
+            // 
+            this.chtDefectSize.BackColor = System.Drawing.Color.Gainsboro;
+            chartArea2.AlignmentOrientation = ((System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations)((System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations.Vertical | System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations.Horizontal)));
+            chartArea2.Name = "ChartArea1";
+            this.chtDefectSize.ChartAreas.Add(chartArea2);
+            this.chtDefectSize.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend2.Name = "Legend1";
+            this.chtDefectSize.Legends.Add(legend2);
+            this.chtDefectSize.Location = new System.Drawing.Point(3, 3);
+            this.chtDefectSize.Name = "chtDefectSize";
+            this.chtDefectSize.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
+            series2.ChartArea = "ChartArea1";
+            series2.IsVisibleInLegend = false;
+            series2.Legend = "Legend1";
+            series2.LegendText = "Defect";
+            series2.Name = "Series1";
+            series2.SmartLabelStyle.CalloutLineAnchorCapStyle = System.Windows.Forms.DataVisualization.Charting.LineAnchorCapStyle.Round;
+            series2.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String;
+            this.chtDefectSize.Series.Add(series2);
+            this.chtDefectSize.Size = new System.Drawing.Size(446, 293);
+            this.chtDefectSize.TabIndex = 4;
+            // 
             // imageList2
             // 
             this.imageList2.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList2.ImageStream")));
@@ -1513,6 +1555,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.chtDefect)).EndInit();
             this.tabPage3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picReffImage)).EndInit();
+            this.tabPage4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chtDefectSize)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1628,5 +1672,7 @@
         private System.Windows.Forms.TabPage tabPage3;
         private Controls.WrPictureBox picReffImage;
         private System.Windows.Forms.Label lblAddDefect;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chtDefectSize;
     }
 }
