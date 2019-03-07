@@ -289,25 +289,44 @@ namespace WR.Client.UI
                     if (!isSameLot)
                         //_dielayoutlist = DataCache.GetAllDielayoutListById(service.GetDielayoutListById(wf.DIELAYOUTID));
                         _dielayoutlist = DataCache.GetAllDielayoutListById(DataCache.GetDielayoutListById(wf.DIELAYOUTID));
-                    else
+                    //else
+                    //{
+                    //    //_dielayoutlist.ForEach(s => s.INSPCLASSIFIID = 0);
+                    //    var deflayout = _dielayoutlist.Where(s => s.INSPCLASSIFIID != 0);
+
+                    //    foreach (var d in deflayout)
+                    //    {
+                    //        var index = _dielayoutlist.FindIndex(s => s.ID == d.ID);
+
+                    //        if (index != -1)
+                    //            _dielayoutlist[index].INSPCLASSIFIID = 0;
+                    //    }
+                    //}
+
+                    //1. 初始化INSPCLASSIFIID=0
+                    var deflayout = _dielayoutlist.Where(s => s.INSPCLASSIFIID != 0);
+
+                    foreach (var d in deflayout)
                     {
-                        //_dielayoutlist.ForEach(s => s.INSPCLASSIFIID = 0);
-                        var deflayout = _dielayoutlist.Where(s => s.INSPCLASSIFIID != 0);
+                        var index = _dielayoutlist.FindIndex(s => s.ID == d.ID);
 
-                        foreach (var d in deflayout)
-                        {
-                            var index = _dielayoutlist.FindIndex(s => s.ID == d.ID);
-
-                            if (index != -1)
-                                _dielayoutlist[index].INSPCLASSIFIID = 0;
-                        }
+                        if (index != -1)
+                            _dielayoutlist[index].INSPCLASSIFIID = 0;
                     }
 
-                    //更新布局缺陷
+                    //2. 更新布局缺陷
                     foreach (var d in defList)
                     {
                         UpdateDieLayout(d.DieAddress, (int)d.Cclassid);
                     }
+
+                    if (this.InvokeRequired)
+                        this.Invoke(new Action(() =>
+                        {
+                            GetWaferField();
+                        }));
+                    else
+                        GetWaferField();
 
                     //获取参照图片
                     if (this.InvokeRequired)
@@ -1563,13 +1582,15 @@ namespace WR.Client.UI
                 if (!string.IsNullOrEmpty(list[i].DESCRIPTION))
                     xValue = list[i].DESCRIPTION;
 
-                var value = _defectlist.Where(s => s.Cclassid == list[0].ID)
+                var value = _defectlist.Where(s => s.Cclassid == list[i].ID)
                     .Select(s => Math.Round(Math.Sqrt(Math.Pow(double.Parse(s.Size_.Split(',')[0]), 2) + Math.Pow(double.Parse(s.Size_.Split(',')[1]), 2)), 2))
                     .Average();
 
-                p.SetValueXY(xValue, Math.Round(value, 2));
+                //p.SetValueXY(xValue, Math.Round(value, 2));
 
-                p.Label = value.ToString("0.00");
+                p.SetValueXY(Math.Round(value, 2), list[i].Points);
+
+                p.Label = xValue + " Size:" + value.ToString("0.00") + " Number:" + list[i].Points;
 
                 serie.Points.Add(p);
             }
@@ -2870,6 +2891,21 @@ namespace WR.Client.UI
                     grdData.CurrentCell = grdData[grdData.CurrentCell.ColumnIndex, grdData.Rows.Count - 1];
 
             }
+            ////重新计算良率
+            ////decimal goodCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID == 0);
+            //decimal defectCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID != 0);
+            //decimal dieCnt = _dielayoutlist.Count - _dielayoutlist.Count(s => s.DISPOSITION.Trim().ToLower() == "notprocess");
+
+            //Oparams[3] = defectCnt.ToString();
+            ////Oparams[4] = (goodCnt / dieCnt * 100).ToString("0.00");
+            //Oparams[4] = ((dieCnt - defectCnt) / dieCnt * 100).ToString("0.00");
+
+            //lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", Oparams[1], Oparams[2], Oparams[3], Oparams[4]);
+            GetWaferField();
+        }
+
+        private void GetWaferField()
+        {
             //重新计算良率
             //decimal goodCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID == 0);
             decimal defectCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID != 0);
@@ -2897,6 +2933,12 @@ namespace WR.Client.UI
 
             //if (index != -1 && _dielayoutlist[index].INSPCLASSIFIID < cclassid)
             //    _dielayoutlist[index].INSPCLASSIFIID = cclassid;
+
+            var maxClassId = _defectlist.Where(s => s.DieAddress == dieAddress).Max(s => s.Cclassid);
+
+            if (cclassid < maxClassId)
+                cclassid = maxClassId.Value;
+
             if (index != -1 && (_dielayoutlist[index].INSPCLASSIFIID < cclassid || cclassid == 0))
                 _dielayoutlist[index].INSPCLASSIFIID = cclassid;
         }

@@ -155,7 +155,7 @@ namespace WR.WCF.Site
                     if (!string.IsNullOrEmpty(operatorid))
                     {
                         sql = string.Format(@"select rownum Id,a.device,a.layer,a.lot,a.substrate_slot,a.substrate_id,a.substrate_notchlocation,t.SFIELD,
-                                                    decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
+                                                    decode(t.ischecked||t.numdefect, 00,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
                                                     t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
                                                     t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id,
                                                    case when b.inspecteddie>0 and b.maska_die>=0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) end maska_die,
@@ -172,7 +172,7 @@ namespace WR.WCF.Site
                     else
                     {
                         sql = string.Format(@"select rownum Id,a.device,a.layer,a.lot,a.substrate_slot,a.substrate_id,a.substrate_notchlocation,t.SFIELD,
-                                                    decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
+                                                    decode(t.ischecked||t.numdefect, 00,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
                                                     t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
                                                     t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id,
                                                     case when b.inspecteddie>0 and b.maska_die>=0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) end maska_die,
@@ -608,7 +608,7 @@ namespace WR.WCF.Site
                     //                                                    where t.identificationid=a.identificationid and t.resultid=b.resultid
                     //                                                    and t.resultid='{0}'", resultid);
                     sbt.AppendFormat(@"select rownum Id,a.device,a.layer,a.lot,a.substrate_slot,a.substrate_id,a.substrate_notchlocation,t.SFIELD,
-                                                    decode(t.numdefect,0,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
+                                                    decode(t.ischecked||t.numdefect,00,nvl(b.defectivedie,0),t.numdefect) NUMDEFECT,t.ischecked,t.classificationinfoid,
                                                     t.computername,t.completiontime,t.checkeddate,t.createddate,'Front' filetype,t.disposition,b.defectdensity,
                                                     t.lotcompletiontime,t.identificationid,t.resultid,t.dielayoutid,b.recipe_id,
                                                     case when b.inspecteddie>0 and b.maska_die>=0 then round((b.inspecteddie- b.maska_defect)/b.inspecteddie*100,2) end maska_die,
@@ -818,7 +818,7 @@ namespace WR.WCF.Site
                                                          from wm_inspectioninfo f
                                                         where f.resultid = t.resultid),
                                                        0),
-                                       t.sfield  = nvl((select round((f.inspecteddie - f.defectivedie) /
+                                       t.sfield  = nvl((select round((f.inspecteddie - f.defectivedie)*100 /
                                                                      f.inspecteddie,
                                                                      2)
                                                          from wm_inspectioninfo f

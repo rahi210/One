@@ -28,14 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.chartDb = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.chartDisk = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -79,12 +83,11 @@
             this.btnArchive = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.dtpAto = new System.Windows.Forms.DateTimePicker();
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.chartDb = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartDb)).BeginInit();
+            this.panel3.SuspendLayout();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartDisk)).BeginInit();
             this.panel2.SuspendLayout();
@@ -93,9 +96,6 @@
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.groupBox8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartDb)).BeginInit();
-            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -122,6 +122,53 @@
             this.groupBox6.Size = new System.Drawing.Size(984, 562);
             this.groupBox6.TabIndex = 7;
             this.groupBox6.TabStop = false;
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.chartDb);
+            this.groupBox8.Controls.Add(this.panel3);
+            this.groupBox8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox8.Location = new System.Drawing.Point(491, 17);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(490, 542);
+            this.groupBox8.TabIndex = 7;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Database";
+            // 
+            // chartDb
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chartDb.ChartAreas.Add(chartArea1);
+            this.chartDb.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend1.Name = "Legend1";
+            this.chartDb.Legends.Add(legend1);
+            this.chartDb.Location = new System.Drawing.Point(3, 55);
+            this.chartDb.Name = "chartDb";
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartDb.Series.Add(series1);
+            this.chartDb.Size = new System.Drawing.Size(484, 484);
+            this.chartDb.TabIndex = 6;
+            this.chartDb.Text = "chart1";
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.comboBox1);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(3, 17);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(484, 38);
+            this.panel3.TabIndex = 5;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(23, 12);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(75, 20);
+            this.comboBox1.TabIndex = 4;
+            this.comboBox1.Visible = false;
             // 
             // groupBox7
             // 
@@ -238,7 +285,7 @@
             // label11
             // 
             this.label11.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label11.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label11.ForeColor = System.Drawing.Color.Red;
             this.label11.Location = new System.Drawing.Point(160, 30);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(300, 55);
@@ -568,53 +615,6 @@
             this.dtpAto.Size = new System.Drawing.Size(114, 21);
             this.dtpAto.TabIndex = 16;
             // 
-            // groupBox8
-            // 
-            this.groupBox8.Controls.Add(this.chartDb);
-            this.groupBox8.Controls.Add(this.panel3);
-            this.groupBox8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox8.Location = new System.Drawing.Point(491, 17);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(490, 542);
-            this.groupBox8.TabIndex = 7;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Database";
-            // 
-            // chartDb
-            // 
-            chartArea1.Name = "ChartArea1";
-            this.chartDb.ChartAreas.Add(chartArea1);
-            this.chartDb.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chartDb.Legends.Add(legend1);
-            this.chartDb.Location = new System.Drawing.Point(3, 55);
-            this.chartDb.Name = "chartDb";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chartDb.Series.Add(series1);
-            this.chartDb.Size = new System.Drawing.Size(484, 484);
-            this.chartDb.TabIndex = 6;
-            this.chartDb.Text = "chart1";
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.comboBox1);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(3, 17);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(484, 38);
-            this.panel3.TabIndex = 5;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(23, 12);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(75, 20);
-            this.comboBox1.TabIndex = 4;
-            this.comboBox1.Visible = false;
-            // 
             // frm_Archive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -626,6 +626,9 @@
             this.Load += new System.EventHandler(this.frm_Archive_Load);
             this.panel1.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chartDb)).EndInit();
+            this.panel3.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chartDisk)).EndInit();
             this.panel2.ResumeLayout(false);
@@ -638,9 +641,6 @@
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.groupBox8.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.chartDb)).EndInit();
-            this.panel3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

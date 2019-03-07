@@ -87,7 +87,8 @@ namespace WR.Client.UI
 
         private void frm_review_Load(object sender, EventArgs e)
         {
-            log.Error("start frm_review_Load");
+            //log.Error("start frm_review_Load");
+
             grdData.Dock = DockStyle.Fill;
             grdData.Visible = true;
             lstData.Visible = false;
@@ -124,7 +125,7 @@ namespace WR.Client.UI
             threadSound.IsBackground = true;
             threadSound.Start();
 
-            log.Error("end frm_review_Load");
+            //log.Error("end frm_review_Load");
         }
 
         /// <summary>
@@ -245,7 +246,12 @@ namespace WR.Client.UI
                 grdData.DataSource = new BindingCollection<WmwaferResultEntity>(lotlist);
 
                 if (!string.IsNullOrEmpty(old_selectedid))
-                    selectIndex = lotlist.FindIndex(s => s.RESULTID == old_selectedid);
+                {
+                    if (old_selectedid != "-1")
+                        selectIndex = lotlist.FindIndex(s => s.RESULTID == old_selectedid);
+                    else
+                        selectIndex = lotlist.FindIndex(s => s.COMPLETIONTIME == lotlist.Max(m => m.COMPLETIONTIME));
+                }
 
                 if (selectIndex <= 0)
                     selectIndex = 0;
@@ -339,6 +345,14 @@ namespace WR.Client.UI
 
             if (res > 0)
             {
+                var rs = service.GetWaferResultById(ent.RESULTID);
+
+                if (rs != null)
+                {
+                    ent.NUMDEFECT = rs.NUMDEFECT;
+                    ent.SFIELD = rs.SFIELD;
+                }
+
                 ent.ISCHECKED = "1";
                 grdData.Invalidate();
                 return true;
@@ -719,7 +733,8 @@ namespace WR.Client.UI
         private void tlRefresh_Click(object sender, EventArgs e)
         {
             //selectedid = string.Empty;
-            old_selectedid = selectedid;
+            //old_selectedid = selectedid;
+            old_selectedid = "-1";
 
             if (refreshing)
                 return;
@@ -1796,10 +1811,10 @@ namespace WR.Client.UI
 
                 SaveFileDialog sd = new SaveFileDialog();
                 sd.FileName = node.Tag.ToString();
-                sd.Filter = "JPEG 图像 (.jpg)|*.jpg";
+                sd.Filter = "压缩(zipped)文件夹 (.zip)|*.zip";
                 if (sd.ShowDialog() == DialogResult.OK)
                 {
-                    DownloadXml(node.Tag.ToString(), sd.FileName);
+                    DownloadImage(node.Tag.ToString(), sd.FileName);
 
                     MsgBoxEx.Info("Image file is complete.");
                 }
