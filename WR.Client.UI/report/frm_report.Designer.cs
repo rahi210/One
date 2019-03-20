@@ -95,6 +95,9 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle53 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle54 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle55 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle58 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle59 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle60 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabReport = new System.Windows.Forms.TabControl();
             this.tabDensity = new System.Windows.Forms.TabPage();
             this.grdDensity = new CRD.WinUI.Editors.WrDataGridView();
@@ -287,6 +290,8 @@
             this.label18 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
+            this.tabWaferYieldList = new System.Windows.Forms.TabPage();
+            this.grdWaferField = new CRD.WinUI.Editors.WrDataGridView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cbxDevice = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -330,6 +335,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.grdLotWaferCode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.grdLotCode)).BeginInit();
             this.panel6.SuspendLayout();
+            this.tabWaferYieldList.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grdWaferField)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -345,6 +352,7 @@
             this.tabReport.Controls.Add(this.tabYield);
             this.tabReport.Controls.Add(this.tabPolat);
             this.tabReport.Controls.Add(this.tabLotYield);
+            this.tabReport.Controls.Add(this.tabWaferYieldList);
             this.tabReport.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabReport.ItemSize = new System.Drawing.Size(96, 21);
             this.tabReport.Location = new System.Drawing.Point(0, 78);
@@ -2711,6 +2719,64 @@
             this.label20.TabIndex = 0;
             this.label20.Text = "Inspection Date:";
             // 
+            // tabWaferYieldList
+            // 
+            this.tabWaferYieldList.Controls.Add(this.grdWaferField);
+            this.tabWaferYieldList.Location = new System.Drawing.Point(4, 25);
+            this.tabWaferYieldList.Name = "tabWaferYieldList";
+            this.tabWaferYieldList.Padding = new System.Windows.Forms.Padding(3);
+            this.tabWaferYieldList.Size = new System.Drawing.Size(1415, 519);
+            this.tabWaferYieldList.TabIndex = 9;
+            this.tabWaferYieldList.Text = "Wafer Yield List";
+            this.tabWaferYieldList.UseVisualStyleBackColor = true;
+            // 
+            // grdWaferField
+            // 
+            this.grdWaferField.AllowUserToAddRows = false;
+            this.grdWaferField.AllowUserToDeleteRows = false;
+            this.grdWaferField.AllowUserToOrderColumns = true;
+            this.grdWaferField.AllowUserToResizeRows = false;
+            this.grdWaferField.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.grdWaferField.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.grdWaferField.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            dataGridViewCellStyle58.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle58.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(246)))), ((int)(((byte)(239)))));
+            dataGridViewCellStyle58.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle58.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle58.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle58.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle58.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdWaferField.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle58;
+            this.grdWaferField.ColumnHeadersHeight = 26;
+            this.grdWaferField.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dataGridViewCellStyle59.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle59.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle59.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle59.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle59.SelectionBackColor = System.Drawing.Color.Wheat;
+            dataGridViewCellStyle59.SelectionForeColor = System.Drawing.Color.DarkSlateBlue;
+            dataGridViewCellStyle59.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdWaferField.DefaultCellStyle = dataGridViewCellStyle59;
+            this.grdWaferField.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdWaferField.EnableHeadersVisualStyles = false;
+            this.grdWaferField.GridColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.grdWaferField.Location = new System.Drawing.Point(3, 3);
+            this.grdWaferField.Name = "grdWaferField";
+            this.grdWaferField.ReadOnly = true;
+            this.grdWaferField.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle60.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle60.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle60.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle60.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle60.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle60.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle60.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdWaferField.RowHeadersDefaultCellStyle = dataGridViewCellStyle60;
+            this.grdWaferField.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.grdWaferField.RowTemplate.Height = 23;
+            this.grdWaferField.Size = new System.Drawing.Size(1409, 513);
+            this.grdWaferField.TabIndex = 5;
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.cbxDevice);
@@ -2915,6 +2981,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.grdLotCode)).EndInit();
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
+            this.tabWaferYieldList.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grdWaferField)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -3129,5 +3197,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn40;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn41;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn42;
+        private System.Windows.Forms.TabPage tabWaferYieldList;
+        private CRD.WinUI.Editors.WrDataGridView grdWaferField;
     }
 }

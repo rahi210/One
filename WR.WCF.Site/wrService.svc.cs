@@ -1424,29 +1424,29 @@ namespace WR.WCF.Site
                         //    tablename = string.Empty;
 
                         if (lot.EndsWith("|||"))
-                            sql = string.Format(@"select c.device, c.layer,c.lot, a.inspclassifiid, c.substrate_id,count(a.id) NumCnt, a.resultid
+                            sql = string.Format(@"select c.device, c.layer,c.lot, a.inspclassifiid, c.substrate_id,count(a.id) NumCnt, a.resultid,max(b.mastertoolname) mastertoolname,max(nvl(b.sfield,0)) sfield,max(d.recipe_id) recipe_id
                                                   from wm_defectlist{3}       a,
                                                        wm_waferresult      b,
-                                                       wm_identification   c
-                                                 where a.resultid = b.resultid
+                                                       wm_identification   c,wm_inspectioninfo d
+                                                 where a.resultid = b.resultid and b.resultid=d.resultid
                                                    and b.identificationid = c.identificationid
                                                    and b.delflag='0' and instr(c.device||'|||','{0}')>0 and b.completiontime>={1} and b.completiontime<={2} 
                                                  group by c.device, c.layer,c.lot,c.substrate_id, a.inspclassifiid, a.resultid", lot, stDate, edDate, tablename);
                         else if (lot.EndsWith("||"))
-                            sql = string.Format(@"select c.device, c.layer, c.lot,a.inspclassifiid, c.substrate_id,count(a.id) NumCnt, a.resultid
+                            sql = string.Format(@"select c.device, c.layer, c.lot,a.inspclassifiid, c.substrate_id,count(a.id) NumCnt, a.resultid,max(b.mastertoolname) mastertoolname,max(nvl(b.sfield,0)) sfield,max(d.recipe_id) recipe_id
                                                   from wm_defectlist{3}       a,
                                                        wm_waferresult      b,
-                                                       wm_identification   c
-                                                 where a.resultid = b.resultid
+                                                       wm_identification   c,wm_inspectioninfo d
+                                                 where a.resultid = b.resultid and b.resultid=d.resultid
                                                    and b.identificationid = c.identificationid
                                                    and b.delflag='0' and instr(c.device||'|'||c.layer||'||','{0}')>0 and b.completiontime>={1} and b.completiontime<={2} 
                                                  group by c.device, c.layer,c.lot,c.substrate_id, a.inspclassifiid, a.resultid", lot, stDate, edDate, tablename);
                         else
-                            sql = string.Format(@"select c.device, c.layer,c.lot, a.inspclassifiid,c.substrate_id, count(a.id) NumCnt, a.resultid
+                            sql = string.Format(@"select c.device, c.layer,c.lot, a.inspclassifiid,c.substrate_id, count(a.id) NumCnt, a.resultid,max(b.mastertoolname) mastertoolname,max(nvl(b.sfield,0)) sfield,max(d.recipe_id) recipe_id
                                                   from wm_defectlist{3}       a,
                                                        wm_waferresult      b,
-                                                       wm_identification   c
-                                                 where a.resultid = b.resultid
+                                                       wm_identification   c,wm_inspectioninfo d
+                                                 where a.resultid = b.resultid and b.resultid=d.resultid
                                                    and b.identificationid = c.identificationid
                                                    and b.delflag='0' and instr(c.device||'|'||c.layer||'|'||c.lot||'|','{0}')>0 and b.completiontime>={1} and b.completiontime<={2} 
                                                  group by c.device, c.layer,c.lot, c.substrate_id,a.inspclassifiid, a.resultid", lot, stDate, edDate, tablename);
@@ -1465,7 +1465,10 @@ namespace WR.WCF.Site
                                 Inspclassifiid = tmp.Key.Inspclassifiid,
                                 Substrate_id = tmp.Key.Substrate_id,
                                 RESULTID = tmp.Key.RESULTID,
-                                NumCnt = tmp.Sum(t => t.NumCnt)
+                                NumCnt = tmp.Sum(t => t.NumCnt),
+                                MASTERTOOLNAME = tmp.Max(t => t.MASTERTOOLNAME),
+                                RECIPE_ID = tmp.Max(t => t.RECIPE_ID),
+                                SFIELD = tmp.Max(t => t.SFIELD)
                             }).ToList();
 
                     return list;

@@ -1531,7 +1531,8 @@ namespace WR.Client.UI
             }
             else if (tabControl1.SelectedTab == tabPage4)
             {
-                ChtSizeShow();
+                //ChtSizeShow();
+                ChtSizeShow1();
             }
         }
 
@@ -1561,6 +1562,44 @@ namespace WR.Client.UI
                 p.Label = list[i].Points.ToString();
 
                 serie.Points.Add(p);
+            }
+        }
+
+        private void ChtSizeShow1()
+        {
+            var list = GetItemSum();
+
+            //var serie = chtDefectSize.Series[0];
+            chtDefectSize.Series.Clear();
+
+            chtDefectSize.ChartAreas[0].AxisX.Title = "Defect Size(um)";
+            chtDefectSize.ChartAreas[0].AxisY.Title = "Number of Defects";
+
+
+            string[] xtval = { "<10", "<25", "<50", "<100", "<200", "<300", "<500", ">500" };
+            int[] xval = { 10, 25, 50, 100, 200, 300, 500, 500 };
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].Points < 1)
+                    continue;
+
+                Series ser = chtDefectSize.Series.Add(list[i].DESCRIPTION);
+                ser.ChartType = SeriesChartType.Column;
+                ser.IsValueShownAsLabel = true;
+                ser.CustomProperties = "LabelStyle=Bottom";
+                ser.LegendText = list[i].DESCRIPTION;
+                
+                double[] yval = _defectlist.Where(s => s.Cclassid == list[i].ID)
+                   .Select(s => Math.Round(Math.Sqrt(Math.Pow(double.Parse(s.Size_.Split(',')[0]), 2) + Math.Pow(double.Parse(s.Size_.Split(',')[1]), 2)), 2)).ToArray();
+
+                for (int y = 0; y < xval.Length; y++)
+                {
+                    if (y == xval.Length - 1)
+                        ser.Points.AddXY(xtval[y], yval.Count(s => s > xval[y]));
+                    else
+                        ser.Points.AddXY(xtval[y], yval.Count(s => s < xval[y]));
+                }
             }
         }
 

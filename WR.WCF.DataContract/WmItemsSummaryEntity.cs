@@ -39,5 +39,21 @@ namespace WR.WCF.DataContract
         [DataMember]
         public string RESULTID
         { get; set; }
+
+        [DataMember]
+        public string MASTERTOOLNAME
+        { get; set; }
+
+        [DataMember]
+        public string RECIPE_ID
+        { get; set; }
+
+        [DataMember]
+        public decimal SFIELD
+        { get; set; }
+
+        [DataMember]
+        public decimal LFIELD
+        { get; set; }
     }
 }

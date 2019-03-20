@@ -180,7 +180,7 @@ namespace WR.Client.UI
         /// </summary>
         /// <param name="oldList"></param>
         /// <returns></returns>
-        public static List<WmdielayoutlistEntitiy> GetAllDielayoutListById(List<WmdielayoutlistEntitiy> oldList)
+        public static List<WmdielayoutlistEntitiy> GetAllDielayoutListById(List<WmdielayoutlistEntitiy> oldList, bool filterNotExist = true)
         {
             var rows = oldList[0].ROWS_;
             var cols = oldList[0].COLUMNS_;
@@ -189,7 +189,12 @@ namespace WR.Client.UI
             var newList = new List<WmdielayoutlistEntitiy>();
 
             if (rows * cols == oldList.Count)
-                return oldList.Where(s => !s.DISPOSITION.Trim().Equals("NotExist")).ToList();
+            {
+                if (filterNotExist)
+                    return oldList.Where(s => !s.DISPOSITION.Trim().Equals("NotExist")).ToList();
+                else
+                    return oldList;
+            }
 
             for (int i = 0; i < rows; i++)
             {
@@ -215,7 +220,11 @@ namespace WR.Client.UI
                             INSPCLASSIFIID = 0,
                             ROWS_ = rows,
                             COLUMNS_ = cols
-                        }).Where(s => !s.DISPOSITION.Trim().Equals("NotExist")).ToList();
+                        }).ToList();
+            //}).Where(s => !s.DISPOSITION.Trim().Equals("NotExist")).ToList();
+
+            if (filterNotExist)
+                list = list.Where(s => !s.DISPOSITION.Trim().Equals("NotExist")).ToList();
 
             return list;
         }

@@ -218,6 +218,9 @@ namespace WR.Client.UI
                     grdLotCode.DataSource = null;
                     grdLotWaferCode.DataSource = null;
                     break;
+                case "tabWaferYieldList":
+                    grdWaferField.DataSource = null;
+                    break;
                 default:
                     break;
             }
@@ -244,7 +247,7 @@ namespace WR.Client.UI
             }
 
             //必须选中lot
-            if ((tabReport.SelectedTab == tabPolat || tabReport.SelectedTab == tabLotYield) && cbxLot.SelectedIndex < 1)
+            if ((tabReport.SelectedTab == tabPolat || tabReport.SelectedTab == tabLotYield || tabReport.SelectedTab == tabWaferYieldList) && cbxLot.SelectedIndex < 1)
             {
                 cbxLot.Focus();
                 MsgBoxEx.Info("Please input lot");
@@ -284,6 +287,9 @@ namespace WR.Client.UI
                         break;
                     case "tabLotYield":
                         ShowLotYield();
+                        break;
+                    case "tabWaferYieldList":
+                        ShowWaferYield();
                         break;
                     default:
                         break;
@@ -954,6 +960,9 @@ namespace WR.Client.UI
                 case "tabLotYield":
                     sd.FileName = "Lot Report.xls";//string.Format("Summary Of Good Die By For ({0}).xls", cbxLot.Text.Trim());
                     break;
+                case "tabWaferYieldList":
+                    sd.FileName = "Wafer Yield List Report.xls";//string.Format("General Defect List For ({0}).xls", cbxLot.Text.Trim());
+                    break;
                 default:
                     break;
             }
@@ -1091,6 +1100,12 @@ namespace WR.Client.UI
                         new string[] { "Job:", lblJob.Text, "Recipe:", lblRecipe.Text },
                         grdLotWaferCode, sd.FileName, true, new string[] { "Wafers:", lblWafers.Text, "Total Dice:", lblTotalDice.Text, "Scanned Dice:", lblScannedDice.Text, "Good Dice:",
                             lblGoodDice.Text, "Bad Dice:", lblBadDice.Text, "Ink Dice:", lblInkDice.Text  }, grdLotCode);
+                    break;
+                case "tabWaferYieldList":
+                    NpoiHelper.GridToExcelByNPOI("Wafer Yield List Report Report", cbxLot.Text.Trim(),
+                       string.Format("{0:yyyy/MM/dd}-{1:yyyy/MM/dd}", dtDate.Value, dateTo.Value),
+                       null, null, null,
+                       grdWaferField, sd.FileName, false);
                     break;
                 default:
                     break;
@@ -1650,6 +1665,122 @@ namespace WR.Client.UI
 
             grdLotCode.DataSource = new BindingCollection<LotCodeInfo>(codeInfo);
             grdLotWaferCode.DataSource = new BindingCollection<LotWaferCodeInfo>(newWaferCodeInfo);
+        }
+
+        private void ShowWaferYield()
+        {
+            IwrService service = wrService.GetService();
+            var items = service.GetClassificationItemsByLayer(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
+            var itemsBy = items.Where(s => s.ID != 0).OrderBy(p => p.ID);
+
+            DataTable dt = new DataTable();
+            var col = dt.Columns.Add("Machine ID", typeof(string));
+            //col.Caption = "mastertoolname";
+
+            col = dt.Columns.Add("Recipe", typeof(string));
+            //col.Caption = "recipe_id";
+
+            col = dt.Columns.Add("Device", typeof(string));
+            col.ColumnName = "Device";
+            col.Caption = "Device";
+
+            col = dt.Columns.Add("Lot Name", typeof(string));
+            //col.ColumnName = "Lot";
+            col.Caption = "Lot Name";
+
+            col = dt.Columns.Add("Wafer ID", typeof(string));
+            //col.ColumnName = "Wafer ID";
+            col.Caption = "Substrate_id";
+
+            col = dt.Columns.Add("Lot Yield", typeof(string));
+            //col.ColumnName = "Lot Yield";
+            col.Caption = "Lot Yield";
+
+            col = dt.Columns.Add("Wafer Yield", typeof(string));
+            //col.ColumnName = "Wafer Yield";
+            col.Caption = "Wafer Yield";
+
+            foreach (var item in itemsBy)
+            {
+                col = dt.Columns.Add(item.NAME, typeof(Int64));
+                col.ColumnName = item.NAME;
+                col.Caption = item.ITEMID;
+                col.DefaultValue = 0;
+            }
+
+            //添加汇总列
+            col = dt.Columns.Add("Total Defect", typeof(Int64));
+            col.ColumnName = "Total Defect";
+
+            var itemsSum = service.GetItemsSummaryByLot(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
+            var defSum = service.GetDefectSummaryByLot(GetLot(), dtDate.Value.ToString("yyyyMMdd000000"), dateTo.Value.ToString("yyyyMMdd235959"));
+
+            var dlyr = itemsSum.Distinct(new LotSumComparint());
+
+            foreach (var dl in dlyr)
+            {
+                long defectCnt = 0;
+                var tt = itemsSum.Where(p => p.Device == dl.Device && p.Layer == dl.Layer && p.Substrate_id == dl.Substrate_id);
+
+                DataRow dr = dt.NewRow();
+                dr["Machine ID"] = dl.MASTERTOOLNAME;
+                dr["Recipe"] = dl.RECIPE_ID;
+                dr["Device"] = dl.Device;
+                dr["Lot Name"] = dl.Lot;
+                dr["Wafer ID"] = dl.Substrate_id;
+                dr["Wafer Yield"] = dl.SFIELD;
+                dr["Lot Yield"] = Math.Round(dlyr.Average(s => s.SFIELD), 2);
+
+                foreach (var t in tt)
+                {
+                    foreach (DataColumn c in dt.Columns)
+                    {
+                        if (c.Caption == t.Inspclassifiid)
+                        {
+                            Int64 tcnt = Int64.Parse(dr[c.Ordinal].ToString() == "" ? "0" : dr[c.Ordinal].ToString());
+                            if (t.NumCnt.HasValue)
+                                dr[c.Ordinal] = tcnt + t.NumCnt;
+                            else
+                                dr[c.Ordinal] = tcnt;
+
+                            defectCnt += tcnt + t.NumCnt.Value;
+
+                            continue;
+                        }
+                    }
+                }
+
+                dr["Total Defect"] = defectCnt;
+                dt.Rows.Add(dr);
+            }
+
+            List<string> listColumn = new List<string>();
+
+            listColumn.Add("Machine ID");
+            listColumn.Add("Recipe");
+            listColumn.Add("Device");
+            listColumn.Add("Lot Name");
+            listColumn.Add("Wafer ID");
+            listColumn.Add("Lot Yield");
+            listColumn.Add("Wafer Yield");
+
+            for (int i = 7; i < dt.Columns.Count; i++)
+            {
+                object data = dt.Compute(string.Format("SUM([{0}])", dt.Columns[i].ColumnName), "");
+                if (data != DBNull.Value && Convert.ToInt32(data) != 0)
+                    listColumn.Add(dt.Columns[i].ColumnName);
+            }
+
+            DataTable dtNew = dt.DefaultView.ToTable(false, listColumn.ToArray());
+
+            grdWaferField.DataSource = dtNew;
+
+            //grdWaferField.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            //grdWaferField.Columns[0].Width = 100;
+            //grdWaferField.Columns[1].Width = 160;
+            //grdWaferField.Columns[2].Width = 160;
+            //grdWaferField.Columns[3].Width = 160;
+            //grdWaferField.Columns[4].Width = 160;
         }
     }
 
