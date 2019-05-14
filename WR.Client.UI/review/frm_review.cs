@@ -1568,7 +1568,7 @@ namespace WR.Client.UI
                         }
 
                         var dielayout = service.GetDielayoutById(result.DIELAYOUTID);
-                        var dielist = DataCache.GetAllDielayoutListById(DataCache.GetDielayoutListById(result.DIELAYOUTID));
+                        var dielist = DataCache.GetAllDielayoutListById(DataCache.GetDielayoutListById(result.DIELAYOUTID),false);
                         var defectlit = service.GetDefectList(result.RESULTID, "");
 
                         CHGSinf sinf = new CHGSinf();

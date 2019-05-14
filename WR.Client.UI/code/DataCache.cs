@@ -43,6 +43,18 @@ namespace WR.Client.UI
         public static List<TbMenuEntity> Tbmenus;
 
         private static List<WmidentificationEntity> _identifcationInfo;
+
+        /// <summary>
+        /// 数据库类型
+        /// </summary>
+        public static bool IsOracle
+        {
+            get
+            {
+                return CmnDict.Count(s => s.DICTID == "1001" && s.CODE == "0") > 0;
+            }
+        }
+
         /// <summary>
         /// 机台信息
         /// </summary>

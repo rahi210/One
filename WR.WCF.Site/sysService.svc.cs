@@ -143,11 +143,22 @@ namespace WR.WCF.Site
             {
                 using (BFdbContext db = new BFdbContext())
                 {
-                    string sql = string.Format(@"select a.*,nvl2(b.roleid,'0','1') FLG from Tb_Role a,
+                    if (db.DatabaseType == DatabaseType.Mysql)
+                    {
+                        string sql = string.Format(@"select a.*,if(isnull(b.roleid),'1','0') FLG from Tb_Role a left join
+                                    (select tb.roleid from Tb_Userrolerelation tb where tb.userid='{0}') b
+                                    on a.id=b.roleid", userid);
+
+                        return db.SqlQuery<TbRoleEntity>(sql).ToList();
+                    }
+                    else
+                    {
+                        string sql = string.Format(@"select a.*,nvl2(b.roleid,'0','1') FLG from Tb_Role a,
                                     (select tb.roleid from Tb_Userrolerelation tb where tb.userid='{0}') b
                                     where a.id=b.roleid(+)", userid);
 
-                    return db.SqlQuery<TbRoleEntity>(sql).ToList();
+                        return db.SqlQuery<TbRoleEntity>(sql).ToList();
+                    }
                 }
             }
             catch (Exception ex)
@@ -352,11 +363,22 @@ namespace WR.WCF.Site
             {
                 using (BFdbContext db = new BFdbContext())
                 {
-                    string sql = string.Format(@"select a.*,nvl2(b.menuid,'0','1') FLG from Tb_menu a,
+                    if (db.DatabaseType == DatabaseType.Mysql)
+                    {
+                        string sql = string.Format(@"select a.*,if(isnull(b.menuid),'1','0') FLG from Tb_menu a left join
+                                    (select tb.menuid from Tb_rolemenurelation tb where tb.roleid='{0}') b
+                                    on a.id=b.menuid", roleid);
+
+                        return db.SqlQuery<TbMenuEntity>(sql).ToList();
+                    }
+                    else
+                    {
+                        string sql = string.Format(@"select a.*,nvl2(b.menuid,'0','1') FLG from Tb_menu a,
                                     (select tb.menuid from Tb_rolemenurelation tb where tb.roleid='{0}') b
                                     where a.id=b.menuid(+)", roleid);
 
-                    return db.SqlQuery<TbMenuEntity>(sql).ToList();
+                        return db.SqlQuery<TbMenuEntity>(sql).ToList();
+                    }
                 }
             }
             catch (Exception ex)
@@ -758,7 +780,7 @@ namespace WR.WCF.Site
 
                 using (BFdbContext db = new BFdbContext())
                 {
-                    db.ExecuteSqlCommand("delete cmn_dict t where t.dictid='3000'");
+                    db.ExecuteSqlCommand("delete cmn_dict where dictid='3000'");
 
                     using (db.BeginTransaction())
                     {

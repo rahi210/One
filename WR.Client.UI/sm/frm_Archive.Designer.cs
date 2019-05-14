@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
@@ -114,8 +114,8 @@
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.groupBox8);
             this.groupBox6.Controls.Add(this.groupBox7);
+            this.groupBox6.Controls.Add(this.groupBox8);
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox6.Location = new System.Drawing.Point(0, 200);
             this.groupBox6.Name = "groupBox6";
@@ -127,7 +127,7 @@
             // 
             this.groupBox8.Controls.Add(this.chartDb);
             this.groupBox8.Controls.Add(this.panel3);
-            this.groupBox8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox8.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox8.Location = new System.Drawing.Point(491, 17);
             this.groupBox8.Name = "groupBox8";
             this.groupBox8.Size = new System.Drawing.Size(490, 542);
@@ -137,17 +137,17 @@
             // 
             // chartDb
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartDb.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.chartDb.ChartAreas.Add(chartArea2);
             this.chartDb.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chartDb.Legends.Add(legend1);
+            legend2.Name = "Legend1";
+            this.chartDb.Legends.Add(legend2);
             this.chartDb.Location = new System.Drawing.Point(3, 55);
             this.chartDb.Name = "chartDb";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chartDb.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chartDb.Series.Add(series2);
             this.chartDb.Size = new System.Drawing.Size(484, 484);
             this.chartDb.TabIndex = 6;
             this.chartDb.Text = "chart1";
@@ -174,7 +174,7 @@
             // 
             this.groupBox7.Controls.Add(this.chartDisk);
             this.groupBox7.Controls.Add(this.panel2);
-            this.groupBox7.Dock = System.Windows.Forms.DockStyle.Left;
+            this.groupBox7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox7.Location = new System.Drawing.Point(3, 17);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(488, 542);
@@ -184,17 +184,17 @@
             // 
             // chartDisk
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chartDisk.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            this.chartDisk.ChartAreas.Add(chartArea1);
             this.chartDisk.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend2.Name = "Legend1";
-            this.chartDisk.Legends.Add(legend2);
+            legend1.Name = "Legend1";
+            this.chartDisk.Legends.Add(legend1);
             this.chartDisk.Location = new System.Drawing.Point(3, 55);
             this.chartDisk.Name = "chartDisk";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chartDisk.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartDisk.Series.Add(series1);
             this.chartDisk.Size = new System.Drawing.Size(482, 484);
             this.chartDisk.TabIndex = 6;
             this.chartDisk.Text = "chart1";

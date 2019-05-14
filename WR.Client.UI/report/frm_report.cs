@@ -247,7 +247,7 @@ namespace WR.Client.UI
             }
 
             //必须选中lot
-            if ((tabReport.SelectedTab == tabPolat || tabReport.SelectedTab == tabLotYield || tabReport.SelectedTab == tabWaferYieldList) && cbxLot.SelectedIndex < 1)
+            if ((tabReport.SelectedTab == tabPolat || tabReport.SelectedTab == tabLotYield) && cbxLot.SelectedIndex < 1)
             {
                 cbxLot.Focus();
                 MsgBoxEx.Info("Please input lot");
@@ -420,8 +420,11 @@ namespace WR.Client.UI
                 if (decimal.TryParse(p.AREA_, out area))
                     p.AREA_ = string.Format("{0:0.000}", area);
 
-                var sz = p.SIZE_.Split(new char[] { ',' });
-                p.SIZE_ = string.Format("{0},{1}", Math.Round(decimal.Parse(sz[0]), 3), Math.Round(decimal.Parse(sz[1]), 3));
+                if (!string.IsNullOrEmpty(p.SIZE_))
+                {
+                    var sz = p.SIZE_.Split(new char[] { ',' });
+                    p.SIZE_ = string.Format("{0},{1}", Math.Round(decimal.Parse(sz[0]), 3), Math.Round(decimal.Parse(sz[1]), 3));
+                }
             });
 
             var blst = new BindingCollection<WmDefectiveDieReport>(lst);
@@ -1093,7 +1096,7 @@ namespace WR.Client.UI
                     NpoiHelper.GridToExcelPolat(tmpfile2, sd.FileName, dtMc, img);
                     break;
                 case "tabLotYield":
-                    NpoiHelper.GridToExcelByNPOI("Lot Yield", cbxLot.Text.Trim(),
+                    NpoiHelper.GridToExcelLotYield("Lot Yield", cbxLot.Text.Trim(),
                         string.Format("{0:yyyy/MM/dd}-{1:yyyy/MM/dd}", dtDate.Value, dateTo.Value),
                         new string[] { "Inspection Date:", lblInspectionDate.Text, "Operator:", lblOperator.Text },
                         new string[] { "Lot Code:", lblLotCode.Text, "Machine ID:", lblMachineId.Text },
@@ -1577,18 +1580,28 @@ namespace WR.Client.UI
 
             if (headInfo != null)
             {
-                lblInspectionDate.Text = headInfo.COMPLETIONTIME.ToString();
+                lblInspectionDate.Text = DateTime.ParseExact(headInfo.COMPLETIONTIME.ToString(), "yyyyMMddHHmmss", null).ToString("yyy-MM-dd HH:mm:ss");
                 lblOperator.Text = headInfo.USERID;
                 lblLotCode.Text = headInfo.LOT;
                 lblMachineId.Text = headInfo.MASTERTOOLCOMPUTERNAME;
-                lblJob.Text = headInfo.LAYER;
-                lblRecipe.Text = headInfo.RECIPE_ID;
+                //lblJob.Text = headInfo.LAYER;
+                //lblRecipe.Text = headInfo.RECIPE_ID;
+                lblJob.Text = headInfo.RECIPE_ID;
+                lblRecipe.Text = headInfo.LAYER;
             }
 
+            //var waferInfo = (from l in lst
+            //                 group l by new { l.LOT, l.SUBSTRATE_ID } into t
+            //                 select new LotInfo { TotalDice = t.Max(s => s.INSPECTEDDIE), GoodDice = t.Max(s => s.GOODDIE), BadDice = t.Max(s => s.NUMDEFECT), WaferId = t.Key.SUBSTRATE_ID }).ToList();
             var waferInfo = (from l in lst
                              group l by new { l.LOT, l.SUBSTRATE_ID } into t
-                             select new LotInfo { TotalDice = t.Max(s => s.INSPECTEDDIE), GoodDice = t.Max(s => s.GOODDIE), BadDice = t.Max(s => s.NUMDEFECT) }).ToList();
-
+                             select new LotInfo
+                                 {
+                                     WaferId = t.Key.SUBSTRATE_ID,
+                                     TotalDice = t.Max(s => s.INSPECTEDDIE),
+                                     BadDice = t.Count(),
+                                     GoodDice = t.Max(s => s.INSPECTEDDIE) - t.Count()
+                                 }).ToList();
 
             if (waferInfo != null)
             {
@@ -1628,6 +1641,7 @@ namespace WR.Client.UI
 
             var newWaferCodeInfo = (from w in waferCodeInfo
                                     join d in waferCodeDistinctInfo on new { w.Lot, w.WaferId, w.Code, w.Category } equals new { d.Lot, d.WaferId, d.Code, d.Category }
+                                    join l in waferInfo on w.WaferId equals l.WaferId
                                     select new LotWaferCodeInfo
                                     {
                                         Lot = w.Lot,
@@ -1636,9 +1650,9 @@ namespace WR.Client.UI
                                         Category = w.Category,
                                         InspectedDie = w.InspectedDie,
                                         TotalDefects = w.TotalDefects,
-                                        DieQuantity = d.DieQuantity
-                                    }).OrderBy(s => s.WaferId).ToList();
-
+                                        DieQuantity = d.DieQuantity,
+                                        WaferTotalDefects = l.BadDice
+                                    }).OrderBy(s => s.Code).OrderBy(s => s.WaferId).ToList();
 
             double lotDefects = 0;
 
@@ -1646,7 +1660,7 @@ namespace WR.Client.UI
             {
                 lotDefects = newWaferCodeInfo.Sum(s => s.TotalDefects);
 
-                newWaferCodeInfo.ForEach(s => s.Pareto = Math.Round(s.TotalDefects * 100 / lotDefects, 2));
+                newWaferCodeInfo.ForEach(s => s.Pareto = Math.Round(s.TotalDefects * 100 / s.WaferTotalDefects, 2));
                 newWaferCodeInfo.ForEach(s => s.YieldLoss = Math.Round(s.DieQuantity * 100 / s.InspectedDie, 2));
 
                 codeInfo = (from w in newWaferCodeInfo
@@ -1658,10 +1672,15 @@ namespace WR.Client.UI
                                 //InspectedDie = t.Max(s => s.InspectedDie),
                                 TotalDefects = t.Sum(s => s.TotalDefects),
                                 DieQuantity = t.Sum(s => s.DieQuantity),
-                                Pareto = Math.Round(t.Average(s => s.Pareto), 2),
-                                YieldLoss = Math.Round(t.Average(s => s.YieldLoss), 2)
+                                //Pareto = Math.Round(t.Average(s => s.Pareto), 2),
+                                //YieldLoss = Math.Round(t.Average(s => s.YieldLoss), 2)
+                                Pareto = Math.Round(t.Sum(s => s.DieQuantity) * 100 / lotDefects, 2),
+                                YieldLoss = Math.Round(t.Sum(s => s.DieQuantity) * 100 / t.Max(s => s.InspectedDie), 2)
                             }).OrderBy(s => s.Code).ToList();
             }
+
+            grdLotCode.AutoGenerateColumns = false;
+            grdLotWaferCode.AutoGenerateColumns = false;
 
             grdLotCode.DataSource = new BindingCollection<LotCodeInfo>(codeInfo);
             grdLotWaferCode.DataSource = new BindingCollection<LotWaferCodeInfo>(newWaferCodeInfo);
@@ -1724,11 +1743,13 @@ namespace WR.Client.UI
 
                 DataRow dr = dt.NewRow();
                 dr["Machine ID"] = dl.MASTERTOOLNAME;
-                dr["Recipe"] = dl.RECIPE_ID;
-                dr["Device"] = dl.Device;
+                //dr["Recipe"] = dl.RECIPE_ID;
+                //dr["Device"] = dl.Device;
+                dr["Recipe"] = dl.Layer;
+                dr["Device"] = dl.RECIPE_ID;
                 dr["Lot Name"] = dl.Lot;
                 dr["Wafer ID"] = dl.Substrate_id;
-                dr["Wafer Yield"] = dl.SFIELD;
+                dr["Wafer Yield"] = Math.Round(dl.SFIELD, 2);
                 dr["Lot Yield"] = Math.Round(dlyr.Average(s => s.SFIELD), 2);
 
                 foreach (var t in tt)
@@ -1792,6 +1813,8 @@ namespace WR.Client.UI
         public int GoodDice { get; set; }
         public int BadDice { get; set; }
         public int InkDice { get; set; }
+
+        public string WaferId { get; set; }
     }
 
     public class LotCodeInfo
@@ -1815,5 +1838,6 @@ namespace WR.Client.UI
         public string Category { get; set; }
         public double Pareto { get; set; }
         public double YieldLoss { get; set; }
+        public double WaferTotalDefects { get; set; }
     }
 }

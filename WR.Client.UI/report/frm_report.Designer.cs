@@ -61,10 +61,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -98,6 +94,10 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle58 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle59 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle60 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabReport = new System.Windows.Forms.TabControl();
             this.tabDensity = new System.Windows.Forms.TabPage();
             this.grdDensity = new CRD.WinUI.Editors.WrDataGridView();
@@ -194,17 +194,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.tabGood = new System.Windows.Forms.TabPage();
             this.grdGoodDie = new CRD.WinUI.Editors.WrDataGridView();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column41 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column42 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DefectDie = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column43 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column44 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel5 = new System.Windows.Forms.Panel();
             this.lblGoodDieListNum = new System.Windows.Forms.Label();
             this.lblGoodDieRepNum = new System.Windows.Forms.Label();
@@ -249,22 +238,22 @@
             this.chartPolat = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabLotYield = new System.Windows.Forms.TabPage();
             this.grdLotWaferCode = new CRD.WinUI.Editors.WrDataGridView();
-            this.dataGridViewTextBoxColumn39 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn34 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn35 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn36 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn37 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn38 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn40 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn41 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn42 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LOT = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.WaferId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.InspectedDie = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalDefects = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DieQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Category = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Pareto = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.YieldLoss = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.grdLotCode = new CRD.WinUI.Editors.WrDataGridView();
             this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn24 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SumTotalDefects = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SumDieQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn25 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn26 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn27 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SumYieldLoss = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel6 = new System.Windows.Forms.Panel();
             this.lblInkDice = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
@@ -306,6 +295,17 @@
             this.label1 = new System.Windows.Forms.Label();
             this.dateTo = new System.Windows.Forms.DateTimePicker();
             this.dtDate = new System.Windows.Forms.DateTimePicker();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column41 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column42 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DefectDie = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column43 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column44 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabReport.SuspendLayout();
             this.tabDensity.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdDensity)).BeginInit();
@@ -1532,107 +1532,6 @@
             this.grdGoodDie.Size = new System.Drawing.Size(1415, 457);
             this.grdGoodDie.TabIndex = 1;
             // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.DataPropertyName = "DEVICE";
-            this.dataGridViewTextBoxColumn3.FillWeight = 120F;
-            this.dataGridViewTextBoxColumn3.HeaderText = "DeviceId";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.ReadOnly = true;
-            this.dataGridViewTextBoxColumn3.Visible = false;
-            this.dataGridViewTextBoxColumn3.Width = 80;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.DataPropertyName = "LAYER";
-            this.dataGridViewTextBoxColumn4.HeaderText = "SetupId";
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            this.dataGridViewTextBoxColumn4.ReadOnly = true;
-            this.dataGridViewTextBoxColumn4.Visible = false;
-            this.dataGridViewTextBoxColumn4.Width = 120;
-            // 
-            // dataGridViewTextBoxColumn6
-            // 
-            this.dataGridViewTextBoxColumn6.DataPropertyName = "LOT";
-            this.dataGridViewTextBoxColumn6.FillWeight = 120F;
-            this.dataGridViewTextBoxColumn6.HeaderText = "LotId";
-            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
-            this.dataGridViewTextBoxColumn6.ReadOnly = true;
-            this.dataGridViewTextBoxColumn6.Visible = false;
-            this.dataGridViewTextBoxColumn6.Width = 120;
-            // 
-            // dataGridViewTextBoxColumn7
-            // 
-            this.dataGridViewTextBoxColumn7.DataPropertyName = "SUBSTRATE_ID";
-            this.dataGridViewTextBoxColumn7.FillWeight = 180F;
-            this.dataGridViewTextBoxColumn7.HeaderText = "WaferId";
-            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
-            this.dataGridViewTextBoxColumn7.ReadOnly = true;
-            this.dataGridViewTextBoxColumn7.Width = 140;
-            // 
-            // Column41
-            // 
-            this.Column41.DataPropertyName = "INSPECTIONDATE";
-            dataGridViewCellStyle26.Format = "G";
-            dataGridViewCellStyle26.NullValue = null;
-            this.Column41.DefaultCellStyle = dataGridViewCellStyle26;
-            this.Column41.HeaderText = "Inspection Date";
-            this.Column41.Name = "Column41";
-            this.Column41.ReadOnly = true;
-            this.Column41.Width = 180;
-            // 
-            // Column42
-            // 
-            this.Column42.DataPropertyName = "INSPCNT";
-            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.Column42.DefaultCellStyle = dataGridViewCellStyle27;
-            this.Column42.HeaderText = "Inspection Die";
-            this.Column42.Name = "Column42";
-            this.Column42.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn8
-            // 
-            this.dataGridViewTextBoxColumn8.DataPropertyName = "GOODCNT";
-            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.dataGridViewTextBoxColumn8.DefaultCellStyle = dataGridViewCellStyle28;
-            this.dataGridViewTextBoxColumn8.FillWeight = 70F;
-            this.dataGridViewTextBoxColumn8.HeaderText = "Good Die";
-            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
-            this.dataGridViewTextBoxColumn8.ReadOnly = true;
-            // 
-            // DefectDie
-            // 
-            this.DefectDie.DataPropertyName = "DEFECTNUM";
-            this.DefectDie.HeaderText = "Defect Die";
-            this.DefectDie.Name = "DefectDie";
-            this.DefectDie.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn9
-            // 
-            this.dataGridViewTextBoxColumn9.DataPropertyName = "PERCENT";
-            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.dataGridViewTextBoxColumn9.DefaultCellStyle = dataGridViewCellStyle29;
-            this.dataGridViewTextBoxColumn9.HeaderText = "Percent Of Good Die(%)";
-            this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
-            this.dataGridViewTextBoxColumn9.ReadOnly = true;
-            this.dataGridViewTextBoxColumn9.Width = 150;
-            // 
-            // Column43
-            // 
-            this.Column43.DataPropertyName = "SUBSTRATE_SLOT";
-            this.Column43.HeaderText = "SUBSTRATE_SLOT";
-            this.Column43.Name = "Column43";
-            this.Column43.ReadOnly = true;
-            this.Column43.Visible = false;
-            // 
-            // Column44
-            // 
-            this.Column44.DataPropertyName = "COMPLETIONTIME";
-            this.Column44.HeaderText = "COMPLETIONTIME";
-            this.Column44.Name = "Column44";
-            this.Column44.ReadOnly = true;
-            this.Column44.Visible = false;
-            // 
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
@@ -2223,15 +2122,15 @@
             this.grdLotWaferCode.ColumnHeadersHeight = 26;
             this.grdLotWaferCode.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.grdLotWaferCode.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn39,
-            this.dataGridViewTextBoxColumn34,
-            this.dataGridViewTextBoxColumn35,
-            this.dataGridViewTextBoxColumn36,
-            this.dataGridViewTextBoxColumn37,
-            this.dataGridViewTextBoxColumn38,
-            this.dataGridViewTextBoxColumn40,
-            this.dataGridViewTextBoxColumn41,
-            this.dataGridViewTextBoxColumn42});
+            this.LOT,
+            this.WaferId,
+            this.InspectedDie,
+            this.Code,
+            this.TotalDefects,
+            this.DieQuantity,
+            this.Category,
+            this.Pareto,
+            this.YieldLoss});
             dataGridViewCellStyle49.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle49.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle49.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -2260,90 +2159,90 @@
             this.grdLotWaferCode.Size = new System.Drawing.Size(1409, 218);
             this.grdLotWaferCode.TabIndex = 8;
             // 
-            // dataGridViewTextBoxColumn39
+            // LOT
             // 
-            this.dataGridViewTextBoxColumn39.DataPropertyName = "Lot";
-            this.dataGridViewTextBoxColumn39.HeaderText = "LOT";
-            this.dataGridViewTextBoxColumn39.Name = "dataGridViewTextBoxColumn39";
-            this.dataGridViewTextBoxColumn39.ReadOnly = true;
-            this.dataGridViewTextBoxColumn39.Width = 200;
+            this.LOT.DataPropertyName = "Lot";
+            this.LOT.HeaderText = "LOT";
+            this.LOT.Name = "LOT";
+            this.LOT.ReadOnly = true;
+            this.LOT.Width = 200;
             // 
-            // dataGridViewTextBoxColumn34
+            // WaferId
             // 
-            this.dataGridViewTextBoxColumn34.DataPropertyName = "WaferId";
-            this.dataGridViewTextBoxColumn34.FillWeight = 150F;
-            this.dataGridViewTextBoxColumn34.HeaderText = "Wafer ID";
-            this.dataGridViewTextBoxColumn34.Name = "dataGridViewTextBoxColumn34";
-            this.dataGridViewTextBoxColumn34.ReadOnly = true;
-            this.dataGridViewTextBoxColumn34.Width = 200;
+            this.WaferId.DataPropertyName = "WaferId";
+            this.WaferId.FillWeight = 150F;
+            this.WaferId.HeaderText = "Wafer ID";
+            this.WaferId.Name = "WaferId";
+            this.WaferId.ReadOnly = true;
+            this.WaferId.Width = 200;
             // 
-            // dataGridViewTextBoxColumn35
+            // InspectedDie
             // 
-            this.dataGridViewTextBoxColumn35.DataPropertyName = "InspectedDie";
+            this.InspectedDie.DataPropertyName = "InspectedDie";
             dataGridViewCellStyle44.NullValue = "0";
-            this.dataGridViewTextBoxColumn35.DefaultCellStyle = dataGridViewCellStyle44;
-            this.dataGridViewTextBoxColumn35.FillWeight = 120F;
-            this.dataGridViewTextBoxColumn35.HeaderText = "Inspected Dice";
-            this.dataGridViewTextBoxColumn35.Name = "dataGridViewTextBoxColumn35";
-            this.dataGridViewTextBoxColumn35.ReadOnly = true;
-            this.dataGridViewTextBoxColumn35.Width = 110;
+            this.InspectedDie.DefaultCellStyle = dataGridViewCellStyle44;
+            this.InspectedDie.FillWeight = 120F;
+            this.InspectedDie.HeaderText = "Inspected Dice";
+            this.InspectedDie.Name = "InspectedDie";
+            this.InspectedDie.ReadOnly = true;
+            this.InspectedDie.Width = 110;
             // 
-            // dataGridViewTextBoxColumn36
+            // Code
             // 
-            this.dataGridViewTextBoxColumn36.DataPropertyName = "Code";
-            this.dataGridViewTextBoxColumn36.HeaderText = "Code";
-            this.dataGridViewTextBoxColumn36.Name = "dataGridViewTextBoxColumn36";
-            this.dataGridViewTextBoxColumn36.ReadOnly = true;
-            this.dataGridViewTextBoxColumn36.Width = 110;
+            this.Code.DataPropertyName = "Code";
+            this.Code.HeaderText = "Code";
+            this.Code.Name = "Code";
+            this.Code.ReadOnly = true;
+            this.Code.Width = 110;
             // 
-            // dataGridViewTextBoxColumn37
+            // TotalDefects
             // 
-            this.dataGridViewTextBoxColumn37.DataPropertyName = "TotalDefects";
+            this.TotalDefects.DataPropertyName = "TotalDefects";
             dataGridViewCellStyle45.NullValue = "0";
-            this.dataGridViewTextBoxColumn37.DefaultCellStyle = dataGridViewCellStyle45;
-            this.dataGridViewTextBoxColumn37.FillWeight = 80F;
-            this.dataGridViewTextBoxColumn37.HeaderText = "Total Defects";
-            this.dataGridViewTextBoxColumn37.Name = "dataGridViewTextBoxColumn37";
-            this.dataGridViewTextBoxColumn37.ReadOnly = true;
-            this.dataGridViewTextBoxColumn37.Width = 90;
+            this.TotalDefects.DefaultCellStyle = dataGridViewCellStyle45;
+            this.TotalDefects.FillWeight = 80F;
+            this.TotalDefects.HeaderText = "Total Defects";
+            this.TotalDefects.Name = "TotalDefects";
+            this.TotalDefects.ReadOnly = true;
+            this.TotalDefects.Width = 90;
             // 
-            // dataGridViewTextBoxColumn38
+            // DieQuantity
             // 
-            this.dataGridViewTextBoxColumn38.DataPropertyName = "DieQuantity";
+            this.DieQuantity.DataPropertyName = "DieQuantity";
             dataGridViewCellStyle46.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             dataGridViewCellStyle46.NullValue = "0";
-            this.dataGridViewTextBoxColumn38.DefaultCellStyle = dataGridViewCellStyle46;
-            this.dataGridViewTextBoxColumn38.FillWeight = 120F;
-            this.dataGridViewTextBoxColumn38.HeaderText = "Die Quantity";
-            this.dataGridViewTextBoxColumn38.Name = "dataGridViewTextBoxColumn38";
-            this.dataGridViewTextBoxColumn38.ReadOnly = true;
+            this.DieQuantity.DefaultCellStyle = dataGridViewCellStyle46;
+            this.DieQuantity.FillWeight = 120F;
+            this.DieQuantity.HeaderText = "Die Quantity";
+            this.DieQuantity.Name = "DieQuantity";
+            this.DieQuantity.ReadOnly = true;
             // 
-            // dataGridViewTextBoxColumn40
+            // Category
             // 
-            this.dataGridViewTextBoxColumn40.DataPropertyName = "Category";
-            this.dataGridViewTextBoxColumn40.HeaderText = "Category";
-            this.dataGridViewTextBoxColumn40.Name = "dataGridViewTextBoxColumn40";
-            this.dataGridViewTextBoxColumn40.ReadOnly = true;
+            this.Category.DataPropertyName = "Category";
+            this.Category.HeaderText = "Category";
+            this.Category.Name = "Category";
+            this.Category.ReadOnly = true;
             // 
-            // dataGridViewTextBoxColumn41
+            // Pareto
             // 
-            this.dataGridViewTextBoxColumn41.DataPropertyName = "Pareto";
+            this.Pareto.DataPropertyName = "Pareto";
             dataGridViewCellStyle47.Format = "N2";
             dataGridViewCellStyle47.NullValue = "0";
-            this.dataGridViewTextBoxColumn41.DefaultCellStyle = dataGridViewCellStyle47;
-            this.dataGridViewTextBoxColumn41.HeaderText = "Pareto%";
-            this.dataGridViewTextBoxColumn41.Name = "dataGridViewTextBoxColumn41";
-            this.dataGridViewTextBoxColumn41.ReadOnly = true;
+            this.Pareto.DefaultCellStyle = dataGridViewCellStyle47;
+            this.Pareto.HeaderText = "Pareto%";
+            this.Pareto.Name = "Pareto";
+            this.Pareto.ReadOnly = true;
             // 
-            // dataGridViewTextBoxColumn42
+            // YieldLoss
             // 
-            this.dataGridViewTextBoxColumn42.DataPropertyName = "YieldLoss";
+            this.YieldLoss.DataPropertyName = "YieldLoss";
             dataGridViewCellStyle48.Format = "N2";
             dataGridViewCellStyle48.NullValue = "0";
-            this.dataGridViewTextBoxColumn42.DefaultCellStyle = dataGridViewCellStyle48;
-            this.dataGridViewTextBoxColumn42.HeaderText = "Yield Loss%";
-            this.dataGridViewTextBoxColumn42.Name = "dataGridViewTextBoxColumn42";
-            this.dataGridViewTextBoxColumn42.ReadOnly = true;
+            this.YieldLoss.DefaultCellStyle = dataGridViewCellStyle48;
+            this.YieldLoss.HeaderText = "Yield Loss%";
+            this.YieldLoss.Name = "YieldLoss";
+            this.YieldLoss.ReadOnly = true;
             // 
             // grdLotCode
             // 
@@ -2364,11 +2263,11 @@
             this.grdLotCode.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.grdLotCode.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn5,
-            this.dataGridViewTextBoxColumn12,
-            this.dataGridViewTextBoxColumn24,
+            this.SumTotalDefects,
+            this.SumDieQuantity,
             this.dataGridViewTextBoxColumn25,
             this.dataGridViewTextBoxColumn26,
-            this.dataGridViewTextBoxColumn27});
+            this.SumYieldLoss});
             dataGridViewCellStyle56.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle56.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle56.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -2406,26 +2305,26 @@
             this.dataGridViewTextBoxColumn5.ReadOnly = true;
             this.dataGridViewTextBoxColumn5.Width = 130;
             // 
-            // dataGridViewTextBoxColumn12
+            // SumTotalDefects
             // 
-            this.dataGridViewTextBoxColumn12.DataPropertyName = "TotalDefects";
+            this.SumTotalDefects.DataPropertyName = "TotalDefects";
             dataGridViewCellStyle52.NullValue = "0";
-            this.dataGridViewTextBoxColumn12.DefaultCellStyle = dataGridViewCellStyle52;
-            this.dataGridViewTextBoxColumn12.FillWeight = 120F;
-            this.dataGridViewTextBoxColumn12.HeaderText = "Total Defects";
-            this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
-            this.dataGridViewTextBoxColumn12.ReadOnly = true;
-            this.dataGridViewTextBoxColumn12.Width = 110;
+            this.SumTotalDefects.DefaultCellStyle = dataGridViewCellStyle52;
+            this.SumTotalDefects.FillWeight = 120F;
+            this.SumTotalDefects.HeaderText = "Total Defects";
+            this.SumTotalDefects.Name = "SumTotalDefects";
+            this.SumTotalDefects.ReadOnly = true;
+            this.SumTotalDefects.Width = 110;
             // 
-            // dataGridViewTextBoxColumn24
+            // SumDieQuantity
             // 
-            this.dataGridViewTextBoxColumn24.DataPropertyName = "DieQuantity";
+            this.SumDieQuantity.DataPropertyName = "DieQuantity";
             dataGridViewCellStyle53.NullValue = "0";
-            this.dataGridViewTextBoxColumn24.DefaultCellStyle = dataGridViewCellStyle53;
-            this.dataGridViewTextBoxColumn24.HeaderText = "Die Quantity";
-            this.dataGridViewTextBoxColumn24.Name = "dataGridViewTextBoxColumn24";
-            this.dataGridViewTextBoxColumn24.ReadOnly = true;
-            this.dataGridViewTextBoxColumn24.Width = 110;
+            this.SumDieQuantity.DefaultCellStyle = dataGridViewCellStyle53;
+            this.SumDieQuantity.HeaderText = "Die Quantity";
+            this.SumDieQuantity.Name = "SumDieQuantity";
+            this.SumDieQuantity.ReadOnly = true;
+            this.SumDieQuantity.Width = 110;
             // 
             // dataGridViewTextBoxColumn25
             // 
@@ -2448,15 +2347,15 @@
             this.dataGridViewTextBoxColumn26.Name = "dataGridViewTextBoxColumn26";
             this.dataGridViewTextBoxColumn26.ReadOnly = true;
             // 
-            // dataGridViewTextBoxColumn27
+            // SumYieldLoss
             // 
-            this.dataGridViewTextBoxColumn27.DataPropertyName = "YieldLoss";
+            this.SumYieldLoss.DataPropertyName = "YieldLoss";
             dataGridViewCellStyle55.Format = "N2";
             dataGridViewCellStyle55.NullValue = "0";
-            this.dataGridViewTextBoxColumn27.DefaultCellStyle = dataGridViewCellStyle55;
-            this.dataGridViewTextBoxColumn27.HeaderText = "Yield Loss%";
-            this.dataGridViewTextBoxColumn27.Name = "dataGridViewTextBoxColumn27";
-            this.dataGridViewTextBoxColumn27.ReadOnly = true;
+            this.SumYieldLoss.DefaultCellStyle = dataGridViewCellStyle55;
+            this.SumYieldLoss.HeaderText = "Yield Loss%";
+            this.SumYieldLoss.Name = "SumYieldLoss";
+            this.SumYieldLoss.ReadOnly = true;
             // 
             // panel6
             // 
@@ -2493,7 +2392,7 @@
             // 
             // lblInkDice
             // 
-            this.lblInkDice.Location = new System.Drawing.Point(1139, 56);
+            this.lblInkDice.Location = new System.Drawing.Point(1181, 56);
             this.lblInkDice.Name = "lblInkDice";
             this.lblInkDice.Size = new System.Drawing.Size(75, 23);
             this.lblInkDice.TabIndex = 15;
@@ -2504,7 +2403,7 @@
             // 
             this.label32.AutoSize = true;
             this.label32.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label32.Location = new System.Drawing.Point(1066, 55);
+            this.label32.Location = new System.Drawing.Point(1108, 55);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(67, 20);
             this.label32.TabIndex = 14;
@@ -2512,7 +2411,7 @@
             // 
             // lblBadDice
             // 
-            this.lblBadDice.Location = new System.Drawing.Point(958, 56);
+            this.lblBadDice.Location = new System.Drawing.Point(1000, 56);
             this.lblBadDice.Name = "lblBadDice";
             this.lblBadDice.Size = new System.Drawing.Size(75, 23);
             this.lblBadDice.TabIndex = 13;
@@ -2523,7 +2422,7 @@
             // 
             this.label30.AutoSize = true;
             this.label30.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label30.Location = new System.Drawing.Point(880, 55);
+            this.label30.Location = new System.Drawing.Point(922, 55);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(72, 20);
             this.label30.TabIndex = 12;
@@ -2531,7 +2430,7 @@
             // 
             // lblGoodDice
             // 
-            this.lblGoodDice.Location = new System.Drawing.Point(791, 56);
+            this.lblGoodDice.Location = new System.Drawing.Point(833, 56);
             this.lblGoodDice.Name = "lblGoodDice";
             this.lblGoodDice.Size = new System.Drawing.Size(75, 23);
             this.lblGoodDice.TabIndex = 11;
@@ -2542,7 +2441,7 @@
             // 
             this.label22.AutoSize = true;
             this.label22.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label22.Location = new System.Drawing.Point(702, 55);
+            this.label22.Location = new System.Drawing.Point(744, 55);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(83, 20);
             this.label22.TabIndex = 10;
@@ -2550,7 +2449,7 @@
             // 
             // lblScannedDice
             // 
-            this.lblScannedDice.Location = new System.Drawing.Point(582, 56);
+            this.lblScannedDice.Location = new System.Drawing.Point(624, 56);
             this.lblScannedDice.Name = "lblScannedDice";
             this.lblScannedDice.Size = new System.Drawing.Size(75, 23);
             this.lblScannedDice.TabIndex = 9;
@@ -2561,7 +2460,7 @@
             // 
             this.lable12.AutoSize = true;
             this.lable12.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lable12.Location = new System.Drawing.Point(479, 55);
+            this.lable12.Location = new System.Drawing.Point(521, 55);
             this.lable12.Name = "lable12";
             this.lable12.Size = new System.Drawing.Size(104, 20);
             this.lable12.TabIndex = 8;
@@ -2569,9 +2468,9 @@
             // 
             // lblRecipe
             // 
-            this.lblRecipe.Location = new System.Drawing.Point(1129, 22);
+            this.lblRecipe.Location = new System.Drawing.Point(1171, 22);
             this.lblRecipe.Name = "lblRecipe";
-            this.lblRecipe.Size = new System.Drawing.Size(67, 23);
+            this.lblRecipe.Size = new System.Drawing.Size(118, 23);
             this.lblRecipe.TabIndex = 7;
             this.lblRecipe.Text = "-";
             this.lblRecipe.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2580,7 +2479,7 @@
             // 
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label21.Location = new System.Drawing.Point(1066, 21);
+            this.label21.Location = new System.Drawing.Point(1108, 21);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(57, 20);
             this.label21.TabIndex = 6;
@@ -2588,7 +2487,7 @@
             // 
             // lblJob
             // 
-            this.lblJob.Location = new System.Drawing.Point(958, 22);
+            this.lblJob.Location = new System.Drawing.Point(1000, 22);
             this.lblJob.Name = "lblJob";
             this.lblJob.Size = new System.Drawing.Size(67, 23);
             this.lblJob.TabIndex = 5;
@@ -2599,7 +2498,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label15.Location = new System.Drawing.Point(916, 21);
+            this.label15.Location = new System.Drawing.Point(958, 21);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(36, 20);
             this.label15.TabIndex = 4;
@@ -2607,7 +2506,7 @@
             // 
             // lblMachineId
             // 
-            this.lblMachineId.Location = new System.Drawing.Point(791, 22);
+            this.lblMachineId.Location = new System.Drawing.Point(833, 22);
             this.lblMachineId.Name = "lblMachineId";
             this.lblMachineId.Size = new System.Drawing.Size(67, 23);
             this.lblMachineId.TabIndex = 3;
@@ -2618,7 +2517,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label14.Location = new System.Drawing.Point(695, 21);
+            this.label14.Location = new System.Drawing.Point(737, 21);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(90, 20);
             this.label14.TabIndex = 2;
@@ -2626,7 +2525,7 @@
             // 
             // lblTotalDice
             // 
-            this.lblTotalDice.Location = new System.Drawing.Point(377, 56);
+            this.lblTotalDice.Location = new System.Drawing.Point(419, 56);
             this.lblTotalDice.Name = "lblTotalDice";
             this.lblTotalDice.Size = new System.Drawing.Size(75, 23);
             this.lblTotalDice.TabIndex = 1;
@@ -2637,14 +2536,14 @@
             // 
             this.lblWafers.Location = new System.Drawing.Point(175, 56);
             this.lblWafers.Name = "lblWafers";
-            this.lblWafers.Size = new System.Drawing.Size(106, 23);
+            this.lblWafers.Size = new System.Drawing.Size(139, 23);
             this.lblWafers.TabIndex = 1;
             this.lblWafers.Text = "0";
             this.lblWafers.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblLotCode
             // 
-            this.lblLotCode.Location = new System.Drawing.Point(582, 22);
+            this.lblLotCode.Location = new System.Drawing.Point(624, 22);
             this.lblLotCode.Name = "lblLotCode";
             this.lblLotCode.Size = new System.Drawing.Size(92, 23);
             this.lblLotCode.TabIndex = 1;
@@ -2653,7 +2552,7 @@
             // 
             // lblOperator
             // 
-            this.lblOperator.Location = new System.Drawing.Point(377, 22);
+            this.lblOperator.Location = new System.Drawing.Point(419, 22);
             this.lblOperator.Name = "lblOperator";
             this.lblOperator.Size = new System.Drawing.Size(75, 23);
             this.lblOperator.TabIndex = 1;
@@ -2664,7 +2563,7 @@
             // 
             this.lblInspectionDate.Location = new System.Drawing.Point(172, 22);
             this.lblInspectionDate.Name = "lblInspectionDate";
-            this.lblInspectionDate.Size = new System.Drawing.Size(109, 23);
+            this.lblInspectionDate.Size = new System.Drawing.Size(142, 23);
             this.lblInspectionDate.TabIndex = 1;
             this.lblInspectionDate.Text = "-";
             this.lblInspectionDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2673,7 +2572,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label16.Location = new System.Drawing.Point(503, 21);
+            this.label16.Location = new System.Drawing.Point(545, 21);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(72, 20);
             this.label16.TabIndex = 0;
@@ -2683,7 +2582,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label17.Location = new System.Drawing.Point(291, 55);
+            this.label17.Location = new System.Drawing.Point(333, 55);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(80, 20);
             this.label17.TabIndex = 0;
@@ -2703,7 +2602,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label19.Location = new System.Drawing.Point(299, 21);
+            this.label19.Location = new System.Drawing.Point(341, 21);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(72, 20);
             this.label19.TabIndex = 0;
@@ -2936,6 +2835,106 @@
             this.dtDate.TabIndex = 8;
             this.dtDate.Leave += new System.EventHandler(this.dtDate_Leave);
             // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.DataPropertyName = "DEVICE";
+            this.dataGridViewTextBoxColumn3.FillWeight = 120F;
+            this.dataGridViewTextBoxColumn3.HeaderText = "DeviceId";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
+            this.dataGridViewTextBoxColumn3.Visible = false;
+            this.dataGridViewTextBoxColumn3.Width = 80;
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.DataPropertyName = "LAYER";
+            this.dataGridViewTextBoxColumn4.HeaderText = "SetupId";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.ReadOnly = true;
+            this.dataGridViewTextBoxColumn4.Visible = false;
+            this.dataGridViewTextBoxColumn4.Width = 120;
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.DataPropertyName = "LOT";
+            this.dataGridViewTextBoxColumn6.FillWeight = 120F;
+            this.dataGridViewTextBoxColumn6.HeaderText = "LotId";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            this.dataGridViewTextBoxColumn6.ReadOnly = true;
+            this.dataGridViewTextBoxColumn6.Width = 120;
+            // 
+            // dataGridViewTextBoxColumn7
+            // 
+            this.dataGridViewTextBoxColumn7.DataPropertyName = "SUBSTRATE_ID";
+            this.dataGridViewTextBoxColumn7.FillWeight = 180F;
+            this.dataGridViewTextBoxColumn7.HeaderText = "WaferId";
+            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            this.dataGridViewTextBoxColumn7.ReadOnly = true;
+            this.dataGridViewTextBoxColumn7.Width = 140;
+            // 
+            // Column41
+            // 
+            this.Column41.DataPropertyName = "INSPECTIONDATE";
+            dataGridViewCellStyle26.Format = "G";
+            dataGridViewCellStyle26.NullValue = null;
+            this.Column41.DefaultCellStyle = dataGridViewCellStyle26;
+            this.Column41.HeaderText = "Inspection Date";
+            this.Column41.Name = "Column41";
+            this.Column41.ReadOnly = true;
+            this.Column41.Width = 180;
+            // 
+            // Column42
+            // 
+            this.Column42.DataPropertyName = "INSPCNT";
+            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Column42.DefaultCellStyle = dataGridViewCellStyle27;
+            this.Column42.HeaderText = "Inspection Die";
+            this.Column42.Name = "Column42";
+            this.Column42.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn8
+            // 
+            this.dataGridViewTextBoxColumn8.DataPropertyName = "GOODCNT";
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.dataGridViewTextBoxColumn8.DefaultCellStyle = dataGridViewCellStyle28;
+            this.dataGridViewTextBoxColumn8.FillWeight = 70F;
+            this.dataGridViewTextBoxColumn8.HeaderText = "Good Die";
+            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+            this.dataGridViewTextBoxColumn8.ReadOnly = true;
+            // 
+            // DefectDie
+            // 
+            this.DefectDie.DataPropertyName = "DEFECTNUM";
+            this.DefectDie.HeaderText = "Defect Die";
+            this.DefectDie.Name = "DefectDie";
+            this.DefectDie.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn9
+            // 
+            this.dataGridViewTextBoxColumn9.DataPropertyName = "PERCENT";
+            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.dataGridViewTextBoxColumn9.DefaultCellStyle = dataGridViewCellStyle29;
+            this.dataGridViewTextBoxColumn9.HeaderText = "Percent Of Good Die(%)";
+            this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
+            this.dataGridViewTextBoxColumn9.ReadOnly = true;
+            this.dataGridViewTextBoxColumn9.Width = 150;
+            // 
+            // Column43
+            // 
+            this.Column43.DataPropertyName = "SUBSTRATE_SLOT";
+            this.Column43.HeaderText = "SUBSTRATE_SLOT";
+            this.Column43.Name = "Column43";
+            this.Column43.ReadOnly = true;
+            this.Column43.Visible = false;
+            // 
+            // Column44
+            // 
+            this.Column44.DataPropertyName = "COMPLETIONTIME";
+            this.Column44.HeaderText = "COMPLETIONTIME";
+            this.Column44.Name = "Column44";
+            this.Column44.ReadOnly = true;
+            this.Column44.Visible = false;
+            // 
             // frm_report
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -3129,17 +3128,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column28;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column29;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column30;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column41;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column42;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DefectDie;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column43;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column44;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
@@ -3182,22 +3170,33 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label lblScannedDice;
         private System.Windows.Forms.Label lable12;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn24;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn25;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn26;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn27;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn39;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn34;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn35;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn36;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn37;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn38;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn40;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn41;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn42;
         private System.Windows.Forms.TabPage tabWaferYieldList;
         private CRD.WinUI.Editors.WrDataGridView grdWaferField;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LOT;
+        private System.Windows.Forms.DataGridViewTextBoxColumn WaferId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn InspectedDie;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Code;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TotalDefects;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DieQuantity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Category;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Pareto;
+        private System.Windows.Forms.DataGridViewTextBoxColumn YieldLoss;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SumTotalDefects;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SumDieQuantity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn25;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn26;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SumYieldLoss;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column41;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column42;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DefectDie;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column43;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column44;
     }
 }

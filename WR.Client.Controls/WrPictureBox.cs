@@ -709,13 +709,13 @@ namespace WR.Client.Controls
             return location;
         }
 
-        private Brush _bgColor = new SolidBrush(SystemColors.ControlDarkDark);
-        private Brush _egPen = new SolidBrush(SystemColors.Control);
-        private Pen _linePen = new Pen(Color.White);
+        //private Brush _bgColor = new SolidBrush(SystemColors.ControlDarkDark);
+        //private Brush _egPen = new SolidBrush(SystemColors.Control);
+        //private Pen _linePen = new Pen(Color.White);
 
-        private Brush _dPen = new SolidBrush(Color.Black);
-        private Brush _lPen = new SolidBrush(Color.DarkGreen);
-        private Brush _rPen = new SolidBrush(Color.Red);
+        //private Brush _dPen = new SolidBrush(Color.Black);
+        //private Brush _lPen = new SolidBrush(Color.DarkGreen);
+        //private Brush _rPen = new SolidBrush(Color.Red);
 
         /// <summary>
         /// 画图
@@ -724,6 +724,14 @@ namespace WR.Client.Controls
         {
             if (!HasDraw)
                 return;
+
+            Brush _bgColor = new SolidBrush(SystemColors.ControlDarkDark);
+            Brush _egPen = new SolidBrush(SystemColors.Control);
+            Pen _linePen = new Pen(Color.White);
+
+            Brush _dPen = new SolidBrush(Color.Black);
+            Brush _lPen = new SolidBrush(Color.DarkGreen);
+            Brush _rPen = new SolidBrush(Color.Red);
 
             var col = ColCnt;
             var row = RowCnt;
@@ -801,9 +809,9 @@ namespace WR.Client.Controls
 
             double scaleX = Math.Round(Convert.ToDouble(this.Width) / wd, 8);
             double scaleY = Math.Round(Convert.ToDouble(this.Height) / hg, 8);
-            var log = WR.Utils.LogService.Getlog(this.GetType());
+            //var log = WR.Utils.LogService.Getlog(this.GetType());
 
-            log.Debug("画出die start");
+            //log.Debug("画出die start");
             //画出die
             var bpRectangles = _dielayoutlist.Select(die => new Rectangle((die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, ww * this.ZoomMultiple, wh * this.ZoomMultiple)).ToArray();
             var wpRectangles = _dielayoutlist.Select(die => new Rectangle((die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple, (wh - 1) * this.ZoomMultiple)).ToArray();
@@ -814,6 +822,9 @@ namespace WR.Client.Controls
 
             if (wpRectangles.Length > 0)
                 wp.AddRectangles(wpRectangles);
+
+            gc.FillPath(_dPen, bp);
+            gc.FillPath(_lPen, wp);
 
             if (gcFillRectangles.Length > 0)
                 gc.FillRectangles(new SolidBrush(ConvterColor(Color.Gray.Name)), gcFillRectangles);
@@ -848,10 +859,7 @@ namespace WR.Client.Controls
             //        ,new Point(Convert.ToInt32((die.X * ww + offsetX) * scaleX),Convert.ToInt32(((row - die.Y) * wh + offsetY+wh-1) * scaleY))};
             //}
 
-            log.Debug("画出die start");
-
-            gc.FillPath(_dPen, bp);
-            gc.FillPath(_lPen, wp);
+            //log.Debug("画出die start");
 
             //bool lineg = false;
             //int lx = 0;
@@ -861,7 +869,7 @@ namespace WR.Client.Controls
             //double scaleY = Math.Round(Convert.ToDouble(this.Height) / hg, 8);
 
             //画出defect
-            log.Debug("画出defect start");
+            //log.Debug("画出defect start");
             foreach (DefectCoordinate def in _defectlist)
             {
                 if (string.IsNullOrEmpty(def.Location))
@@ -891,7 +899,7 @@ namespace WR.Client.Controls
                     //myPen.Dispose();
                 }
             }
-            log.Debug("画出defect end");
+            //log.Debug("画出defect end");
 
             //定位画线
             if (lineg)
@@ -940,12 +948,25 @@ namespace WR.Client.Controls
             g.SmoothingMode = SmoothingMode.HighQuality;
 
             g.DrawImage(btp, new Rectangle(0, 0, outBmp.Width, outBmp.Height), new Rectangle(0, 0, btp.Width, btp.Height), GraphicsUnit.Pixel);
-            g.Dispose();
-
+            
             //绑定图片
             this.WrImage = outBmp;
             this.scaleX = scaleX;
             this.scaleY = scaleY;
+
+            _bgColor.Dispose();
+            _egPen.Dispose();
+            _linePen.Dispose();
+
+            _dPen.Dispose();
+            _lPen.Dispose();
+            _rPen.Dispose();
+
+            btp.Dispose();
+            outBmp.Dispose();
+            btp = null;
+            outBmp = null;
+            g.Dispose();
 
             HasDraw = true;
             //this.Refresh();

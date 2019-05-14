@@ -241,7 +241,7 @@ namespace WR.Utils
             catch { }
         }
 
-        public static void GridToExcelByNPOI(string sheetname, string lotid, string date,
+        public static void GridToExcelLotYield(string sheetname, string lotid, string date,
             string[] summ1, string[] summ2, string[] summ3, DataGridView gv, string strExcelFileName, bool summflag, string[] summ4 = null, DataGridView gv1 = null)
         {
             HSSFWorkbook workbook = new HSSFWorkbook();
@@ -265,18 +265,22 @@ namespace WR.Utils
                 //Lot ID
                 IRow summRow_1 = sheet.CreateRow(0);
                 summRow_1.Height = 20 * 20;
-                ICell cell_1 = summRow_1.CreateCell(0);
-                cell_1.SetCellValue("Lot ID:");
-                cell_1.CellStyle = SummStyle;
-                ICell cell_2 = summRow_1.CreateCell(1);
-                cell_2.SetCellValue(lotid);
-                cell_2.CellStyle = SummStyle;
-                ICell cell_3 = summRow_1.CreateCell(2);
-                cell_3.SetCellValue("Date:");
-                cell_3.CellStyle = SummStyle;
-                ICell cell_4 = summRow_1.CreateCell(3);
-                cell_4.SetCellValue(date);
-                cell_4.CellStyle = SummStyle;
+
+                if (summ4 == null)
+                {
+                    ICell cell_1 = summRow_1.CreateCell(0);
+                    cell_1.SetCellValue("Lot ID:");
+                    cell_1.CellStyle = SummStyle;
+                    ICell cell_2 = summRow_1.CreateCell(1);
+                    cell_2.SetCellValue(lotid);
+                    cell_2.CellStyle = SummStyle;
+                    ICell cell_3 = summRow_1.CreateCell(2);
+                    cell_3.SetCellValue("Date:");
+                    cell_3.CellStyle = SummStyle;
+                    ICell cell_4 = summRow_1.CreateCell(3);
+                    cell_4.SetCellValue(date);
+                    cell_4.CellStyle = SummStyle;
+                }
 
                 if (summflag)
                 {
@@ -295,6 +299,14 @@ namespace WR.Utils
                     ICell cell_24 = summRow_2.CreateCell(3);
                     cell_24.SetCellValue(summ1[3]);
                     cell_24.CellStyle = SummStyle;
+
+                    ICell cell_25 = summRow_2.CreateCell(4);
+                    cell_25.SetCellValue("Create Date:");
+                    cell_25.CellStyle = SummStyle;
+                    ICell cell_26 = summRow_2.CreateCell(5);
+                    cell_26.SetCellValue(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cell_26.CellStyle = SummStyle;
+
 
                     IRow summRow_3 = sheet.CreateRow(2);
                     summRow_3.Height = 20 * 20;
@@ -374,11 +386,19 @@ namespace WR.Utils
                 HeadercellStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.Black.Index;
                 HeadercellStyle.FillBackgroundColor = NPOI.HSSF.Util.HSSFColor.Lavender.Index;
 
+                var waferId = string.Empty;
+                int tDefects = 0, badDie = 0;
+                var yieldLoss = 0.00;
+
                 if (gv1 != null)
                 {
                     int icolIndex1 = 0;
                     int ridx1 = (summflag ? 4 + rIndex : 1 + rIndex);
-                    IRow headerRow1 = sheet.CreateRow(ridx1); rIndex++;
+
+                    IRow r = sheet.CreateRow(ridx1);
+                    r.Height = 20 * 20; rIndex++; ridx1++;
+
+                    IRow headerRow1 = sheet.CreateRow(ridx1); //rIndex++;
                     headerRow1.Height = 20 * 20;
                     foreach (DataGridViewColumn item in gv1.Columns)
                     {
@@ -421,12 +441,34 @@ namespace WR.Utils
                                     cell.SetCellValue(Rowitem.Cells[Colitem.Name].FormattedValue.ToString());
                                     cell.CellStyle = cellStyle1;
                                     iCellIndex1++;
+
+                                    if (Colitem.Name == "SumYieldLoss")
+                                        yieldLoss += Convert.ToDouble(Rowitem.Cells[Colitem.Name].Value);
                                 }
                             }
                             iCellIndex1 = 0;
                             iRowIndex1++;
                             rIndex++;
                         }
+
+                        IRow DataRows = sheet.CreateRow(iRowIndex1);
+                        foreach (DataGridViewColumn Colitem in gv1.Columns)
+                        {
+                            if (Colitem.Visible)
+                            {
+                                ICell cell = DataRows.CreateCell(iCellIndex1);
+
+                                if (Colitem.Name == "SumYieldLoss")
+                                    cell.SetCellValue(string.Format("{0}/{1}", yieldLoss, 100 - yieldLoss));
+
+                                cell.CellStyle = cellStyle1;
+                                iCellIndex1++;
+                            }
+                        }
+
+                        iCellIndex1 = 0;
+                        iRowIndex1++;
+                        rIndex++;
                     }
                     rIndex++;
                 }
@@ -434,7 +476,309 @@ namespace WR.Utils
                 //用column name 作为列名
                 int icolIndex = 0;
                 int ridx = (summflag ? 4 + rIndex : 1 + rIndex);
-                IRow headerRow = sheet.CreateRow(ridx); rIndex++;
+
+                IRow r2 = sheet.CreateRow(ridx);
+                r2.Height = 20 * 20; rIndex++; ridx++;
+
+                IRow headerRow = sheet.CreateRow(ridx); //rIndex++;
+                headerRow.Height = 20 * 20;
+                foreach (DataGridViewColumn item in gv.Columns)
+                {
+                    if (!item.Visible)
+                        continue;
+
+                    ICell cell = headerRow.CreateCell(icolIndex);
+                    sheet.SetColumnWidth(icolIndex, item.Width * 50);
+                    cell.SetCellValue(item.HeaderText);
+                    cell.CellStyle = HeadercellStyle;
+                    icolIndex++;
+                }
+
+                ICellStyle cellStyle = workbook.CreateCellStyle();
+
+                //为避免日期格式被Excel自动替换，所以设定 format 为 『@』 表示一率当成text來看
+                cellStyle.DataFormat = HSSFDataFormat.GetBuiltinFormat("@");
+                cellStyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyle.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+
+                NPOI.SS.UserModel.IFont cellfont = workbook.CreateFont();
+                cellfont.Boldweight = (short)FontBoldWeight.Normal;
+                cellStyle.SetFont(cellfont);
+
+                ICellStyle sumStyle = workbook.CreateCellStyle();
+
+                //为避免日期格式被Excel自动替换，所以设定 format 为 『@』 表示一率当成text來看
+                sumStyle.DataFormat = HSSFDataFormat.GetBuiltinFormat("@");
+                sumStyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+                sumStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+                sumStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+                sumStyle.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+
+                NPOI.SS.UserModel.IFont sumfont = workbook.CreateFont();
+                sumfont.Boldweight = (short)FontBoldWeight.Bold;
+                sumStyle.SetFont(sumfont);
+
+
+                //建立内容行
+                int iRowIndex = (summflag ? 5 + rIndex : 2 + rIndex);
+                int iCellIndex = 0;
+                int rcnt = 0;
+
+                yieldLoss = 0;
+
+                if (gv.Rows.Count > 0)
+                {
+                    foreach (DataGridViewRow Rowitem in gv.Rows)
+                    {
+                        if (!string.IsNullOrEmpty(waferId) && waferId != Rowitem.Cells["WaferId"].FormattedValue.ToString())
+                        {
+                            IRow DataRows = sheet.CreateRow(iRowIndex);
+                            foreach (DataGridViewColumn Colitem in gv.Columns)
+                            {
+                                if (Colitem.Visible)
+                                {
+                                    ICell cell = DataRows.CreateCell(iCellIndex);
+
+                                    if (Colitem.Name != "Code" && Colitem.Name != "Category" && Colitem.Name != "Pareto")
+                                    {
+                                        if (Colitem.Name == "TotalDefects")
+                                            cell.SetCellValue(tDefects);
+                                        else if (Colitem.Name == "DieQuantity")
+                                            cell.SetCellValue(badDie);
+                                        else if (Colitem.Name == "YieldLoss")
+                                            cell.SetCellValue(string.Format("{0}/{1}", yieldLoss, 100 - yieldLoss));
+                                        else if (Colitem.Name == "WaferId")
+                                            cell.SetCellValue(waferId);
+                                        else
+                                            cell.SetCellValue(Rowitem.Cells[Colitem.Name].FormattedValue.ToString());
+                                    }
+
+                                    cell.CellStyle = sumStyle;
+                                    iCellIndex++;
+                                }
+                            }
+
+                            tDefects = 0;
+                            badDie = 0;
+                            yieldLoss = 0;
+
+                            iCellIndex = 0;
+                            iRowIndex++;
+                            rIndex++;
+
+                            sheet.CreateRow(iRowIndex);
+
+                            iRowIndex++;
+                            rIndex++;
+                        }
+
+
+                        IRow DataRow = sheet.CreateRow(iRowIndex);
+                        foreach (DataGridViewColumn Colitem in gv.Columns)
+                        {
+                            if (Colitem.Visible)
+                            {
+                                ICell cell = DataRow.CreateCell(iCellIndex);
+                                cell.SetCellValue(Rowitem.Cells[Colitem.Name].FormattedValue.ToString());
+                                cell.CellStyle = cellStyle;
+                                iCellIndex++;
+
+                                if (Colitem.Name == "TotalDefects")
+                                    tDefects += Convert.ToInt16(Rowitem.Cells[Colitem.Name].Value);
+                                else if (Colitem.Name == "DieQuantity")
+                                    badDie += Convert.ToInt16(Rowitem.Cells[Colitem.Name].Value);
+                                else if (Colitem.Name == "YieldLoss")
+                                    yieldLoss += Convert.ToDouble(Rowitem.Cells[Colitem.Name].Value);
+                            }
+                        }
+
+                        iCellIndex = 0;
+                        iRowIndex++;
+                        rIndex++;
+                        rcnt++;
+
+                        waferId = Rowitem.Cells["WaferId"].FormattedValue.ToString();
+
+                        if (!string.IsNullOrEmpty(waferId) && rcnt == gv.Rows.Count)
+                        {
+                            IRow DataRows = sheet.CreateRow(iRowIndex);
+                            foreach (DataGridViewColumn Colitem in gv.Columns)
+                            {
+                                if (Colitem.Visible)
+                                {
+                                    ICell cell = DataRows.CreateCell(iCellIndex);
+
+                                    if (Colitem.Name != "Code" && Colitem.Name != "Category" && Colitem.Name != "Pareto")
+                                    {
+                                        if (Colitem.Name == "TotalDefects")
+                                            cell.SetCellValue(tDefects);
+                                        else if (Colitem.Name == "DieQuantity")
+                                            cell.SetCellValue(badDie);
+                                        else if (Colitem.Name == "YieldLoss")
+                                            cell.SetCellValue(string.Format("{0}/{1}", yieldLoss, 100 - yieldLoss));
+                                        else if (Colitem.Name == "WaferId")
+                                            cell.SetCellValue(waferId);
+                                        else
+                                            cell.SetCellValue(Rowitem.Cells[Colitem.Name].FormattedValue.ToString());
+                                    }
+
+                                    cell.CellStyle = sumStyle;
+                                    iCellIndex++;
+                                }
+                            }
+
+                            tDefects = 0;
+                            badDie = 0;
+                            yieldLoss = 0;
+
+                            iCellIndex = 0;
+                            iRowIndex++;
+                            rIndex++;
+
+                            IRow drSum = sheet.CreateRow(iRowIndex);
+                            drSum.Height = 20 * 20;
+
+                            iRowIndex++;
+                            rIndex++;
+                        }
+                    }
+
+                    ////自适应列宽度
+                    //for (int i = 0; i < icolIndex; i++)
+                    //{
+                    //    sheet.AutoSizeColumn(i);
+                    //}
+                }
+
+                //写Excel
+                FileStream file = new FileStream(strExcelFileName, FileMode.OpenOrCreate);
+                workbook.Write(file);
+                file.Flush();
+                file.Close();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally { workbook = null; }
+        }
+
+        public static void GridToExcelByNPOI(string sheetname, string lotid, string date,
+           string[] summ1, string[] summ2, string[] summ3, DataGridView gv, string strExcelFileName, bool summflag)
+        {
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            try
+            {
+                ISheet sheet = workbook.CreateSheet(sheetname);
+
+                //汇总栏
+                ICellStyle SummStyle = workbook.CreateCellStyle();
+                SummStyle.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
+                SummStyle.VerticalAlignment = NPOI.SS.UserModel.VerticalAlignment.Center;
+                //字体
+                NPOI.SS.UserModel.IFont summfont = workbook.CreateFont();
+                summfont.Boldweight = (short)FontBoldWeight.Bold;
+                summfont.Color = NPOI.HSSF.Util.HSSFColor.DarkBlue.Index;
+                SummStyle.SetFont(summfont);
+                SummStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.DarkBlue.Index;
+                SummStyle.FillBackgroundColor = NPOI.HSSF.Util.HSSFColor.Lavender.Index;
+                //Lot ID
+                IRow summRow_1 = sheet.CreateRow(0);
+                summRow_1.Height = 20 * 20;
+                ICell cell_1 = summRow_1.CreateCell(0);
+                cell_1.SetCellValue("Lot ID:");
+                cell_1.CellStyle = SummStyle;
+                ICell cell_2 = summRow_1.CreateCell(1);
+                cell_2.SetCellValue(lotid);
+                cell_2.CellStyle = SummStyle;
+                ICell cell_3 = summRow_1.CreateCell(2);
+                cell_3.SetCellValue("Date:");
+                cell_3.CellStyle = SummStyle;
+                ICell cell_4 = summRow_1.CreateCell(3);
+                cell_4.SetCellValue(date);
+                cell_4.CellStyle = SummStyle;
+
+                ICell cell_5 = summRow_1.CreateCell(4);
+                cell_5.SetCellValue("Create Date:");
+                cell_5.CellStyle = SummStyle;
+                ICell cell_6 = summRow_1.CreateCell(5);
+                cell_6.SetCellValue(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                cell_6.CellStyle = SummStyle;
+
+                if (summflag)
+                {
+                    //汇总
+                    IRow summRow_2 = sheet.CreateRow(1);
+                    summRow_2.Height = 20 * 20;
+                    ICell cell_21 = summRow_2.CreateCell(0);
+                    cell_21.SetCellValue(summ1[0]);
+                    cell_21.CellStyle = SummStyle;
+                    ICell cell_22 = summRow_2.CreateCell(1);
+                    cell_22.SetCellValue(summ1[1]);
+                    cell_22.CellStyle = SummStyle;
+                    ICell cell_23 = summRow_2.CreateCell(2);
+                    cell_23.SetCellValue(summ1[2]);
+                    cell_23.CellStyle = SummStyle;
+                    ICell cell_24 = summRow_2.CreateCell(3);
+                    cell_24.SetCellValue(summ1[3]);
+                    cell_24.CellStyle = SummStyle;
+
+                    IRow summRow_3 = sheet.CreateRow(2);
+                    summRow_3.Height = 20 * 20;
+                    ICell cell_31 = summRow_3.CreateCell(0);
+                    cell_31.SetCellValue(summ2[0]);
+                    cell_31.CellStyle = SummStyle;
+                    ICell cell_32 = summRow_3.CreateCell(1);
+                    cell_32.SetCellValue(summ2[1]);
+                    cell_32.CellStyle = SummStyle;
+                    ICell cell_33 = summRow_3.CreateCell(2);
+                    cell_33.SetCellValue(summ2[2]);
+                    cell_33.CellStyle = SummStyle;
+                    ICell cell_34 = summRow_3.CreateCell(3);
+                    cell_34.SetCellValue(summ2[3]);
+                    cell_34.CellStyle = SummStyle;
+
+                    IRow summRow_4 = sheet.CreateRow(3);
+                    summRow_4.Height = 20 * 20;
+                    ICell cell_41 = summRow_4.CreateCell(0);
+                    cell_41.SetCellValue(summ3[0]);
+                    cell_41.CellStyle = SummStyle;
+                    ICell cell_42 = summRow_4.CreateCell(1);
+                    cell_42.SetCellValue(summ3[1]);
+                    cell_42.CellStyle = SummStyle;
+                    if (summ3.Length > 2)
+                    {
+                        ICell cell_43 = summRow_4.CreateCell(2);
+                        cell_43.SetCellValue(summ3[2]);
+                        cell_43.CellStyle = SummStyle;
+                        ICell cell_44 = summRow_4.CreateCell(3);
+                        cell_44.SetCellValue(summ3[3]);
+                        cell_44.CellStyle = SummStyle;
+                    }
+                }
+
+                //表格头
+                ICellStyle HeadercellStyle = workbook.CreateCellStyle();
+                HeadercellStyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+                HeadercellStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+                HeadercellStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+                HeadercellStyle.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+                HeadercellStyle.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
+                HeadercellStyle.VerticalAlignment = NPOI.SS.UserModel.VerticalAlignment.Center;
+                //字体
+                NPOI.SS.UserModel.IFont headerfont = workbook.CreateFont();
+                headerfont.Boldweight = (short)FontBoldWeight.Bold;
+                HeadercellStyle.SetFont(headerfont);
+                //HeadercellStyle.FillBackgroundColorColor
+                HeadercellStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.Black.Index;
+                HeadercellStyle.FillBackgroundColor = NPOI.HSSF.Util.HSSFColor.Lavender.Index;
+
+                //用column name 作为列名
+                int icolIndex = 0;
+                int ridx = (summflag ? 4 : 1);
+                IRow headerRow = sheet.CreateRow(ridx);
                 headerRow.Height = 20 * 20;
                 foreach (DataGridViewColumn item in gv.Columns)
                 {
@@ -462,7 +806,7 @@ namespace WR.Utils
                 cellStyle.SetFont(cellfont);
 
                 //建立内容行
-                int iRowIndex = (summflag ? 5 + rIndex : 2 + rIndex);
+                int iRowIndex = (summflag ? 5 : 2);
                 int iCellIndex = 0;
                 if (gv.Rows.Count > 0)
                 {
@@ -481,7 +825,6 @@ namespace WR.Utils
                         }
                         iCellIndex = 0;
                         iRowIndex++;
-                        rIndex++;
                     }
 
                     ////自适应列宽度

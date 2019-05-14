@@ -80,7 +80,7 @@ namespace WR.Client.UI
                         {
                             if (sinfList[i].DISPOSITION != "NotExist")
                             {
-                                if (sinfList[i].DISPOSITION == "NotProcess     ")
+                                if (sinfList[i].DISPOSITION.Trim() == "NotProcess")
                                     sinfString.AppendFormat("@@@");
                                 else
                                     sinfString.AppendFormat("000");
@@ -148,7 +148,7 @@ namespace WR.Client.UI
                         {
                             if (sinfList[i].DISPOSITION != "NotExist")
                             {
-                                if (sinfList[i].DISPOSITION == "NotProcess     ")
+                                if (sinfList[i].DISPOSITION.Trim() == "NotProcess")
                                     sinfString.AppendFormat("@@");
                                 else
                                     sinfString.AppendFormat("00");

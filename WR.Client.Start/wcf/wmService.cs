@@ -18,6 +18,8 @@ namespace WR.Client.Start
             binding.MaxBufferPoolSize = 2147483647;
             binding.Security.Mode = BasicHttpSecurityMode.None;
 
+            binding.OpenTimeout = new TimeSpan(0, 0, 1);
+
             binding.ReaderQuotas.MaxStringContentLength = 2147483647;
             return binding;
         }

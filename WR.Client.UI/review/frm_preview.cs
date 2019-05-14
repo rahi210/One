@@ -913,7 +913,9 @@ namespace WR.Client.UI
 
             //picWafer.ReDraw(col, row, loction, listDieLayout, picWafer.DefectList);
             log.Debug("picWafer.ReDraw...............");
+            log.Debug(string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", Oparams[1], Oparams[2], Oparams[3], Oparams[4]));
             picWafer.ReDraw();
+
             log.Debug("picWafer.ReDraw End...............");
         }
 
@@ -1589,7 +1591,7 @@ namespace WR.Client.UI
                 ser.IsValueShownAsLabel = true;
                 ser.CustomProperties = "LabelStyle=Bottom";
                 ser.LegendText = list[i].DESCRIPTION;
-                
+
                 double[] yval = _defectlist.Where(s => s.Cclassid == list[i].ID)
                    .Select(s => Math.Round(Math.Sqrt(Math.Pow(double.Parse(s.Size_.Split(',')[0]), 2) + Math.Pow(double.Parse(s.Size_.Split(',')[1]), 2)), 2)).ToArray();
 
@@ -2948,7 +2950,7 @@ namespace WR.Client.UI
             //重新计算良率
             //decimal goodCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID == 0);
             decimal defectCnt = _dielayoutlist.Count(s => s.INSPCLASSIFIID != 0);
-            decimal dieCnt = _dielayoutlist.Count - _dielayoutlist.Count(s => s.DISPOSITION.Trim().ToLower() == "notprocess");
+            decimal dieCnt = _dielayoutlist.Count(s => s.DISPOSITION.Trim().ToLower() != "notprocess" && s.DISPOSITION.Trim().ToLower() != "notexist");
 
             Oparams[3] = defectCnt.ToString();
             //Oparams[4] = (goodCnt / dieCnt * 100).ToString("0.00");

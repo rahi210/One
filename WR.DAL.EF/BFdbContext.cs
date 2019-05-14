@@ -15,6 +15,16 @@ using WR.WCF.DataContract;
 namespace WR.DAL.EF
 {
     /// <summary>
+    /// 数据库类型
+    /// </summary>
+    public enum DatabaseType
+    {
+        Oracle,
+        Mysql,
+        SqlServer
+    }
+
+    /// <summary>
     /// 数据库操作
     /// </summary>
     public class BFdbContext : DbContext
@@ -27,7 +37,14 @@ namespace WR.DAL.EF
 
             this.Configuration.LazyLoadingEnabled = false;
             this.Configuration.ProxyCreationEnabled = false;
+
+            if (objectContext.Connection.ConnectionString.Contains("MySql.Data.MySqlClient"))
+                DatabaseType = DatabaseType.Mysql;
+            else
+                DatabaseType = DatabaseType.Oracle;
         }
+
+        public DatabaseType DatabaseType { get; set; }
 
         #region 数据操作
         /// <summary>
@@ -96,6 +113,9 @@ namespace WR.DAL.EF
         /// <returns></returns>
         public int ExecuteSqlCommand(string sql, params object[] parms)
         {
+            if (DatabaseType == DatabaseType.Mysql)
+                sql = sql.Replace("sysdate", "sysdate()").Replace("nvl(", "ifnull(").Replace("rownum","0");
+
             return Database.ExecuteSqlCommand(sql, parms);
         }
 
@@ -248,6 +268,9 @@ namespace WR.DAL.EF
         /// <returns></returns>
         public IQueryable<T> SqlQuery<T>(string sql, params object[] parms) where T : class
         {
+            if (DatabaseType == DatabaseType.Mysql)
+                sql = sql.Replace("sysdate", "sysdate()").Replace("nvl(", "ifnull(").Replace("rownum", "0");
+
             return Database.SqlQuery<T>(sql, parms).AsQueryable();
         }
         #endregion

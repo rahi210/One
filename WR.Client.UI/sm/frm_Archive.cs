@@ -142,6 +142,12 @@ namespace WR.Client.UI
                 chartDb.Series[0].Points.AddXY("Used Space(GB)", Math.Round(dbList[0].UsedSpace / 1024 / 1024 / 1024, 1));
                 chartDb.Series[0].IsValueShownAsLabel = true;
             }
+
+            if (!DataCache.IsOracle)
+            {
+                groupBox4.Visible = false;
+                groupBox8.Visible = false;
+            }
         }
 
         private void ArchiveDate()
