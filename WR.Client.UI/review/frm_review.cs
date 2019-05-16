@@ -33,7 +33,7 @@ namespace WR.Client.UI
         [DllImport("winmm.dll", SetLastError = true)]
         static extern bool PlaySound(string pszSound, UIntPtr hmod, uint fdwSound);
 
-        private int showMode = 0; //显示模式 0：默认 1：CompletionTime 2：ReviewTime 3：Lot
+        private int showMode = 3; //显示模式 0：默认 1：CompletionTime 2：ReviewTime 3：Lot
 
         public frm_review()
         {
@@ -693,10 +693,10 @@ namespace WR.Client.UI
                         {
                             if (double.Parse(e.Value.ToString()) < _waferYield)
                             {
-                                //e.CellStyle.ForeColor = Color.Red;
-                                //e.CellStyle.SelectionForeColor = Color.Red;
-                                e.CellStyle.BackColor = Color.Red;
-                                e.CellStyle.SelectionBackColor = Color.Red;
+                                e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.SelectionForeColor = Color.Red;
+                                //e.CellStyle.BackColor = Color.Red;
+                                //e.CellStyle.SelectionBackColor = Color.Red;
                                 hasPlay = true;
                             }
                         }
@@ -706,9 +706,10 @@ namespace WR.Client.UI
                         {
                             if (double.Parse(e.Value.ToString()) < _lotYield)
                             {
-                                //e.CellStyle.ForeColor = Color.Red;
-                                e.CellStyle.BackColor = Color.Red;
-                                e.CellStyle.SelectionBackColor = Color.Red;
+                                e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.SelectionForeColor = Color.Red;
+                                //e.CellStyle.BackColor = Color.Red;
+                                //e.CellStyle.SelectionBackColor = Color.Red;
                             }
                         }
                         break;
@@ -717,9 +718,10 @@ namespace WR.Client.UI
                         {
                             if (double.Parse(e.Value.ToString()) < ayield)
                             {
-                                //e.CellStyle.ForeColor = Color.Red;
-                                e.CellStyle.BackColor = Color.Red;
-                                e.CellStyle.SelectionBackColor = Color.Red;
+                                e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.SelectionForeColor = Color.Red;
+                                //e.CellStyle.BackColor = Color.Red;
+                                //e.CellStyle.SelectionBackColor = Color.Red;
                             }
                         }
                         break;
@@ -728,9 +730,10 @@ namespace WR.Client.UI
                         {
                             if (double.Parse(e.Value.ToString()) < byield)
                             {
-                                //e.CellStyle.ForeColor = Color.Red;
-                                e.CellStyle.BackColor = Color.Red;
-                                e.CellStyle.SelectionBackColor = Color.Red;
+                                e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.SelectionForeColor = Color.Red;
+                                //e.CellStyle.BackColor = Color.Red;
+                                //e.CellStyle.SelectionBackColor = Color.Red;
                             }
                         }
                         break;
@@ -739,9 +742,10 @@ namespace WR.Client.UI
                         {
                             if (double.Parse(e.Value.ToString()) < cyield)
                             {
-                                //e.CellStyle.ForeColor = Color.Red;
-                                e.CellStyle.BackColor = Color.Red;
-                                e.CellStyle.SelectionBackColor = Color.Red;
+                                e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.SelectionForeColor = Color.Red;
+                                //e.CellStyle.BackColor = Color.Red;
+                                //e.CellStyle.SelectionBackColor = Color.Red;
                             }
                         }
                         break;
@@ -750,9 +754,10 @@ namespace WR.Client.UI
                         {
                             if (double.Parse(e.Value.ToString()) < dyield)
                             {
-                                //e.CellStyle.ForeColor = Color.Red;
-                                e.CellStyle.BackColor = Color.Red;
-                                e.CellStyle.SelectionBackColor = Color.Red;
+                                e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.SelectionForeColor = Color.Red;
+                                //e.CellStyle.BackColor = Color.Red;
+                                //e.CellStyle.SelectionBackColor = Color.Red;
                             }
                         }
                         break;
@@ -761,9 +766,10 @@ namespace WR.Client.UI
                         {
                             if (double.Parse(e.Value.ToString()) < eyield)
                             {
-                                //e.CellStyle.ForeColor = Color.Red;
-                                e.CellStyle.BackColor = Color.Red;
-                                e.CellStyle.SelectionBackColor = Color.Red;
+                                e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.SelectionForeColor = Color.Red;
+                                //e.CellStyle.BackColor = Color.Red;
+                                //e.CellStyle.SelectionBackColor = Color.Red;
                             }
                         }
                         break;
@@ -1568,7 +1574,7 @@ namespace WR.Client.UI
                         }
 
                         var dielayout = service.GetDielayoutById(result.DIELAYOUTID);
-                        var dielist = DataCache.GetAllDielayoutListById(DataCache.GetDielayoutListById(result.DIELAYOUTID),false);
+                        var dielist = DataCache.GetAllDielayoutListById(DataCache.GetDielayoutListById(result.DIELAYOUTID), false);
                         var defectlit = service.GetDefectList(result.RESULTID, "");
 
                         CHGSinf sinf = new CHGSinf();

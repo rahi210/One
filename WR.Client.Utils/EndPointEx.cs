@@ -23,6 +23,7 @@ namespace WR.Client.Utils
             binding.Security.Mode = BasicHttpSecurityMode.None;
             //binding.TransferMode = TransferMode.Streamed;
             binding.ReaderQuotas.MaxStringContentLength = 2147483647;
+            binding.ReaderQuotas.MaxArrayLength = 2147483647;
             //binding.UseDefaultWebProxy = false;
             binding.SendTimeout = new TimeSpan(0, 30, 0);
             binding.OpenTimeout = new TimeSpan(0, 30, 0);

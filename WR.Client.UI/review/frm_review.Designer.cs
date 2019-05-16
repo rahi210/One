@@ -181,21 +181,21 @@
             this.toolStripSeparator1,
             this.tlsLReport});
             this.cnsList.Name = "contextMenuStrip2";
-            this.cnsList.Size = new System.Drawing.Size(169, 190);
+            this.cnsList.Size = new System.Drawing.Size(137, 168);
             // 
             // tlsLPreview
             // 
             this.tlsLPreview.Image = global::WR.Client.UI.Properties.Resources.preview24;
             this.tlsLPreview.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tlsLPreview.Name = "tlsLPreview";
-            this.tlsLPreview.Size = new System.Drawing.Size(168, 38);
+            this.tlsLPreview.Size = new System.Drawing.Size(136, 38);
             this.tlsLPreview.Text = "Preview";
             this.tlsLPreview.Click += new System.EventHandler(this.preview_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(165, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(133, 6);
             // 
             // tlsLLoad
             // 
@@ -206,7 +206,7 @@
             this.tlsLLoad.Image = global::WR.Client.UI.Properties.Resources.export24;
             this.tlsLLoad.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tlsLLoad.Name = "tlsLLoad";
-            this.tlsLLoad.Size = new System.Drawing.Size(168, 38);
+            this.tlsLLoad.Size = new System.Drawing.Size(136, 38);
             this.tlsLLoad.Text = "Export";
             // 
             // tlslxml
@@ -235,14 +235,14 @@
             this.tlsLDelete.Image = global::WR.Client.UI.Properties.Resources.delete24;
             this.tlsLDelete.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tlsLDelete.Name = "tlsLDelete";
-            this.tlsLDelete.Size = new System.Drawing.Size(168, 38);
+            this.tlsLDelete.Size = new System.Drawing.Size(136, 38);
             this.tlsLDelete.Text = "Delete";
             this.tlsLDelete.Click += new System.EventHandler(this.tlsLDelete_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(165, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(133, 6);
             // 
             // tlsLReport
             // 
@@ -256,7 +256,7 @@
             this.ItmYield,
             this.ItmPolat});
             this.tlsLReport.Name = "tlsLReport";
-            this.tlsLReport.Size = new System.Drawing.Size(168, 38);
+            this.tlsLReport.Size = new System.Drawing.Size(136, 38);
             this.tlsLReport.Text = "Report";
             // 
             // ItmDensity
@@ -1030,7 +1030,6 @@
             this.rbnReviewTime.Name = "rbnReviewTime";
             this.rbnReviewTime.Size = new System.Drawing.Size(83, 16);
             this.rbnReviewTime.TabIndex = 3;
-            this.rbnReviewTime.TabStop = true;
             this.rbnReviewTime.Text = "ReviewTime";
             this.rbnReviewTime.UseVisualStyleBackColor = true;
             this.rbnReviewTime.CheckedChanged += new System.EventHandler(this.rbnReviewTime_CheckedChanged);
@@ -1038,6 +1037,7 @@
             // rbnLot
             // 
             this.rbnLot.AutoSize = true;
+            this.rbnLot.Checked = true;
             this.rbnLot.Location = new System.Drawing.Point(13, 35);
             this.rbnLot.Name = "rbnLot";
             this.rbnLot.Size = new System.Drawing.Size(41, 16);
@@ -1054,7 +1054,6 @@
             this.rbnCompletionTime.Name = "rbnCompletionTime";
             this.rbnCompletionTime.Size = new System.Drawing.Size(107, 16);
             this.rbnCompletionTime.TabIndex = 1;
-            this.rbnCompletionTime.TabStop = true;
             this.rbnCompletionTime.Text = "CompletionTime";
             this.rbnCompletionTime.UseVisualStyleBackColor = true;
             this.rbnCompletionTime.CheckedChanged += new System.EventHandler(this.rbnCompletionTime_CheckedChanged);
@@ -1062,12 +1061,10 @@
             // rbnDefault
             // 
             this.rbnDefault.AutoSize = true;
-            this.rbnDefault.Checked = true;
             this.rbnDefault.Location = new System.Drawing.Point(13, 13);
             this.rbnDefault.Name = "rbnDefault";
             this.rbnDefault.Size = new System.Drawing.Size(59, 16);
             this.rbnDefault.TabIndex = 0;
-            this.rbnDefault.TabStop = true;
             this.rbnDefault.Text = "Device";
             this.rbnDefault.UseVisualStyleBackColor = true;
             this.rbnDefault.CheckedChanged += new System.EventHandler(this.rbnDefault_CheckedChanged);
