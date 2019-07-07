@@ -28,6 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.fpnl = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -54,11 +60,13 @@
             this.cbxNotdone = new System.Windows.Forms.CheckBox();
             this.btnOK = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.rbnThreeByte = new System.Windows.Forms.RadioButton();
+            this.panel7 = new System.Windows.Forms.Panel();
             this.rbnTwoByte = new System.Windows.Forms.RadioButton();
-            this.label9 = new System.Windows.Forms.Label();
-            this.rbnHexadecimal = new System.Windows.Forms.RadioButton();
+            this.rbnThreeByte = new System.Windows.Forms.RadioButton();
+            this.panel6 = new System.Windows.Forms.Panel();
             this.rbnDecimal = new System.Windows.Forms.RadioButton();
+            this.rbnHexadecimal = new System.Windows.Forms.RadioButton();
+            this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.btnSinfPath = new System.Windows.Forms.Button();
             this.txtSinfPath = new System.Windows.Forms.TextBox();
@@ -77,8 +85,25 @@
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.panel7 = new System.Windows.Forms.Panel();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.grdClass = new CRD.WinUI.Editors.WrDataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colHotKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column13 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column16 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Points = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.InspectionType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mnFront = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tlsEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.tlsSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.tlsClassCancel = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -90,6 +115,8 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudDay)).BeginInit();
             this.tabPage2.SuspendLayout();
+            this.panel7.SuspendLayout();
+            this.panel6.SuspendLayout();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudWaferYield)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudLotYield)).BeginInit();
@@ -98,8 +125,9 @@
             this.panel5.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage5.SuspendLayout();
-            this.panel6.SuspendLayout();
-            this.panel7.SuspendLayout();
+            this.tabPage7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grdClass)).BeginInit();
+            this.mnFront.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -404,17 +432,14 @@
             this.tabPage2.Text = "SINF Options";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // rbnThreeByte
+            // panel7
             // 
-            this.rbnThreeByte.AutoSize = true;
-            this.rbnThreeByte.Location = new System.Drawing.Point(44, 3);
-            this.rbnThreeByte.Name = "rbnThreeByte";
-            this.rbnThreeByte.Size = new System.Drawing.Size(41, 16);
-            this.rbnThreeByte.TabIndex = 8;
-            this.rbnThreeByte.TabStop = true;
-            this.rbnThreeByte.Text = "000";
-            this.rbnThreeByte.UseVisualStyleBackColor = true;
-            this.rbnThreeByte.CheckedChanged += new System.EventHandler(this.rbnThreeByte_CheckedChanged);
+            this.panel7.Controls.Add(this.rbnTwoByte);
+            this.panel7.Controls.Add(this.rbnThreeByte);
+            this.panel7.Location = new System.Drawing.Point(119, 71);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(200, 24);
+            this.panel7.TabIndex = 10;
             // 
             // rbnTwoByte
             // 
@@ -428,14 +453,38 @@
             this.rbnTwoByte.UseVisualStyleBackColor = true;
             this.rbnTwoByte.CheckedChanged += new System.EventHandler(this.rbnTwoByte_CheckedChanged);
             // 
-            // label9
+            // rbnThreeByte
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(48, 73);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(65, 12);
-            this.label9.TabIndex = 6;
-            this.label9.Text = "Sinf Type:";
+            this.rbnThreeByte.AutoSize = true;
+            this.rbnThreeByte.Location = new System.Drawing.Point(44, 3);
+            this.rbnThreeByte.Name = "rbnThreeByte";
+            this.rbnThreeByte.Size = new System.Drawing.Size(41, 16);
+            this.rbnThreeByte.TabIndex = 8;
+            this.rbnThreeByte.TabStop = true;
+            this.rbnThreeByte.Text = "000";
+            this.rbnThreeByte.UseVisualStyleBackColor = true;
+            this.rbnThreeByte.CheckedChanged += new System.EventHandler(this.rbnThreeByte_CheckedChanged);
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.rbnDecimal);
+            this.panel6.Controls.Add(this.rbnHexadecimal);
+            this.panel6.Location = new System.Drawing.Point(119, 44);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(200, 23);
+            this.panel6.TabIndex = 9;
+            // 
+            // rbnDecimal
+            // 
+            this.rbnDecimal.AutoSize = true;
+            this.rbnDecimal.Location = new System.Drawing.Point(3, 5);
+            this.rbnDecimal.Name = "rbnDecimal";
+            this.rbnDecimal.Size = new System.Drawing.Size(65, 16);
+            this.rbnDecimal.TabIndex = 4;
+            this.rbnDecimal.TabStop = true;
+            this.rbnDecimal.Text = "decimal";
+            this.rbnDecimal.UseVisualStyleBackColor = true;
+            this.rbnDecimal.CheckedChanged += new System.EventHandler(this.rbnDecimal_CheckedChanged);
             // 
             // rbnHexadecimal
             // 
@@ -449,17 +498,14 @@
             this.rbnHexadecimal.UseVisualStyleBackColor = true;
             this.rbnHexadecimal.CheckedChanged += new System.EventHandler(this.rbnHexadecimal_CheckedChanged);
             // 
-            // rbnDecimal
+            // label9
             // 
-            this.rbnDecimal.AutoSize = true;
-            this.rbnDecimal.Location = new System.Drawing.Point(3, 5);
-            this.rbnDecimal.Name = "rbnDecimal";
-            this.rbnDecimal.Size = new System.Drawing.Size(65, 16);
-            this.rbnDecimal.TabIndex = 4;
-            this.rbnDecimal.TabStop = true;
-            this.rbnDecimal.Text = "decimal";
-            this.rbnDecimal.UseVisualStyleBackColor = true;
-            this.rbnDecimal.CheckedChanged += new System.EventHandler(this.rbnDecimal_CheckedChanged);
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(48, 73);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(65, 12);
+            this.label9.TabIndex = 6;
+            this.label9.Text = "Sinf Type:";
             // 
             // label8
             // 
@@ -613,6 +659,7 @@
             // 
             this.tabControl2.Controls.Add(this.tabPage5);
             this.tabControl2.Controls.Add(this.tabPage6);
+            this.tabControl2.Controls.Add(this.tabPage7);
             this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl2.Location = new System.Drawing.Point(0, 0);
             this.tabControl2.Name = "tabControl2";
@@ -641,23 +688,219 @@
             this.tabPage6.Text = "Yield Setting";
             this.tabPage6.UseVisualStyleBackColor = true;
             // 
-            // panel6
+            // tabPage7
             // 
-            this.panel6.Controls.Add(this.rbnDecimal);
-            this.panel6.Controls.Add(this.rbnHexadecimal);
-            this.panel6.Location = new System.Drawing.Point(119, 44);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(200, 23);
-            this.panel6.TabIndex = 9;
+            this.tabPage7.Controls.Add(this.grdClass);
+            this.tabPage7.Location = new System.Drawing.Point(4, 22);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage7.Size = new System.Drawing.Size(406, 574);
+            this.tabPage7.TabIndex = 2;
+            this.tabPage7.Text = "Hot Key Setting";
+            this.tabPage7.UseVisualStyleBackColor = true;
             // 
-            // panel7
+            // grdClass
             // 
-            this.panel7.Controls.Add(this.rbnTwoByte);
-            this.panel7.Controls.Add(this.rbnThreeByte);
-            this.panel7.Location = new System.Drawing.Point(119, 71);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(200, 24);
-            this.panel7.TabIndex = 10;
+            this.grdClass.AllowUserToAddRows = false;
+            this.grdClass.AllowUserToDeleteRows = false;
+            this.grdClass.AllowUserToOrderColumns = true;
+            this.grdClass.AllowUserToResizeRows = false;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.grdClass.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
+            this.grdClass.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.grdClass.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(246)))), ((int)(((byte)(239)))));
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdClass.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            this.grdClass.ColumnHeadersHeight = 26;
+            this.grdClass.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.grdClass.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column1,
+            this.Column2,
+            this.colHotKey,
+            this.Column4,
+            this.Column3,
+            this.Column11,
+            this.Column12,
+            this.Column13,
+            this.Column14,
+            this.Column15,
+            this.Column16,
+            this.Points,
+            this.InspectionType});
+            this.grdClass.ContextMenuStrip = this.mnFront;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.Wheat;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.DarkSlateBlue;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdClass.DefaultCellStyle = dataGridViewCellStyle9;
+            this.grdClass.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdClass.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.grdClass.EnableHeadersVisualStyles = false;
+            this.grdClass.GridColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.grdClass.Location = new System.Drawing.Point(3, 3);
+            this.grdClass.MultiSelect = false;
+            this.grdClass.Name = "grdClass";
+            this.grdClass.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdClass.RowHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            this.grdClass.RowHeadersVisible = false;
+            this.grdClass.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.grdClass.RowTemplate.Height = 23;
+            this.grdClass.ShowCellErrors = false;
+            this.grdClass.ShowRowErrors = false;
+            this.grdClass.Size = new System.Drawing.Size(400, 568);
+            this.grdClass.TabIndex = 4;
+            this.grdClass.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.grdClass_CellBeginEdit);
+            this.grdClass.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdClass_CellClick);
+            this.grdClass.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grdClass_CellFormatting);
+            // 
+            // Column1
+            // 
+            this.Column1.DataPropertyName = "ID";
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle8;
+            this.Column1.HeaderText = "Id";
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            this.Column1.Width = 40;
+            // 
+            // Column2
+            // 
+            this.Column2.DataPropertyName = "NAME";
+            this.Column2.HeaderText = "Classification";
+            this.Column2.Name = "Column2";
+            this.Column2.ReadOnly = true;
+            this.Column2.Width = 200;
+            // 
+            // colHotKey
+            // 
+            this.colHotKey.DataPropertyName = "HOTKEY";
+            this.colHotKey.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.colHotKey.HeaderText = "Acc Keys";
+            this.colHotKey.Name = "colHotKey";
+            this.colHotKey.ReadOnly = true;
+            this.colHotKey.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colHotKey.Width = 130;
+            // 
+            // Column4
+            // 
+            this.Column4.DataPropertyName = "COLOR";
+            this.Column4.HeaderText = "Color";
+            this.Column4.Name = "Column4";
+            this.Column4.ReadOnly = true;
+            this.Column4.Visible = false;
+            this.Column4.Width = 50;
+            // 
+            // Column3
+            // 
+            this.Column3.DataPropertyName = "SCHEMEID";
+            this.Column3.HeaderText = "SCHEMEID";
+            this.Column3.Name = "Column3";
+            this.Column3.Visible = false;
+            // 
+            // Column11
+            // 
+            this.Column11.DataPropertyName = "ITEMID";
+            this.Column11.HeaderText = "ITEMID";
+            this.Column11.Name = "Column11";
+            this.Column11.Visible = false;
+            // 
+            // Column12
+            // 
+            this.Column12.DataPropertyName = "DESCRIPTION";
+            this.Column12.HeaderText = "DESCRIPTION";
+            this.Column12.Name = "Column12";
+            this.Column12.Visible = false;
+            // 
+            // Column13
+            // 
+            this.Column13.DataPropertyName = "PRIORITY";
+            this.Column13.HeaderText = "PRIORITY";
+            this.Column13.Name = "Column13";
+            this.Column13.Visible = false;
+            // 
+            // Column14
+            // 
+            this.Column14.DataPropertyName = "ISACCEPTABLE";
+            this.Column14.HeaderText = "ISACCEPTABLE";
+            this.Column14.Name = "Column14";
+            this.Column14.Visible = false;
+            // 
+            // Column15
+            // 
+            this.Column15.DataPropertyName = "TYPE";
+            this.Column15.HeaderText = "TYPE";
+            this.Column15.Name = "Column15";
+            this.Column15.Visible = false;
+            // 
+            // Column16
+            // 
+            this.Column16.DataPropertyName = "USERID";
+            this.Column16.HeaderText = "USERID";
+            this.Column16.Name = "Column16";
+            this.Column16.Visible = false;
+            // 
+            // Points
+            // 
+            this.Points.DataPropertyName = "Points";
+            this.Points.HeaderText = "Points";
+            this.Points.Name = "Points";
+            this.Points.Visible = false;
+            // 
+            // InspectionType
+            // 
+            this.InspectionType.DataPropertyName = "InspectionType";
+            this.InspectionType.HeaderText = "InspectionType";
+            this.InspectionType.Name = "InspectionType";
+            this.InspectionType.Visible = false;
+            // 
+            // mnFront
+            // 
+            this.mnFront.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tlsEdit,
+            this.tlsSave,
+            this.tlsClassCancel});
+            this.mnFront.Name = "mnFront";
+            this.mnFront.Size = new System.Drawing.Size(115, 70);
+            this.mnFront.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.mnFront_ItemClicked);
+            // 
+            // tlsEdit
+            // 
+            this.tlsEdit.Image = global::WR.Client.UI.Properties.Resources.edit24;
+            this.tlsEdit.Name = "tlsEdit";
+            this.tlsEdit.Size = new System.Drawing.Size(152, 22);
+            this.tlsEdit.Text = "Edit";
+            // 
+            // tlsSave
+            // 
+            this.tlsSave.Enabled = false;
+            this.tlsSave.Image = global::WR.Client.UI.Properties.Resources.save32;
+            this.tlsSave.Name = "tlsSave";
+            this.tlsSave.Size = new System.Drawing.Size(152, 22);
+            this.tlsSave.Text = "Save";
+            // 
+            // tlsClassCancel
+            // 
+            this.tlsClassCancel.Enabled = false;
+            this.tlsClassCancel.Image = global::WR.Client.UI.Properties.Resources.goback;
+            this.tlsClassCancel.Name = "tlsClassCancel";
+            this.tlsClassCancel.Size = new System.Drawing.Size(152, 22);
+            this.tlsClassCancel.Text = "Cancel";
             // 
             // frm_config
             // 
@@ -683,6 +926,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudDay)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudWaferYield)).EndInit();
@@ -693,10 +940,9 @@
             this.panel5.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
-            this.panel6.ResumeLayout(false);
-            this.panel6.PerformLayout();
-            this.panel7.ResumeLayout(false);
-            this.panel7.PerformLayout();
+            this.tabPage7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grdClass)).EndInit();
+            this.mnFront.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -754,6 +1000,25 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.TabPage tabPage7;
+        private CRD.WinUI.Editors.WrDataGridView grdClass;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewComboBoxColumn colHotKey;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column13;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column14;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column16;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Points;
+        private System.Windows.Forms.DataGridViewTextBoxColumn InspectionType;
+        private System.Windows.Forms.ContextMenuStrip mnFront;
+        private System.Windows.Forms.ToolStripMenuItem tlsEdit;
+        private System.Windows.Forms.ToolStripMenuItem tlsSave;
+        private System.Windows.Forms.ToolStripMenuItem tlsClassCancel;
 
     }
 }

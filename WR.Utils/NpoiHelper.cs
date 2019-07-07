@@ -666,7 +666,7 @@ namespace WR.Utils
         }
 
         public static void GridToExcelByNPOI(string sheetname, string lotid, string date,
-           string[] summ1, string[] summ2, string[] summ3, DataGridView gv, string strExcelFileName, bool summflag)
+           string[] summ1, string[] summ2, string[] summ3, DataGridView gv, string strExcelFileName, bool summflag, int mergeColIndex = -1)
         {
             HSSFWorkbook workbook = new HSSFWorkbook();
             try
@@ -808,24 +808,60 @@ namespace WR.Utils
                 //建立内容行
                 int iRowIndex = (summflag ? 5 : 2);
                 int iCellIndex = 0;
+
+
+                //merge params
+                string mergeColValue = string.Empty;
+
+                int mergeFirstRow = iRowIndex;
+                int mergeLastRow = iRowIndex;
+
                 if (gv.Rows.Count > 0)
                 {
                     foreach (DataGridViewRow Rowitem in gv.Rows)
                     {
                         IRow DataRow = sheet.CreateRow(iRowIndex);
+
                         foreach (DataGridViewColumn Colitem in gv.Columns)
                         {
                             if (Colitem.Visible)
                             {
+                                var colValue = Rowitem.Cells[Colitem.Name].FormattedValue.ToString();
+
+                                if (iCellIndex == mergeColIndex)
+                                {
+                                    if (mergeColValue != colValue && iRowIndex != mergeFirstRow)
+                                    {
+                                        sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(mergeFirstRow, iRowIndex - 1, mergeColIndex, mergeColIndex));
+
+                                        mergeFirstRow = iRowIndex;
+                                    }
+
+                                    mergeColValue = colValue;
+
+                                    cellStyle.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
+                                    cellStyle.VerticalAlignment = VerticalAlignment.Center;
+                                }
+                                else
+                                {
+                                    cellStyle.Alignment = NPOI.SS.UserModel.HorizontalAlignment.General;
+                                    cellStyle.VerticalAlignment = VerticalAlignment.None;
+                                }
+
                                 ICell cell = DataRow.CreateCell(iCellIndex);
-                                cell.SetCellValue(Rowitem.Cells[Colitem.Name].FormattedValue.ToString());
+                                cell.SetCellValue(colValue);
                                 cell.CellStyle = cellStyle;
                                 iCellIndex++;
                             }
                         }
+
                         iCellIndex = 0;
                         iRowIndex++;
                     }
+
+                    if (mergeColIndex != -1)
+                        sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(mergeFirstRow, iRowIndex - 1, mergeColIndex, mergeColIndex));
+
 
                     ////自适应列宽度
                     //for (int i = 0; i < icolIndex; i++)

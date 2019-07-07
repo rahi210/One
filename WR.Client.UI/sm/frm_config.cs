@@ -9,6 +9,7 @@ using WR.Client.WCF;
 using WR.WCF.Contract;
 using WR.WCF.DataContract;
 using WR.Client.Controls;
+using System.Text;
 
 namespace WR.Client.UI
 {
@@ -99,6 +100,228 @@ namespace WR.Client.UI
             InitSystemOption(service);
 
             YieldInit();
+
+            InitHotKey();
+        }
+
+        /// <summary>
+        /// 快捷键
+        /// </summary>
+        private void InitHotKey()
+        {
+            if (DataCache.UserInfo.USERID != "Admin")
+            {
+                tabPage7.Parent = null;
+                return;
+            }
+
+            IwrService wService = wrService.GetService();
+
+            List<CMNDICT> hotkey = DataCache.CmnDict.Where(p => p.DICTID == "2010").ToList();
+            hotkey.Add(new CMNDICT() { DICTID = "2010", CODE = null, NAME = "-" });
+
+            if (this.InvokeRequired)
+                this.Invoke(new Action(() =>
+                {
+                    colHotKey.DisplayMember = "NAME";
+                    colHotKey.ValueMember = "CODE";
+                    colHotKey.DataSource = hotkey;
+                }));
+            else
+            {
+                colHotKey.DisplayMember = "NAME";
+                colHotKey.ValueMember = "CODE";
+                colHotKey.DataSource = hotkey;
+            }
+
+            grdClass.AutoGenerateColumns = false;
+            grdClass.DataSource = wService.GetBaseClassificationItem();
+        }
+
+        private void SetItem(WmClassificationItemEntity item)
+        {
+            if (item == null)
+                return;
+
+            //已经保存
+            if (!string.IsNullOrEmpty(item.InspectionType))
+                return;
+
+            item.InspectionType = string.Format("{0}|{1}", item.HOTKEY, item.COLOR);
+        }
+
+        /// <summary>
+        /// 保存自定义缺陷
+        /// </summary>
+        /// <returns></returns>
+        private bool SaveHotKey()
+        {
+            grdClass.EndEdit();
+
+            List<WmClassificationItemEntity> items = grdClass.DataSource as List<WmClassificationItemEntity>;
+            if (items == null || items.Count < 1)
+                return false;
+
+            StringBuilder sbt = new StringBuilder();
+            foreach (var item in items)
+            {
+                if (!string.IsNullOrEmpty(item.InspectionType))
+                {
+                    if (items.Any(p => p.ID != item.ID && p.HOTKEY == item.HOTKEY && !string.IsNullOrEmpty(item.HOTKEY)))
+                    {
+                        MsgBoxEx.Info(string.Format("Acc Keys[{0}] already repeated!", DataCache.CmnDict.FirstOrDefault(p => p.DICTID == "2010" && p.CODE == item.HOTKEY).NAME));
+                        return false;
+                    }
+
+                    sbt.AppendFormat(";{0}|{1}|{2}", item.ID, item.HOTKEY, item.COLOR);
+                }
+            }
+
+            if (sbt.Length < 1)
+                return true;
+
+            IwrService service = wrService.GetService();
+            int res = service.UpdateClassificationItemUser(sbt.ToString(), "");
+            if (res == 1)
+            {
+                items.ForEach((p) => { p.InspectionType = ""; });
+            }
+
+            return true;
+        }
+
+        private void SetClsMenu()
+        {
+            tlsEdit.Enabled = true;
+            tlsEdit.Checked = false;
+
+            tlsSave.Enabled = false;
+            tlsClassCancel.Enabled = false;
+
+            //colHotKey.ReadOnly = true;
+            grdClass.Columns["colHotKey"].ReadOnly = true;
+        }
+
+        private void mnFront_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem == tlsSave)
+            {
+                if (SaveHotKey())
+                {
+                    SetClsMenu();
+                }
+            }
+            else if (e.ClickedItem == tlsClassCancel)
+            {
+                SetClsMenu();
+
+                List<WmClassificationItemEntity> items = grdClass.DataSource as List<WmClassificationItemEntity>;
+                if (items == null || items.Count < 1)
+                    return;
+
+                items.ForEach((p) =>
+                {
+                    if (!string.IsNullOrEmpty(p.InspectionType))
+                    {
+                        string[] r = p.InspectionType.Split(new char[] { '|' });
+                        p.HOTKEY = r[0];
+                        p.COLOR = r[1];
+                        p.InspectionType = "";
+                    }
+                });
+
+                grdClass.Invalidate();
+            }
+            else
+            {
+                //colHotKey.ReadOnly = false;
+                grdClass.Columns["colHotKey"].ReadOnly = false;
+
+                tlsEdit.Enabled = false;
+                tlsEdit.Checked = true;
+
+                tlsSave.Enabled = true;
+                tlsClassCancel.Enabled = true;
+            }
+        }
+
+        private void grdClass_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+
+            var item = grdClass.Rows[e.RowIndex].DataBoundItem as WmClassificationItemEntity;
+            SetItem(item);
+        }
+
+        private void grdClass_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex > -1 && e.RowIndex > -1)
+            {
+                if (grdClass.Columns[e.ColumnIndex].Name == "Column4")
+                {
+                    if (tlsEdit.Enabled)
+                        return;
+
+                    //if (clrDialog.ShowDialog() == DialogResult.OK)
+                    //{
+                    //    var ent = grdClass.Rows[e.RowIndex].DataBoundItem as WMCLASSIFICATIONITEM;
+                    //    SetItem(ent);
+                    //    ent.COLOR = ColorTranslator.ToHtml(clrDialog.Color);
+                    //    grdClass.Invalidate();
+                    //    grdClass.ClearSelection();
+                    //}
+                }
+            }
+        }
+
+        /// <summary>
+        /// 显示class定义颜色
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void grdClass_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex < 0 || e.RowIndex < 0)
+                return;
+
+            if (grdClass.Columns[e.ColumnIndex].DataPropertyName == "COLOR")
+            {
+                string color = grdClass[e.ColumnIndex, e.RowIndex].Value.ToString().ToUpper();
+                e.Value = null;
+                e.CellStyle.BackColor = ConvterColor(color);
+            }
+        }
+
+        private Color ConvterColor(string color)
+        {
+            try
+            {
+                var newColor = Color.FromName(color);
+
+                if (!newColor.IsKnownColor)
+                {
+                    if (!color.StartsWith("#"))
+                        color = "#" + color;
+
+                    if (color.Length > 7)
+                        newColor = ColorTranslator.FromHtml(color.Substring(0, 7));
+                    else
+                        newColor = ColorTranslator.FromHtml(color);
+                }
+
+                return newColor;
+            }
+            catch
+            {
+                if (!color.StartsWith("#"))
+                    color = "#" + color;
+
+                if (color.Length > 7)
+                    return ColorTranslator.FromHtml(color.Substring(0, 7));
+
+                return ColorTranslator.FromHtml(color);
+            }
         }
 
         private void InitWaferOption(IsysService service)

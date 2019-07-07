@@ -51,7 +51,7 @@ namespace WR.Client.UI
         {
             get
             {
-                return CmnDict.Count(s => s.DICTID == "1001" && s.CODE == "0") > 0;
+                return CmnDict.Count(s => s.DICTID == "1001" && s.CODE == "1") > 0;
             }
         }
 

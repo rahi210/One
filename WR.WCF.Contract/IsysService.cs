@@ -93,5 +93,8 @@ namespace WR.WCF.Contract
 
         [OperationContract]
         string UpdateDict(List<CMNDICT> list);
+
+        [OperationContract]
+        List<TBUSERLOG> GetHeartBeatInterval(int interval = 10);
     }
 }

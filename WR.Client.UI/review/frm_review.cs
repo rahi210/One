@@ -33,7 +33,7 @@ namespace WR.Client.UI
         [DllImport("winmm.dll", SetLastError = true)]
         static extern bool PlaySound(string pszSound, UIntPtr hmod, uint fdwSound);
 
-        private int showMode = 3; //显示模式 0：默认 1：CompletionTime 2：ReviewTime 3：Lot
+        private int showMode = 2; //显示模式 0：默认 1：CompletionTime 2：ReviewTime 3：Lot
 
         public frm_review()
         {
@@ -133,7 +133,7 @@ namespace WR.Client.UI
         /// <summary>
         /// 加载数据
         /// </summary>
-        private void LoadData()
+        private void LoadData(string filter = "")
         {
             try
             {
@@ -246,55 +246,114 @@ namespace WR.Client.UI
                 }
                 else
                 {
-                    //var modeList = new List<WmwaferResultEntity>();
+                    var modeList = new List<WmwaferResultEntity>();
 
                     if (showMode == 1)
                     {
                         lotlist = DataCache.WaferResultInfo.OrderBy(s => s.COMPLETIONTIME).ToList();
                     }
                     else if (showMode == 2)
-                        lotlist = DataCache.WaferResultInfo.OrderBy(s => s.LOT).ToList();
-                    else
-                        lotlist = DataCache.WaferResultInfo.OrderBy(s => s.CHECKEDDATE).ToList();
-
-                    foreach (var p in lotlist)
                     {
-                        //菜单中添加waferid
-                        TreeNode snd = trList.Nodes.Add(p.SUBSTRATE_ID + "-" + p.LOT);
-                        snd.ImageIndex = 6;
-                        snd.SelectedImageIndex = 7;
-                        snd.Name = "sn" + p.RESULTID;
-                        snd.Tag = p.RESULTID;
-                        if (p.COMPLETIONTIME.HasValue && p.COMPLETIONTIME.Value > 0)
-                        {
-                            TreeNode dms = snd.Nodes.Add(string.Format("DMS_[{0:dd/MM/yyyy HH:mm:ss}].xml", DateTime.ParseExact(p.COMPLETIONTIME.Value.ToString(), "yyyyMMddHHmmss", null)));
-                            dms.ImageIndex = 3;
-                            dms.SelectedImageIndex = 3;
-                            //保存waferid
-                            dms.Tag = p.RESULTID;
-                            dms.Name = p.RESULTID;
-                        }
+                        if (string.IsNullOrEmpty(filter))
+                            lotlist = DataCache.WaferResultInfo.OrderBy(s => s.COMPLETIONTIME).ToList();
                         else
-                        {
-                            TreeNode dms = snd.Nodes.Add("DMS_[].xml");
-                            dms.ImageIndex = 3;
-                            dms.SelectedImageIndex = 3;
-                            dms.Tag = p.RESULTID;
-                            dms.Name = p.RESULTID;
-                        }
-
-                        //if (p.ISCHECKED != "2")
-                        //{
-                        //    node.Parent.Parent.NodeFont = ckFont;
-                        //    node.Parent.Parent.ForeColor = Color.SaddleBrown;
-                        //    node.Parent.NodeFont = ckFont;
-                        //    node.Parent.ForeColor = Color.SaddleBrown;
-                        //    node.NodeFont = ckFont;
-                        //    node.ForeColor = Color.SaddleBrown;
-                        //    snd.NodeFont = ckFont;
-                        //    snd.ForeColor = Color.SaddleBrown;
-                        //}
+                            lotlist = DataCache.WaferResultInfo.Where(s => s.LOT.ToLower().IndexOf(txtId.Text.ToLower()) >= 0).OrderBy(s => s.COMPLETIONTIME).ToList();
                     }
+                    else
+                    {
+                        lotlist = DataCache.WaferResultInfo.OrderBy(s => s.CHECKEDDATE).ToList();
+                    }
+
+                    var parentList = lotlist.OrderBy(s => s.LOT).OrderByDescending(s => s.COMPLETIONTIME).Select(s => s.LOT).Distinct().ToList();
+
+                    foreach (var n in parentList)
+                    {
+                        //lot
+                        TreeNode lotNode = trList.Nodes.Add(n);
+                        lotNode.ImageIndex = 6;
+                        lotNode.SelectedImageIndex = 7;
+                        lotNode.Name = n;
+
+                        lotNodes.Add(lotNode);
+
+                        //int index = 1;
+                        var waferList = lotlist.Where(s => s.LOT == n).OrderBy(s => int.Parse(s.SUBSTRATE_SLOT)).ToList();
+
+                        //waferList.ForEach(s => s.SUBSTRATE_SLOT = (index++).ToString());
+                        modeList.AddRange(waferList);
+
+                        foreach (var p in waferList)
+                        {
+                            //菜单中添加waferid
+                            TreeNode snd = lotNode.Nodes.Add(p.SUBSTRATE_ID);
+                            snd.ImageIndex = 6;
+                            snd.SelectedImageIndex = 7;
+                            snd.Name = "sn" + p.RESULTID;
+                            snd.Tag = p.RESULTID;
+
+                            if (p.COMPLETIONTIME.HasValue && p.COMPLETIONTIME.Value > 0)
+                            {
+                                TreeNode dms = snd.Nodes.Add(string.Format("DMS_[{0:dd/MM/yyyy HH:mm:ss}].xml", DateTime.ParseExact(p.COMPLETIONTIME.Value.ToString(), "yyyyMMddHHmmss", null)));
+                                dms.ImageIndex = 3;
+                                dms.SelectedImageIndex = 3;
+
+                                dms.Tag = p.RESULTID;
+                                dms.Name = p.RESULTID;
+                            }
+                            else
+                            {
+                                TreeNode dms = snd.Nodes.Add("DMS_[].xml");
+                                dms.ImageIndex = 3;
+                                dms.SelectedImageIndex = 3;
+                                dms.Tag = p.RESULTID;
+                                dms.Name = p.RESULTID;
+                            }
+                        }
+                    }
+
+                    if (showMode == 2)
+                    {
+                        lotlist = modeList;
+                    }
+
+                    //foreach (var p in lotlist)
+                    //{
+                    //    //菜单中添加waferid
+                    //    TreeNode snd = trList.Nodes.Add(p.SUBSTRATE_ID + "-" + p.LOT);
+                    //    snd.ImageIndex = 6;
+                    //    snd.SelectedImageIndex = 7;
+                    //    snd.Name = "sn" + p.RESULTID;
+                    //    snd.Tag = p.RESULTID;
+                    //    if (p.COMPLETIONTIME.HasValue && p.COMPLETIONTIME.Value > 0)
+                    //    {
+                    //        TreeNode dms = snd.Nodes.Add(string.Format("DMS_[{0:dd/MM/yyyy HH:mm:ss}].xml", DateTime.ParseExact(p.COMPLETIONTIME.Value.ToString(), "yyyyMMddHHmmss", null)));
+                    //        dms.ImageIndex = 3;
+                    //        dms.SelectedImageIndex = 3;
+                    //        //保存waferid
+                    //        dms.Tag = p.RESULTID;
+                    //        dms.Name = p.RESULTID;
+                    //    }
+                    //    else
+                    //    {
+                    //        TreeNode dms = snd.Nodes.Add("DMS_[].xml");
+                    //        dms.ImageIndex = 3;
+                    //        dms.SelectedImageIndex = 3;
+                    //        dms.Tag = p.RESULTID;
+                    //        dms.Name = p.RESULTID;
+                    //    }
+
+                    //    //if (p.ISCHECKED != "2")
+                    //    //{
+                    //    //    node.Parent.Parent.NodeFont = ckFont;
+                    //    //    node.Parent.Parent.ForeColor = Color.SaddleBrown;
+                    //    //    node.Parent.NodeFont = ckFont;
+                    //    //    node.Parent.ForeColor = Color.SaddleBrown;
+                    //    //    node.NodeFont = ckFont;
+                    //    //    node.ForeColor = Color.SaddleBrown;
+                    //    //    snd.NodeFont = ckFont;
+                    //    //    snd.ForeColor = Color.SaddleBrown;
+                    //    //}
+                    //}
                 }
 
                 //trList.ExpandAll();
@@ -490,12 +549,20 @@ namespace WR.Client.UI
                         e.Node.ImageIndex = 9;
                         e.Node.SelectedImageIndex = 8;
 
-                        if (e.Node.Level == 2)
-                            grdData.DataSource = new BindingCollection<WmwaferResultEntity>(DataCache.WaferResultInfo.Where(p => p.DEVICE + p.LAYER + p.LOT == e.Node.Name).ToList());
-                        else if (e.Node.Level == 1)
-                            grdData.DataSource = new BindingCollection<WmwaferResultEntity>(DataCache.WaferResultInfo.Where(p => p.DEVICE + p.LAYER == e.Node.Name).ToList());
-                        else if (e.Node.Level == 0)
-                            grdData.DataSource = new BindingCollection<WmwaferResultEntity>(DataCache.WaferResultInfo.Where(p => p.DEVICE == e.Node.Text.Trim()).ToList());
+                        if (showMode == 0)
+                        {
+                            if (e.Node.Level == 2)
+                                grdData.DataSource = new BindingCollection<WmwaferResultEntity>(DataCache.WaferResultInfo.Where(p => p.DEVICE + p.LAYER + p.LOT == e.Node.Name).ToList());
+                            else if (e.Node.Level == 1)
+                                grdData.DataSource = new BindingCollection<WmwaferResultEntity>(DataCache.WaferResultInfo.Where(p => p.DEVICE + p.LAYER == e.Node.Name).ToList());
+                            else if (e.Node.Level == 0)
+                                grdData.DataSource = new BindingCollection<WmwaferResultEntity>(DataCache.WaferResultInfo.Where(p => p.DEVICE == e.Node.Text.Trim()).ToList());
+                        }
+                        else
+                        {
+                            if (e.Node.Level == 0)
+                                grdData.DataSource = new BindingCollection<WmwaferResultEntity>(DataCache.WaferResultInfo.Where(p => p.LOT == e.Node.Text.Trim()).ToList());
+                        }
                     }
 
                     if (lstData.Visible)
@@ -913,15 +980,26 @@ namespace WR.Client.UI
                     TreeNode node = trList.GetNodeAt(e.Location);
                     if (node != null)
                     {
-                        SetCntList(4);
+
                         trList.SelectedNode = node;
 
-                        SelectID(node.Tag.ToString(), true);
-                        trList.SelectedNode = node;
+                        if (node.Level != 0)
+                        {
+                            SetCntList(4);
 
-                        CheckItem(node.Tag.ToString());
+                            SelectID(node.Tag.ToString(), true);
+                            CheckItem(node.Tag.ToString());
 
-                        cnsList.Show(MousePosition.X, MousePosition.Y);
+                            cnsList.Show(MousePosition.X, MousePosition.Y);
+                        }
+                        //else
+                        //{
+                        //    SetCntList(node.Level);
+                        //    lstRe_view.Enabled = false;
+                        //    tlsLLoad.Enabled = false;
+                        //}
+
+                        //cnsList.Show(MousePosition.X, MousePosition.Y);
                     }
                 }
             }
@@ -948,7 +1026,12 @@ namespace WR.Client.UI
             }
             else
             {
-                if (e.Button == MouseButtons.Left)
+                if (e.Button == MouseButtons.Left && e.Node.Level < 1)
+                {
+                    if (e.Node.Bounds.Contains(e.Location))
+                        trList_NodeMouseClick(sender, e); //单击lot 右边列表显示该lot对应的信息
+                }
+                else if (e.Button == MouseButtons.Left && e.Node.Level == 2)
                 {
                     SelectID(e.Node.Tag.ToString(), true);
                 }
@@ -1715,7 +1798,7 @@ namespace WR.Client.UI
             {
                 TreeNode node = trList.SelectedNode;
 
-                if (node.Level != 4 && node.Level != 3 && showMode == 0)
+                if ((node.Level != 4 && node.Level != 3 && showMode == 0))
                 {
                     //batch import
                     var wfs = new List<WmwaferResultEntity>();
@@ -1815,32 +1898,42 @@ namespace WR.Client.UI
             //        || p.SUBSTRATE_ID.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
             //        || p.LAYER.ToLower().IndexOf(txtId.Text.ToLower()) >= 0).ToList());
 
-            var list = new List<WmwaferResultEntity>();
-
-            if (txtId.Text == "Please input layer or repice id or lot id or wafer id")
-                list = DataCache.WaferResultInfo;
-            else
-                list = DataCache.WaferResultInfo.Where(p => p.RECIPE_ID.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
-                    || p.LOT.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
-                    || p.SUBSTRATE_ID.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
-                    || p.LAYER.ToLower().IndexOf(txtId.Text.ToLower()) >= 0).ToList();
-
-            switch (cbxOrderBy.SelectedIndex)
+            if (showMode == 2)
             {
-                case 0:
-                    list = list.OrderBy(s => s.COMPLETIONTIME).ToList();
-                    break;
-                case 1:
-                    list = list.OrderBy(s => s.CHECKEDDATE).ToList();
-                    break;
-                case 2:
-                    list = list.OrderBy(s => s.LOT).ToList();
-                    break;
-                default:
-                    break;
+                if (txtId.Text == "Please input layer or repice id or lot id or wafer id")
+                    LoadData();
+                else
+                    LoadData(txtId.Text);
             }
+            else
+            {
+                var list = new List<WmwaferResultEntity>();
 
-            grdData.DataSource = new BindingCollection<WmwaferResultEntity>(list);
+                if (txtId.Text == "Please input layer or repice id or lot id or wafer id")
+                    list = DataCache.WaferResultInfo;
+                else
+                    list = DataCache.WaferResultInfo.Where(p => p.RECIPE_ID.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
+                        || p.LOT.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
+                        || p.SUBSTRATE_ID.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
+                        || p.LAYER.ToLower().IndexOf(txtId.Text.ToLower()) >= 0).ToList();
+
+                switch (cbxOrderBy.SelectedIndex)
+                {
+                    case 0:
+                        list = list.OrderBy(s => s.COMPLETIONTIME).ToList();
+                        break;
+                    case 1:
+                        list = list.OrderBy(s => s.CHECKEDDATE).ToList();
+                        break;
+                    case 2:
+                        list = list.OrderBy(s => s.LOT).ToList();
+                        break;
+                    default:
+                        break;
+                }
+
+                grdData.DataSource = new BindingCollection<WmwaferResultEntity>(list);
+            }
         }
 
         /// <summary>

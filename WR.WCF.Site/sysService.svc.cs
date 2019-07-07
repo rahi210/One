@@ -833,5 +833,30 @@ namespace WR.WCF.Site
                 throw GetFault(ex);
             }
         }
+
+        public List<TBUSERLOG> GetHeartBeatInterval(int interval = 10)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    if (db.DatabaseType == DatabaseType.Mysql)
+                    {
+                        string sql = string.Format("select * from tb_userlog t where t.type = '9' and TIMESTAMPDIFF(MINUTE,t.createdate,now())>{0}", interval);
+                        return db.SqlQuery<TBUSERLOG>(sql).ToList();
+                    }
+                    else
+                    {
+                        string sql = string.Format("select * from tb_userlog t where t.type = '9' and round(to_number(sysdate - t.createdate) * 24 * 60)>{0}", interval);
+                        return db.SqlQuery<TBUSERLOG>(sql).ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
     }
 }

@@ -39,5 +39,13 @@ namespace WR.WCF.DataContract
         [DataMember]
         public string InspectionType
         { get; set; }
+
+        [DataMember]
+        public string COLOR
+        { get; set; }
+
+        [DataMember]
+        public string HOTKEY
+        { get; set; }
     }
 }

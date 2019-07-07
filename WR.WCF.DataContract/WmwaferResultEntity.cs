@@ -126,5 +126,8 @@ namespace WR.WCF.DataContract
         [DataMember]
         public decimal? MASKE_DIE
         { get; set; }
+        [DataMember]
+        public decimal? MASKNULL_DIE
+        { get; set; }
     }
 }

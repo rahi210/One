@@ -1019,7 +1019,7 @@ namespace WR.Client.UI
                        new string[] { "Total die Inspected:", lblGoodDieTotal.Text, "Total number of defective die:", lblGoodDieDefective.Text },
                        new string[] { "Total number of good die:", lblGoodDieGood.Text, "Number of wafer in this report:", lblGoodDieRepNum.Text },
                        new string[] { "List of wafer numbers:", lblGoodDieListNum.Text },
-                       grdGoodDie, sd.FileName, true);
+                       grdGoodDie, sd.FileName, true, 0);
                     break;
                 //case "tabYield":
                 //    string tmpfile = Path.Combine(Application.StartupPath, Guid.NewGuid().ToString() + ".xls");

@@ -184,10 +184,11 @@ namespace WR.WCF.Site
                                                    case when b.inspecteddie>0 and b.maskb_die>=0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) end maskb_die,
                                                    case when b.inspecteddie>0 and b.maskc_die>=0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
                                                    case when b.inspecteddie>0 and b.maskd_die>=0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
-                                                   case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
+                                                   case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die,
+                                                   case when b.inspecteddie>0 then round((b.inspecteddie- b.maska_defect- b.maskb_defect- b.maskc_defect- b.maskd_defect- b.maske_defect)/b.inspecteddie*100,2) end masknull_die
                                                     from wm_waferresult t,wm_identification a,wm_inspectioninfo b,cmn_relation c
                                                     where t.identificationid=a.identificationid and t.resultid=b.resultid and instr(concat(a.device,'-',a.layer),concat(c.device,'-',case c.layer when '*' then '' else c.layer end))>0 
-                                                        and ((t.completiontime>={1} and t.completiontime<={2}) or {3}) and c.userid='{0}' and t.delflag='0' order by a.device,a.layer,a.lot,t.completiontime",
+                                                        and ((t.completiontime>={1} and t.completiontime<={2}) or {3}) and c.userid='{0}' and t.delflag='0' order by a.device,a.layer,a.lot,cast(a.substrate_slot as unsigned)",
                                                         operatorid, fromday, today, done == "1" ? "t.ischecked in ('0','1')" : "1=2"); //and t.createddate> to_number(to_char(sysdate,'yyyymmddhh24miss'))
 
                         }
@@ -201,10 +202,11 @@ namespace WR.WCF.Site
                                                    case when b.inspecteddie>0 and b.maskb_die>=0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) end maskb_die,
                                                    case when b.inspecteddie>0 and b.maskc_die>=0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
                                                    case when b.inspecteddie>0 and b.maskd_die>=0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
-                                                   case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
+                                                   case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die,
+                                                   case when b.inspecteddie>0 then round((b.inspecteddie- b.maska_defect- b.maskb_defect- b.maskc_defect- b.maskd_defect- b.maske_defect)/b.inspecteddie*100,2) end masknull_die
                                                     from wm_waferresult t,wm_identification a,wm_inspectioninfo b
                                                     where t.identificationid=a.identificationid and t.resultid=b.resultid
-                                                        and ((t.completiontime>={0} and t.completiontime<={1}) or {2}) and t.delflag='0' order by a.device,a.layer,a.lot,t.completiontime",
+                                                        and ((t.completiontime>={0} and t.completiontime<={1}) or {2}) and t.delflag='0' order by a.device,a.layer,a.lot,cast(a.substrate_slot as unsigned)",
                                                     fromday, today, done == "1" ? "t.ischecked in ('0','1')" : "1=2");
 
                         }
@@ -224,7 +226,7 @@ namespace WR.WCF.Site
                                                    case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
                                                     from wm_waferresult t,wm_identification a,wm_inspectioninfo b,cmn_relation c
                                                     where t.identificationid=a.identificationid and t.resultid=b.resultid and instr(a.device||'-'||a.layer,c.device||'-'||case c.layer when '*' then '' else c.layer end)>0 
-                                                        and ((t.completiontime>={1} and t.completiontime<={2}) or {3}) and c.userid='{0}' and t.delflag='0' order by a.device,a.layer,a.lot,t.completiontime",
+                                                        and ((t.completiontime>={1} and t.completiontime<={2}) or {3}) and c.userid='{0}' and t.delflag='0' order by a.device,a.layer,a.lot,to_number(a.substrate_slot)",
                                                         operatorid, fromday, today, done == "1" ? "t.ischecked in ('0','1')" : "1=2"); //and t.createddate> to_number(to_char(sysdate,'yyyymmddhh24miss'))
 
                         }
@@ -241,7 +243,7 @@ namespace WR.WCF.Site
                                                    case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
                                                     from wm_waferresult t,wm_identification a,wm_inspectioninfo b
                                                     where t.identificationid=a.identificationid and t.resultid=b.resultid
-                                                        and ((t.completiontime>={0} and t.completiontime<={1}) or {2}) and t.delflag='0' order by a.device,a.layer,a.lot,t.completiontime",
+                                                        and ((t.completiontime>={0} and t.completiontime<={1}) or {2}) and t.delflag='0' order by a.device,a.layer,a.lot,to_number(a.substrate_slot)",
                                                     fromday, today, done == "1" ? "t.ischecked in ('0','1')" : "1=2");
                         }
                     }
@@ -465,12 +467,24 @@ namespace WR.WCF.Site
                 var tran = db.BeginTransaction();
                 try
                 {
-                    string[] keyArr = hotkeys.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (string item in keyArr)
+                    if (string.IsNullOrEmpty(userid))
                     {
-                        string[] key = item.Split(new char[] { '|' });
-                        db.ExecuteSqlCommand(string.Format("delete wm_classificationuser where itemid = '{0}' and userid = '{1}'", key[0], userid));
-                        db.ExecuteSqlCommand(string.Format("insert into wm_classificationuser(itemid, hotkey, color, userid) values('{0}', '{1}', '{2}', '{3}')", key[0], key[1], key[2], userid));
+                        string[] keyArr = hotkeys.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (string item in keyArr)
+                        {
+                            string[] key = item.Split(new char[] { '|' });
+                            db.ExecuteSqlCommand(string.Format("update wm_classificationitem t set t.hotkey='{0}',t.color='{1}' where t.id='{2}'", key[1], key[2], key[0]));
+                        }
+                    }
+                    else
+                    {
+                        string[] keyArr = hotkeys.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (string item in keyArr)
+                        {
+                            string[] key = item.Split(new char[] { '|' });
+                            db.ExecuteSqlCommand(string.Format("delete wm_classificationuser where itemid = '{0}' and userid = '{1}'", key[0], userid));
+                            db.ExecuteSqlCommand(string.Format("insert into wm_classificationuser(itemid, hotkey, color, userid) values('{0}', '{1}', '{2}', '{3}')", key[0], key[1], key[2], userid));
+                        }
                     }
 
                     tran.Commit();
@@ -2131,7 +2145,7 @@ namespace WR.WCF.Site
             {
                 using (BFdbContext db = new BFdbContext())
                 {
-                    string sql = "select t.id,t.name from wm_classificationitem t group by t.id,t.name order by t.id";
+                    string sql = "select t.id,t.name,max(t.description) description,max(t.color) color,max(t.hotkey) hotkey from wm_classificationitem t group by t.id,t.name order by t.id";
 
                     return db.SqlQuery<WmClassificationItemEntity>(sql).ToList();
                 }

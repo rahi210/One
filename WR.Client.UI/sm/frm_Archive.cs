@@ -143,7 +143,7 @@ namespace WR.Client.UI
                 chartDb.Series[0].IsValueShownAsLabel = true;
             }
 
-            if (!DataCache.IsOracle)
+            if (DataCache.IsOracle)
             {
                 groupBox4.Visible = false;
                 groupBox8.Visible = false;

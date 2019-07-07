@@ -80,6 +80,43 @@ namespace WR.Client.UI
             lblArrow.Image = global::WR.Client.UI.Properties.Resources.pright;
 
             ShowForm("");
+
+            System.Threading.Tasks.Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        System.Threading.Thread.Sleep(60000); //20s
+
+                        IsysService service = sysService.GetService();
+
+                        var deviceArray = service.GetHeartBeatInterval().Select(s => s.REMARK).ToArray();
+
+                        if (deviceArray.Length > 0)
+                        {
+                            var msg = string.Format("The {0} has stopped uploading, please check its status.", string.Join(",", deviceArray));
+
+                            if (this.InvokeRequired)
+                            {
+                                this.BeginInvoke(new Action(() =>
+                                {
+                                    MsgBoxEx.Warn(msg);
+                                }));
+                            }
+                            else
+                            {
+                                MsgBoxEx.Warn(msg);
+                            }
+
+                            return;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+            });
         }
 
         private void ArchiveDate()

@@ -65,8 +65,8 @@
             System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("All Surface Review List", 6, 7, new System.Windows.Forms.TreeNode[] {
             treeNode14});
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -83,6 +83,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cnsList = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tlsLPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -136,6 +137,7 @@
             this.MaskC_Die = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MaskD_Die = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MaskE_Die = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MaskNull_Die = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColFileStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -508,6 +510,7 @@
             "Order by Lot"});
             this.cbxOrderBy.Name = "cbxOrderBy";
             this.cbxOrderBy.Size = new System.Drawing.Size(180, 56);
+            this.cbxOrderBy.Visible = false;
             // 
             // btnSearch
             // 
@@ -651,6 +654,7 @@
             this.MaskC_Die,
             this.MaskD_Die,
             this.MaskE_Die,
+            this.MaskNull_Die,
             this.Column15,
             this.ColFileStatus,
             this.Column7,
@@ -667,14 +671,14 @@
             this.Column5,
             this.Layer,
             this.RECIPE_ID});
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle18.ForeColor = System.Drawing.Color.SaddleBrown;
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.Color.Wheat;
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.Color.DarkSlateBlue;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.grdData.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle19.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle19.ForeColor = System.Drawing.Color.SaddleBrown;
+            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.Color.Wheat;
+            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.Color.DarkSlateBlue;
+            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdData.DefaultCellStyle = dataGridViewCellStyle19;
             this.grdData.Dock = System.Windows.Forms.DockStyle.Top;
             this.grdData.EnableHeadersVisualStyles = false;
             this.grdData.GridColor = System.Drawing.SystemColors.GradientActiveCaption;
@@ -683,14 +687,14 @@
             this.grdData.Name = "grdData";
             this.grdData.ReadOnly = true;
             this.grdData.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.Color.Salmon;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdData.RowHeadersDefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle20.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle20.ForeColor = System.Drawing.Color.Salmon;
+            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdData.RowHeadersDefaultCellStyle = dataGridViewCellStyle20;
             this.grdData.RowHeadersVisible = false;
             this.grdData.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.grdData.RowTemplate.Height = 23;
@@ -837,11 +841,22 @@
             this.MaskE_Die.ReadOnly = true;
             this.MaskE_Die.Width = 75;
             // 
+            // MaskNull_Die
+            // 
+            this.MaskNull_Die.DataPropertyName = "masknull_die";
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle10.Format = "N2";
+            dataGridViewCellStyle10.NullValue = "-";
+            this.MaskNull_Die.DefaultCellStyle = dataGridViewCellStyle10;
+            this.MaskNull_Die.HeaderText = "Null Yield(%)";
+            this.MaskNull_Die.Name = "MaskNull_Die";
+            this.MaskNull_Die.ReadOnly = true;
+            // 
             // Column15
             // 
             this.Column15.DataPropertyName = "NUMDEFECT";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.Column15.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Column15.DefaultCellStyle = dataGridViewCellStyle11;
             this.Column15.HeaderText = "NumDefects";
             this.Column15.Name = "Column15";
             this.Column15.ReadOnly = true;
@@ -850,8 +865,8 @@
             // ColFileStatus
             // 
             this.ColFileStatus.DataPropertyName = "ISCHECKED";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ColFileStatus.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ColFileStatus.DefaultCellStyle = dataGridViewCellStyle12;
             this.ColFileStatus.HeaderText = "FileStatus";
             this.ColFileStatus.Name = "ColFileStatus";
             this.ColFileStatus.ReadOnly = true;
@@ -866,9 +881,9 @@
             // Column18
             // 
             this.Column18.DataPropertyName = "COMPLETIONTIME";
-            dataGridViewCellStyle12.Format = "G";
-            dataGridViewCellStyle12.NullValue = null;
-            this.Column18.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle13.Format = "G";
+            dataGridViewCellStyle13.NullValue = null;
+            this.Column18.DefaultCellStyle = dataGridViewCellStyle13;
             this.Column18.HeaderText = "FileTime";
             this.Column18.Name = "Column18";
             this.Column18.ReadOnly = true;
@@ -877,9 +892,9 @@
             // Column11
             // 
             this.Column11.DataPropertyName = "CHECKEDDATE";
-            dataGridViewCellStyle13.Format = "G";
-            dataGridViewCellStyle13.NullValue = null;
-            this.Column11.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle14.Format = "G";
+            dataGridViewCellStyle14.NullValue = null;
+            this.Column11.DefaultCellStyle = dataGridViewCellStyle14;
             this.Column11.HeaderText = "ReviewTime";
             this.Column11.Name = "Column11";
             this.Column11.ReadOnly = true;
@@ -888,8 +903,8 @@
             // Column13
             // 
             this.Column13.DataPropertyName = "CREATEDDATE";
-            dataGridViewCellStyle14.Format = "G";
-            this.Column13.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle15.Format = "G";
+            this.Column13.DefaultCellStyle = dataGridViewCellStyle15;
             this.Column13.HeaderText = "ResultTime";
             this.Column13.Name = "Column13";
             this.Column13.ReadOnly = true;
@@ -898,9 +913,9 @@
             // Column14
             // 
             this.Column14.DataPropertyName = "FILETYPE";
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle15.Format = "G";
-            this.Column14.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle16.Format = "G";
+            this.Column14.DefaultCellStyle = dataGridViewCellStyle16;
             this.Column14.HeaderText = "FileType";
             this.Column14.Name = "Column14";
             this.Column14.ReadOnly = true;
@@ -909,8 +924,8 @@
             // Column17
             // 
             this.Column17.DataPropertyName = "DISPOSITION";
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column17.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column17.DefaultCellStyle = dataGridViewCellStyle17;
             this.Column17.HeaderText = "WaferStatus";
             this.Column17.Name = "Column17";
             this.Column17.ReadOnly = true;
@@ -919,10 +934,10 @@
             // Column16
             // 
             this.Column16.DataPropertyName = "DEFECTDENSITY";
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle17.Format = "N2";
-            dataGridViewCellStyle17.NullValue = null;
-            this.Column16.DefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle18.Format = "N2";
+            dataGridViewCellStyle18.NullValue = null;
+            this.Column16.DefaultCellStyle = dataGridViewCellStyle18;
             this.Column16.HeaderText = "Density";
             this.Column16.Name = "Column16";
             this.Column16.ReadOnly = true;
@@ -1147,6 +1162,17 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton btnMergeSinf;
         private System.Windows.Forms.CheckBox ckPlay;
+        private System.Windows.Forms.ToolStripMenuItem tlImage;
+        private System.Windows.Forms.ToolStripMenuItem tsImage;
+        private System.Windows.Forms.ToolStripComboBox cbxOrderBy;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.RadioButton rbnReviewTime;
+        private System.Windows.Forms.RadioButton rbnLot;
+        private System.Windows.Forms.RadioButton rbnCompletionTime;
+        private System.Windows.Forms.RadioButton rbnDefault;
+        private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
@@ -1160,6 +1186,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn MaskC_Die;
         private System.Windows.Forms.DataGridViewTextBoxColumn MaskD_Die;
         private System.Windows.Forms.DataGridViewTextBoxColumn MaskE_Die;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MaskNull_Die;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColFileStatus;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
@@ -1176,17 +1203,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Layer;
         private System.Windows.Forms.DataGridViewTextBoxColumn RECIPE_ID;
-        private System.Windows.Forms.ToolStripMenuItem tlImage;
-        private System.Windows.Forms.ToolStripMenuItem tsImage;
-        private System.Windows.Forms.ToolStripComboBox cbxOrderBy;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.RadioButton rbnReviewTime;
-        private System.Windows.Forms.RadioButton rbnLot;
-        private System.Windows.Forms.RadioButton rbnCompletionTime;
-        private System.Windows.Forms.RadioButton rbnDefault;
-        private System.Windows.Forms.Panel panel4;
 
     }
 }
