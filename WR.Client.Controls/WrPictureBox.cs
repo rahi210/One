@@ -730,7 +730,8 @@ namespace WR.Client.Controls
             Pen _linePen = new Pen(Color.White);
 
             Brush _dPen = new SolidBrush(Color.Black);
-            Brush _lPen = new SolidBrush(Color.DarkGreen);
+            //Brush _lPen = new SolidBrush(Color.DarkGreen);
+            Brush _lPen = new SolidBrush(Color.LimeGreen);
             Brush _rPen = new SolidBrush(Color.Red);
 
             var col = ColCnt;
@@ -792,7 +793,7 @@ namespace WR.Client.Controls
             gc.SmoothingMode = SmoothingMode.HighSpeed;
 
             GraphicsPath ep = new GraphicsPath();
-            //ep.AddEllipse(0, 0, btp.Width * ZoomMultiple, btp.Height * ZoomMultiple);
+            //ep.AddEllipse(locX * ZoomMultiple, locY * ZoomMultiple, btp.Width * ZoomMultiple, btp.Height * ZoomMultiple);
             ep.AddEllipse(locX * ZoomMultiple, locY * ZoomMultiple, btp.Width * ZoomMultiple, btp.Height * ZoomMultiple);
             gc.FillPath(_bgColor, ep);
 
@@ -948,7 +949,7 @@ namespace WR.Client.Controls
             g.SmoothingMode = SmoothingMode.HighQuality;
 
             g.DrawImage(btp, new Rectangle(0, 0, outBmp.Width, outBmp.Height), new Rectangle(0, 0, btp.Width, btp.Height), GraphicsUnit.Pixel);
-            
+
             //绑定图片
             this.WrImage = outBmp;
             this.scaleX = scaleX;
@@ -963,9 +964,9 @@ namespace WR.Client.Controls
             _rPen.Dispose();
 
             btp.Dispose();
-            outBmp.Dispose();
+            //outBmp.Dispose();
             btp = null;
-            outBmp = null;
+            //outBmp = null;
             g.Dispose();
 
             HasDraw = true;

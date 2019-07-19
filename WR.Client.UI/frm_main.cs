@@ -308,7 +308,7 @@ namespace WR.Client.UI
             {
                 foreach (Control item in pnlContext.Controls)
                 {
-                    if (item is Form && item.Name != "frm_report")
+                    if (item is Form && item.Name != "frm_report" && item.Name != "frm_review")
                     {
                         ((Form)item).Close();
 
@@ -327,7 +327,11 @@ namespace WR.Client.UI
                     string tmpresultid = "";
                     if (frm != null && frm.Name == "frm_preview")
                         tmpresultid = ((frm_preview)frm).Resultid;
-                    frm = new frm_review();
+
+                    if (pnlContext.Controls.ContainsKey("frm_review"))
+                        frm = (frm_review)pnlContext.Controls.Find("frm_review", false)[0];
+                    else
+                        frm = new frm_review();
                     ((frm_review)frm).selectedResultid = tmpresultid;
                     frm.frmMain = this;
                     break;

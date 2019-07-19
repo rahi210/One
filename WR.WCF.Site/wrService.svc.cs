@@ -2299,14 +2299,17 @@ namespace WR.WCF.Site
             DriveInfo[] drives = DriveInfo.GetDrives();
             foreach (DriveInfo drive in drives)
             {
-                list.Add(new DiskInfoEntity()
+                if (drive.IsReady)
                 {
-                    Name = drive.Name,
+                    list.Add(new DiskInfoEntity()
+                    {
+                        Name = drive.Name,
 
-                    TotalSize = Convert.ToDouble(drive.TotalSize / (1024 * 1024 * 1024)),
-                    FreeSpace = Convert.ToDouble(drive.TotalFreeSpace / (1024 * 1024 * 1024)),
-                    UsedSpace = Convert.ToDouble(drive.TotalSize / (1024 * 1024 * 1024)) - Convert.ToDouble(drive.TotalFreeSpace / (1024 * 1024 * 1024))
-                });
+                        TotalSize = Convert.ToDouble(drive.TotalSize / (1024 * 1024 * 1024)),
+                        FreeSpace = Convert.ToDouble(drive.TotalFreeSpace / (1024 * 1024 * 1024)),
+                        UsedSpace = Convert.ToDouble(drive.TotalSize / (1024 * 1024 * 1024)) - Convert.ToDouble(drive.TotalFreeSpace / (1024 * 1024 * 1024))
+                    });
+                }
             }
 
             return list;
@@ -2413,14 +2416,14 @@ namespace WR.WCF.Site
                     else
                     {
                         if (string.IsNullOrEmpty(filter))
-                            sql = @"select c.id cid, c.name, nvl(e.mark, 0) mark
+                            sql = @"select to_char(c.id) cid, c.name, nvl(e.mark, 0) mark
                                 from (select t.id, t.name
                                         from wm_classificationitem t
                                         group by t.id, t.name) c
                                 left join em_classificationmark e
                                 on e.cid = c.id order by c.id";
                         else
-                            sql = string.Format(@"select c.id cid, c.name, nvl(e.mark, 0) mark
+                            sql = string.Format(@"select to_char(c.id) cid, c.name, nvl(e.mark, 0) mark
                                           from (select t.id, t.name
                                                    from wm_classificationitem t
                                                   group by t.id, t.name) c
