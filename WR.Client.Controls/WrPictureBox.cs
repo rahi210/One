@@ -49,7 +49,7 @@ namespace WR.Client.Controls
         //放大缩小倍数
         //public int ZoomMultiple { get; set; }
 
-        public int ZoomMultiple
+        public double ZoomMultiple
         {
             get
             {
@@ -77,7 +77,7 @@ namespace WR.Client.Controls
                     this.ReDraw();
                 }
             }
-        } private int _zoom = 0;
+        } private double _zoom = 0;
 
         //操作状态
         public string Status { get; set; }
@@ -224,7 +224,7 @@ namespace WR.Client.Controls
         /// 缩小图片
         /// </summary>
         /// <param name="scale"></param>
-        public void ZoomIn(int scale)
+        public void ZoomIn(double scale)
         {
             if (destImage == null)
                 return;
@@ -260,7 +260,7 @@ namespace WR.Client.Controls
         /// 放大图片
         /// </summary>
         /// <param name="scale"></param>
-        public void ZoomOut(int scale)
+        public void ZoomOut(double scale)
         {
             if (destImage == null)
                 return;
@@ -547,8 +547,11 @@ namespace WR.Client.Controls
                     locStartX = locX;
                     locStartY = locY;
 
-                    this.BackgroundImage = DrawHelper.Cut(destImage, locX, locY, this.Width, this.Height);
-                    this.Refresh();
+                    if (locX != 0 || locY != 0)
+                    {
+                        this.BackgroundImage = DrawHelper.Cut(destImage, locX, locY, this.Width, this.Height);
+                        this.Refresh();
+                    }
                 }
             }
 
@@ -604,7 +607,7 @@ namespace WR.Client.Controls
                 {
                     //MessageBox.Show(e.X.ToString()+","+e.Y.ToString());
 
-                    GetCurrentDefect(new Point((int)e.X / this.ZoomMultiple, (int)e.Y / this.ZoomMultiple));
+                    GetCurrentDefect(new Point((int)(e.X / this.ZoomMultiple), (int)(e.Y / this.ZoomMultiple)));
                 }
             }
 
@@ -638,7 +641,8 @@ namespace WR.Client.Controls
                 if (e.Delta > 0)
                 {
                     if (HasDraw)
-                        ZoomMultiple += 1;
+                        //ZoomMultiple += 1;
+                        ZoomMultiple +=0.1;
                     else
                     {
                         ZoomOut(50);
@@ -647,7 +651,7 @@ namespace WR.Client.Controls
                 else if (e.Delta < 0)
                 {
                     if (HasDraw)
-                        ZoomMultiple -= 1;
+                        ZoomMultiple -= 0.1;
                     else
                     {
                         ZoomIn(50);
@@ -751,40 +755,53 @@ namespace WR.Client.Controls
             //int dragY = locY;
 
             //die宽、高
-            int ww = 5;
-            int wh = 4;
-            int wd = col * ww + 40;
-            int hg = row * wh + 40;
+            double ww = Math.Round(4.0 * row / col);
+            double wh = 4;
+            int rc = Math.Abs(row - col);
 
-            if (col == row)
+            if (rc < 10 || rc > 100)
             {
-                ww = 4;
-                wh = 4;
+                if (col > 500)
+                    rc = 80;
+                else if (col > 200)
+                    rc = 60;
+                else
+                    rc = 30;
+            }
 
-                hg = row * wh + 60;
-            }
-            else if (col < row)
-            {
-                ww = 4;
-                wh = 5;
+            int wd = Convert.ToInt32(col * ww + rc);
+            int hg = Convert.ToInt32(row * wh + rc);
 
-                wd = col * ww + 40;
-                hg = row * wh + 20;
-            }
-            else if ((col - row) > 30)
-            {
-                wh = 6;
-                hg = row * wh + 80;
-            }
-            else if ((col - row) < 10)
-            {
-                wd = col * ww + 60;
-                hg = row * wh + 60;
-            }
+            //ww = Math.Round(ww);
+            //if (col == row)
+            //{
+            //    ww = 4;
+            //    wh = 4;
+
+            //    hg = row * wh + 60;
+            //}
+            //else if (col < row)
+            //{
+            //    ww = 4;
+            //    wh = 5;
+
+            //    wd = col * ww + 40;
+            //    hg = row * wh + 20;
+            //}
+            //else if ((col - row) > 30)
+            //{
+            //    wh = 6;
+            //    hg = row * wh + 80;
+            //}
+            //else if ((col - row) < 10)
+            //{
+            //    wd = col * ww + 60;
+            //    hg = row * wh + 60;
+            //}
 
             //计算偏移量
-            int offsetX = (wd - col * ww) / 2 + locX;
-            int offsetY = (hg - row * wh) / 2 + locY;
+            int offsetX = Convert.ToInt32((wd - col * ww) / 2 + locX);
+            int offsetY = Convert.ToInt32((hg - row * wh) / 2 + locY);
 
             //背景图
             Bitmap btp = new Bitmap(wd, hg);
@@ -794,7 +811,7 @@ namespace WR.Client.Controls
 
             GraphicsPath ep = new GraphicsPath();
             //ep.AddEllipse(locX * ZoomMultiple, locY * ZoomMultiple, btp.Width * ZoomMultiple, btp.Height * ZoomMultiple);
-            ep.AddEllipse(locX * ZoomMultiple, locY * ZoomMultiple, btp.Width * ZoomMultiple, btp.Height * ZoomMultiple);
+            ep.AddEllipse((int)(locX * ZoomMultiple), (int)(locY * ZoomMultiple), (int)(btp.Width * ZoomMultiple), (int)(btp.Height * ZoomMultiple));
             gc.FillPath(_bgColor, ep);
 
             //背景颜色
@@ -814,9 +831,9 @@ namespace WR.Client.Controls
 
             //log.Debug("画出die start");
             //画出die
-            var bpRectangles = _dielayoutlist.Select(die => new Rectangle((die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, ww * this.ZoomMultiple, wh * this.ZoomMultiple)).ToArray();
-            var wpRectangles = _dielayoutlist.Select(die => new Rectangle((die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple, (wh - 1) * this.ZoomMultiple)).ToArray();
-            var gcFillRectangles = _dielayoutlist.Where(die => !string.IsNullOrEmpty(die.FillColor)).Select(die => new Rectangle((die.X * ww + offsetX) * this.ZoomMultiple, ((row - die.Y) * wh + offsetY) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple, (wh - 1) * this.ZoomMultiple)).ToArray();
+            var bpRectangles = _dielayoutlist.Select(die => new Rectangle(Convert.ToInt32((die.X * ww + offsetX) * this.ZoomMultiple), Convert.ToInt32(((row - die.Y) * wh + offsetY) * this.ZoomMultiple), Convert.ToInt32(ww * this.ZoomMultiple), Convert.ToInt32(wh * this.ZoomMultiple))).ToArray();
+            var wpRectangles = _dielayoutlist.Select(die => new Rectangle(Convert.ToInt32((die.X * ww + offsetX) * this.ZoomMultiple), Convert.ToInt32(((row - die.Y) * wh + offsetY) * this.ZoomMultiple), Convert.ToInt32((ww - 1) * this.ZoomMultiple), Convert.ToInt32((wh - 1) * this.ZoomMultiple))).ToArray();
+            var gcFillRectangles = _dielayoutlist.Where(die => !string.IsNullOrEmpty(die.FillColor)).Select(die => new Rectangle(Convert.ToInt32((die.X * ww + offsetX) * this.ZoomMultiple), Convert.ToInt32(((row - die.Y) * wh + offsetY) * this.ZoomMultiple), Convert.ToInt32((ww - 1) * this.ZoomMultiple), Convert.ToInt32((wh - 1) * this.ZoomMultiple))).ToArray();
 
             if (bpRectangles.Length > 0)
                 bp.AddRectangles(bpRectangles);
@@ -880,7 +897,7 @@ namespace WR.Client.Controls
                 int ax = int.Parse(adr[0]);
                 int ay = int.Parse(adr[1]);
 
-                gc.FillRectangle(new SolidBrush(ConvterColor(def.FillColor)), (ax * ww + offsetX) * this.ZoomMultiple, ((row - ay) * wh + offsetY) * this.ZoomMultiple, (ww - 1) * this.ZoomMultiple, (wh - 1) * this.ZoomMultiple);
+                gc.FillRectangle(new SolidBrush(ConvterColor(def.FillColor)), Convert.ToInt32((ax * ww + offsetX) * this.ZoomMultiple), Convert.ToInt32(((row - ay) * wh + offsetY) * this.ZoomMultiple), Convert.ToInt32((ww - 1) * this.ZoomMultiple), Convert.ToInt32((wh - 1) * this.ZoomMultiple));
 
                 def.Points = new List<Point>() { new Point(Convert.ToInt32((ax * ww + offsetX) * scaleX),Convert.ToInt32(((row - ay) * wh + offsetY) * scaleY))
                     ,new Point(Convert.ToInt32((ax * ww + offsetX+ww-1) * scaleX),Convert.ToInt32(((row - ay) * wh + offsetY) * scaleY))
@@ -905,14 +922,14 @@ namespace WR.Client.Controls
             //定位画线
             if (lineg)
             {
-                gc.DrawLine(_linePen, 0, (ly * wh + offsetY + 1) * this.ZoomMultiple, btp.Width * this.ZoomMultiple, (ly * wh + offsetY + 1) * this.ZoomMultiple);
-                gc.DrawLine(_linePen, (lx * ww + offsetX + 1) * this.ZoomMultiple, 0, (lx * ww + offsetX + 1) * this.ZoomMultiple, btp.Height * this.ZoomMultiple);
+                gc.DrawLine(_linePen, 0, Convert.ToInt32((ly * wh + offsetY + 1) * this.ZoomMultiple), Convert.ToInt32(btp.Width * this.ZoomMultiple), Convert.ToInt32((ly * wh + offsetY + 1) * this.ZoomMultiple));
+                gc.DrawLine(_linePen, Convert.ToInt32((lx * ww + offsetX + 1) * this.ZoomMultiple), 0, Convert.ToInt32((lx * ww + offsetX + 1) * this.ZoomMultiple), Convert.ToInt32(btp.Height * this.ZoomMultiple));
             }
 
             //画出定位三角
-            Point p1 = new Point((btp.Width / 2) * this.ZoomMultiple, (btp.Height - 10) * this.ZoomMultiple);
-            Point p2 = new Point((btp.Width / 2 - 6) * this.ZoomMultiple, btp.Height * this.ZoomMultiple);
-            Point p3 = new Point((btp.Width / 2 + 6) * this.ZoomMultiple, btp.Height * this.ZoomMultiple);
+            Point p1 = new Point(Convert.ToInt32((btp.Width / 2) * this.ZoomMultiple), Convert.ToInt32((btp.Height - 10) * this.ZoomMultiple));
+            Point p2 = new Point(Convert.ToInt32((btp.Width / 2 - 6) * this.ZoomMultiple), Convert.ToInt32(btp.Height * this.ZoomMultiple));
+            Point p3 = new Point(Convert.ToInt32((btp.Width / 2 + 6) * this.ZoomMultiple), Convert.ToInt32(btp.Height * this.ZoomMultiple));
             //Point p1 = new Point(btp.Width / 2, btp.Height - 10);
             //Point p2 = new Point(btp.Width / 2 - 6, btp.Height);
             //Point p3 = new Point(btp.Width / 2 + 6, btp.Height);
@@ -928,7 +945,7 @@ namespace WR.Client.Controls
 
                 if (locStartX == 0 || locStartY == 0)
                     SelectRect = new Rectangle((int)((this.mousedownpoint.X)), (int)((this.mousedownpoint.Y)),
-                    ww * this.ZoomMultiple, wh * this.ZoomMultiple);
+                    Convert.ToInt32(ww * this.ZoomMultiple), Convert.ToInt32(wh * this.ZoomMultiple));
                 else
                     SelectRect = new Rectangle((int)((this.mousedownpoint.X)), (int)((this.mousedownpoint.Y)),
                         (int)((this.locStartX - this.mousedownpoint.X)), (int)((this.locStartY - this.mousedownpoint.Y)));

@@ -482,7 +482,7 @@ namespace WR.WCF.Site
                         foreach (string item in keyArr)
                         {
                             string[] key = item.Split(new char[] { '|' });
-                            db.ExecuteSqlCommand(string.Format("delete wm_classificationuser where itemid = '{0}' and userid = '{1}'", key[0], userid));
+                            db.ExecuteSqlCommand(string.Format("delete from wm_classificationuser where itemid = '{0}' and userid = '{1}'", key[0], userid));
                             db.ExecuteSqlCommand(string.Format("insert into wm_classificationuser(itemid, hotkey, color, userid) values('{0}', '{1}', '{2}', '{3}')", key[0], key[1], key[2], userid));
                         }
                     }
@@ -2565,6 +2565,10 @@ namespace WR.WCF.Site
             {
                 using (BFdbContext db = new BFdbContext())
                 {
+                    var hasExist = db.EMLIBRARY.Count(s => s.PAPERNAME == papername.Trim() && s.DELFLAG == "0") > 0;
+                    if (hasExist)
+                        return -1;
+
                     var cnt = 0;
                     var model = new EMLIBRARY();
 
@@ -2633,6 +2637,11 @@ namespace WR.WCF.Site
             {
                 using (BFdbContext db = new BFdbContext())
                 {
+                    var hasExist = db.EMLIBRARY.Count(s => s.PAPERNAME == name.Trim() && s.LID != id && s.DELFLAG == "0") > 0;
+
+                    if (hasExist)
+                        return -1;
+
                     EMLIBRARY model = db.EMLIBRARY.Find(id);
 
                     if (model != null)
@@ -2712,6 +2721,10 @@ namespace WR.WCF.Site
             {
                 using (BFdbContext db = new BFdbContext())
                 {
+                    var hasExist = db.EMPLAN.Count(s => s.PLANNAME == name.Trim() && s.DELFLAG == "0") > 0;
+                    if (hasExist)
+                        return -1;
+
                     var model = new EMPLAN();
 
                     model.PID = Guid.NewGuid().ToString();
@@ -2747,6 +2760,10 @@ namespace WR.WCF.Site
             {
                 using (BFdbContext db = new BFdbContext())
                 {
+                    var hasExist = db.EMPLAN.Count(s => s.PLANNAME == name.Trim() && s.LID != id && s.DELFLAG == "0") > 0;
+                    if (hasExist)
+                        return -1;
+
                     EMPLAN model = db.EMPLAN.Find(id);
 
                     if (model != null)
@@ -2814,10 +2831,10 @@ namespace WR.WCF.Site
                     model.STARTDATE = DateTime.Now;
                     model.DELFLAG = "0";
 
-                    string sql =string.Empty ;
+                    string sql = string.Empty;
 
-                    if(db.DatabaseType == DatabaseType.Mysql)
-                     sql = string.Format(@"insert into em_defectlist
+                    if (db.DatabaseType == DatabaseType.Mysql)
+                        sql = string.Format(@"insert into em_defectlist
                                             (id, passid, inspid, inspectiontype, swcscoordinates, inspclassifiid,
                                                size_, majoraxissize, majorminoraxisaspectratio, area_, dieaddress,
                                                imagename, style, pixelsize, resultid, oldresultid, omodifieddefect)
@@ -2996,9 +3013,9 @@ namespace WR.WCF.Site
                         ischk = "and a.modifieddefect is null";
 
                     string sql = string.Empty;
-                    
-                    if(db.DatabaseType == DatabaseType.Mysql)
-                        sql= string.Format(@"select a.id, a.passid, a.inspid, a.modifieddefect, a.inspclassifiid,
+
+                    if (db.DatabaseType == DatabaseType.Mysql)
+                        sql = string.Format(@"select a.id, a.passid, a.inspid, a.modifieddefect, a.inspclassifiid,
                                                        concat(concat(a.oldresultid, '\\') ,a.imagename) imagename, a.area_, d.color, a.ischecked, a.checkeddate,
                                                        d.name as description, a.dieaddress, 'Front' inspectedsurface,
                                                        '0' adc, d.schemeid, d.id cclassid, a.size_,o.id occlassid

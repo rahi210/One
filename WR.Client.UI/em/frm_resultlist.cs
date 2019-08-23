@@ -281,11 +281,14 @@ namespace WR.Client.UI
         {
             var list = grdData.DataSource as List<WmwaferResultEntity>;
 
-            var slist = list.Where(s => s.Id == 1)
-                .Select(s => new ComboxModel { ID = s.RESULTID, NAME = string.Format("{0}-{1}-{2}-{3}", s.DEVICE, s.LAYER, s.LOT, s.SUBSTRATE_ID) })
-                .ToList();
+            if (list != null && list.Count > 0)
+            {
+                var slist = list.Where(s => s.Id == 1)
+                    .Select(s => new ComboxModel { ID = s.RESULTID, NAME = string.Format("{0}-{1}-{2}-{3}", s.DEVICE, s.LAYER, s.LOT, s.SUBSTRATE_ID) })
+                    .ToList();
 
-            ResultList.AddRange(slist);
+                ResultList.AddRange(slist);
+            }
 
             DialogResult = DialogResult.OK;
         }
@@ -294,5 +297,5 @@ namespace WR.Client.UI
         {
             DialogResult = DialogResult.No;
         }
-    }
+    } 
 }

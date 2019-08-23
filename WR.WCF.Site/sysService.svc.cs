@@ -645,6 +645,10 @@ namespace WR.WCF.Site
             {
                 using (BFdbContext db = new BFdbContext())
                 {
+                    var rs = db.CMNRULE.Count(s => s.RULENAME == rulename) > 0;
+                    if (rs)
+                        return "-1";
+
                     CMNRULE ent = new CMNRULE();
                     ent.DESCRP = descr;
                     ent.DEVICE = device;
@@ -668,6 +672,10 @@ namespace WR.WCF.Site
             {
                 using (BFdbContext db = new BFdbContext())
                 {
+                    var rs = db.CMNRULE.Count(s => s.RULENAME == rulename && s.ID != ruleid) > 0;
+                    if (rs)
+                        return "-1";
+
                     var ent = db.CMNRULE.FirstOrDefault(p => p.ID == ruleid);
                     ent.DESCRP = descr;
                     ent.DEVICE = device;

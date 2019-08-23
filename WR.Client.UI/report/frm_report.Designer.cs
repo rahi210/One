@@ -61,6 +61,10 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -94,10 +98,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle58 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle59 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle60 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabReport = new System.Windows.Forms.TabControl();
             this.tabDensity = new System.Windows.Forms.TabPage();
             this.grdDensity = new CRD.WinUI.Editors.WrDataGridView();
@@ -194,6 +194,17 @@
             this.label6 = new System.Windows.Forms.Label();
             this.tabGood = new System.Windows.Forms.TabPage();
             this.grdGoodDie = new CRD.WinUI.Editors.WrDataGridView();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column41 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column42 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DefectDie = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column43 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column44 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel5 = new System.Windows.Forms.Panel();
             this.lblGoodDieListNum = new System.Windows.Forms.Label();
             this.lblGoodDieRepNum = new System.Windows.Forms.Label();
@@ -295,17 +306,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.dateTo = new System.Windows.Forms.DateTimePicker();
             this.dtDate = new System.Windows.Forms.DateTimePicker();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column41 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column42 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DefectDie = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column43 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column44 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabReport.SuspendLayout();
             this.tabDensity.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdDensity)).BeginInit();
@@ -1531,6 +1531,106 @@
             this.grdGoodDie.RowTemplate.Height = 23;
             this.grdGoodDie.Size = new System.Drawing.Size(1415, 457);
             this.grdGoodDie.TabIndex = 1;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.DataPropertyName = "DEVICE";
+            this.dataGridViewTextBoxColumn3.FillWeight = 120F;
+            this.dataGridViewTextBoxColumn3.HeaderText = "DeviceId";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
+            this.dataGridViewTextBoxColumn3.Visible = false;
+            this.dataGridViewTextBoxColumn3.Width = 80;
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.DataPropertyName = "LAYER";
+            this.dataGridViewTextBoxColumn4.HeaderText = "SetupId";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.ReadOnly = true;
+            this.dataGridViewTextBoxColumn4.Visible = false;
+            this.dataGridViewTextBoxColumn4.Width = 120;
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.DataPropertyName = "LOT";
+            this.dataGridViewTextBoxColumn6.FillWeight = 120F;
+            this.dataGridViewTextBoxColumn6.HeaderText = "LotId";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            this.dataGridViewTextBoxColumn6.ReadOnly = true;
+            this.dataGridViewTextBoxColumn6.Width = 120;
+            // 
+            // dataGridViewTextBoxColumn7
+            // 
+            this.dataGridViewTextBoxColumn7.DataPropertyName = "SUBSTRATE_ID";
+            this.dataGridViewTextBoxColumn7.FillWeight = 180F;
+            this.dataGridViewTextBoxColumn7.HeaderText = "WaferId";
+            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            this.dataGridViewTextBoxColumn7.ReadOnly = true;
+            this.dataGridViewTextBoxColumn7.Width = 140;
+            // 
+            // Column41
+            // 
+            this.Column41.DataPropertyName = "INSPECTIONDATE";
+            dataGridViewCellStyle26.Format = "G";
+            dataGridViewCellStyle26.NullValue = null;
+            this.Column41.DefaultCellStyle = dataGridViewCellStyle26;
+            this.Column41.HeaderText = "Inspection Date";
+            this.Column41.Name = "Column41";
+            this.Column41.ReadOnly = true;
+            this.Column41.Width = 180;
+            // 
+            // Column42
+            // 
+            this.Column42.DataPropertyName = "INSPCNT";
+            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Column42.DefaultCellStyle = dataGridViewCellStyle27;
+            this.Column42.HeaderText = "Inspection Die";
+            this.Column42.Name = "Column42";
+            this.Column42.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn8
+            // 
+            this.dataGridViewTextBoxColumn8.DataPropertyName = "GOODCNT";
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.dataGridViewTextBoxColumn8.DefaultCellStyle = dataGridViewCellStyle28;
+            this.dataGridViewTextBoxColumn8.FillWeight = 70F;
+            this.dataGridViewTextBoxColumn8.HeaderText = "Good Die";
+            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+            this.dataGridViewTextBoxColumn8.ReadOnly = true;
+            // 
+            // DefectDie
+            // 
+            this.DefectDie.DataPropertyName = "DEFECTNUM";
+            this.DefectDie.HeaderText = "Defect Die";
+            this.DefectDie.Name = "DefectDie";
+            this.DefectDie.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn9
+            // 
+            this.dataGridViewTextBoxColumn9.DataPropertyName = "PERCENT";
+            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.dataGridViewTextBoxColumn9.DefaultCellStyle = dataGridViewCellStyle29;
+            this.dataGridViewTextBoxColumn9.HeaderText = "Percent Of Good Die(%)";
+            this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
+            this.dataGridViewTextBoxColumn9.ReadOnly = true;
+            this.dataGridViewTextBoxColumn9.Width = 150;
+            // 
+            // Column43
+            // 
+            this.Column43.DataPropertyName = "SUBSTRATE_SLOT";
+            this.Column43.HeaderText = "SUBSTRATE_SLOT";
+            this.Column43.Name = "Column43";
+            this.Column43.ReadOnly = true;
+            this.Column43.Visible = false;
+            // 
+            // Column44
+            // 
+            this.Column44.DataPropertyName = "COMPLETIONTIME";
+            this.Column44.HeaderText = "COMPLETIONTIME";
+            this.Column44.Name = "Column44";
+            this.Column44.ReadOnly = true;
+            this.Column44.Visible = false;
             // 
             // panel5
             // 
@@ -2834,106 +2934,6 @@
             this.dtDate.Size = new System.Drawing.Size(100, 21);
             this.dtDate.TabIndex = 8;
             this.dtDate.Leave += new System.EventHandler(this.dtDate_Leave);
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.DataPropertyName = "DEVICE";
-            this.dataGridViewTextBoxColumn3.FillWeight = 120F;
-            this.dataGridViewTextBoxColumn3.HeaderText = "DeviceId";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.ReadOnly = true;
-            this.dataGridViewTextBoxColumn3.Visible = false;
-            this.dataGridViewTextBoxColumn3.Width = 80;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.DataPropertyName = "LAYER";
-            this.dataGridViewTextBoxColumn4.HeaderText = "SetupId";
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            this.dataGridViewTextBoxColumn4.ReadOnly = true;
-            this.dataGridViewTextBoxColumn4.Visible = false;
-            this.dataGridViewTextBoxColumn4.Width = 120;
-            // 
-            // dataGridViewTextBoxColumn6
-            // 
-            this.dataGridViewTextBoxColumn6.DataPropertyName = "LOT";
-            this.dataGridViewTextBoxColumn6.FillWeight = 120F;
-            this.dataGridViewTextBoxColumn6.HeaderText = "LotId";
-            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
-            this.dataGridViewTextBoxColumn6.ReadOnly = true;
-            this.dataGridViewTextBoxColumn6.Width = 120;
-            // 
-            // dataGridViewTextBoxColumn7
-            // 
-            this.dataGridViewTextBoxColumn7.DataPropertyName = "SUBSTRATE_ID";
-            this.dataGridViewTextBoxColumn7.FillWeight = 180F;
-            this.dataGridViewTextBoxColumn7.HeaderText = "WaferId";
-            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
-            this.dataGridViewTextBoxColumn7.ReadOnly = true;
-            this.dataGridViewTextBoxColumn7.Width = 140;
-            // 
-            // Column41
-            // 
-            this.Column41.DataPropertyName = "INSPECTIONDATE";
-            dataGridViewCellStyle26.Format = "G";
-            dataGridViewCellStyle26.NullValue = null;
-            this.Column41.DefaultCellStyle = dataGridViewCellStyle26;
-            this.Column41.HeaderText = "Inspection Date";
-            this.Column41.Name = "Column41";
-            this.Column41.ReadOnly = true;
-            this.Column41.Width = 180;
-            // 
-            // Column42
-            // 
-            this.Column42.DataPropertyName = "INSPCNT";
-            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.Column42.DefaultCellStyle = dataGridViewCellStyle27;
-            this.Column42.HeaderText = "Inspection Die";
-            this.Column42.Name = "Column42";
-            this.Column42.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn8
-            // 
-            this.dataGridViewTextBoxColumn8.DataPropertyName = "GOODCNT";
-            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.dataGridViewTextBoxColumn8.DefaultCellStyle = dataGridViewCellStyle28;
-            this.dataGridViewTextBoxColumn8.FillWeight = 70F;
-            this.dataGridViewTextBoxColumn8.HeaderText = "Good Die";
-            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
-            this.dataGridViewTextBoxColumn8.ReadOnly = true;
-            // 
-            // DefectDie
-            // 
-            this.DefectDie.DataPropertyName = "DEFECTNUM";
-            this.DefectDie.HeaderText = "Defect Die";
-            this.DefectDie.Name = "DefectDie";
-            this.DefectDie.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn9
-            // 
-            this.dataGridViewTextBoxColumn9.DataPropertyName = "PERCENT";
-            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.dataGridViewTextBoxColumn9.DefaultCellStyle = dataGridViewCellStyle29;
-            this.dataGridViewTextBoxColumn9.HeaderText = "Percent Of Good Die(%)";
-            this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
-            this.dataGridViewTextBoxColumn9.ReadOnly = true;
-            this.dataGridViewTextBoxColumn9.Width = 150;
-            // 
-            // Column43
-            // 
-            this.Column43.DataPropertyName = "SUBSTRATE_SLOT";
-            this.Column43.HeaderText = "SUBSTRATE_SLOT";
-            this.Column43.Name = "Column43";
-            this.Column43.ReadOnly = true;
-            this.Column43.Visible = false;
-            // 
-            // Column44
-            // 
-            this.Column44.DataPropertyName = "COMPLETIONTIME";
-            this.Column44.HeaderText = "COMPLETIONTIME";
-            this.Column44.Name = "Column44";
-            this.Column44.ReadOnly = true;
-            this.Column44.Visible = false;
             // 
             // frm_report
             // 

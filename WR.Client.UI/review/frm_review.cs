@@ -27,6 +27,7 @@ namespace WR.Client.UI
 
         private double waferYield = 0;
         private double lotYield = 0;
+        private bool isExpand = false;
 
         Thread threadSound;
         private bool hasPlay = false;
@@ -120,7 +121,7 @@ namespace WR.Client.UI
             LoadData();
 
             lotYield = double.Parse(DataCache.CmnDict.FirstOrDefault(s => s.DICTID == "3010" && s.CODE == "0").VALUE);
-            waferYield = double.Parse(DataCache.CmnDict.FirstOrDefault(s => s.DICTID == "3010" && s.CODE == "0").VALUE);
+            waferYield = double.Parse(DataCache.CmnDict.FirstOrDefault(s => s.DICTID == "3010" && s.CODE == "1").VALUE);
 
             ckPlay.Checked = true;
             threadSound = new Thread(new ThreadStart(PlayWarning));
@@ -510,6 +511,11 @@ namespace WR.Client.UI
                     var ent = list.FirstOrDefault(p => p.RESULTID == e.Node.Tag.ToString());
                     if (ent != null)
                     {
+                        //是否有复判权限
+                        var rs = DataCache.Tbmenus.Count(s => s.MENUCODE == "30002") > 0;
+                        if (!rs)
+                            return;
+
                         var isReview = GetWaferResultIsReview(ent.RESULTID);
                         if (isReview)
                             return;
@@ -599,6 +605,11 @@ namespace WR.Client.UI
         private void grdData_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex < 0 || e.RowIndex < 0)
+                return;
+
+            //是否有复判权限
+            var rs = DataCache.Tbmenus.Count(s => s.MENUCODE == "30002") > 0;
+            if (!rs)
                 return;
 
             frm_main frm = this.Tag as frm_main;
@@ -850,6 +861,11 @@ namespace WR.Client.UI
         {
             if (grdData.SelectedRows != null && grdData.SelectedRows.Count > 0)
             {
+                //是否有复判权限
+                var rs = DataCache.Tbmenus.Count(s => s.MENUCODE == "30002") > 0;
+                if (!rs)
+                    return;
+
                 frm_main frm = this.Tag as frm_main;
                 if (frm != null)
                 {
@@ -874,6 +890,9 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void tlRefresh_Click(object sender, EventArgs e)
         {
+            lotYield = double.Parse(DataCache.CmnDict.FirstOrDefault(s => s.DICTID == "3010" && s.CODE == "0").VALUE);
+            waferYield = double.Parse(DataCache.CmnDict.FirstOrDefault(s => s.DICTID == "3010" && s.CODE == "1").VALUE);
+
             //selectedid = string.Empty;
             //old_selectedid = selectedid;
             old_selectedid = "-1";
@@ -930,6 +949,11 @@ namespace WR.Client.UI
 
             if (trList.SelectedNode.Level == 3 || trList.SelectedNode.Level == 4 || showMode != 0)
             {
+                //是否有复判权限
+                var rs = DataCache.Tbmenus.Count(s => s.MENUCODE == "30002") > 0;
+                if (!rs)
+                    return;
+
                 frm_main frm = this.Tag as frm_main;
                 if (frm != null)
                 {
@@ -1095,6 +1119,11 @@ namespace WR.Client.UI
                     tlsLReport.Enabled = true;
                     ItmYield.Enabled = true;
                     ItmPolat.Enabled = false;
+
+                    //tsxml.Enabled = false;
+                    //tsImage.Enabled = false;
+                    tlslxml.Enabled = false;
+                    tlImage.Enabled = false;
                     break;
                 case 2:
                     tlsLPreview.Enabled = false;
@@ -1104,6 +1133,11 @@ namespace WR.Client.UI
                     tlsLReport.Enabled = true;
                     ItmYield.Enabled = false;
                     ItmPolat.Enabled = true;
+
+                    //tsxml.Enabled = false;
+                    //tsImage.Enabled = false;
+                    tlslxml.Enabled = false;
+                    tlImage.Enabled = false;
                     break;
                 case 3:
                 case 4:
@@ -1111,6 +1145,9 @@ namespace WR.Client.UI
                     tlsLLoad.Enabled = true;
                     tlsLDelete.Enabled = true;
                     tlsLReport.Enabled = false;
+
+                    tlslxml.Enabled = true;
+                    tlImage.Enabled = true;
                     break;
                 default:
                     tlsLPreview.Enabled = false;
@@ -1354,6 +1391,16 @@ namespace WR.Client.UI
         {
             ShowReport("8");
         }
+
+        private void lotYieldToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowReport("9");
+        }
+
+        private void itmWaferYieldList_Click(object sender, EventArgs e)
+        {
+            ShowReport("10");
+        }
         #endregion
 
         /// <summary>
@@ -1447,6 +1494,12 @@ namespace WR.Client.UI
             frm_main frm = this.Tag as frm_main;
             if (frm != null)
             {
+                //是否有复判权限
+                var rs = DataCache.Tbmenus.Count(s => s.MENUCODE == "30002") > 0;
+
+                if (!rs)
+                    return;
+
                 var ent = grdData.SelectedRows[0].DataBoundItem as WmwaferResultEntity;
                 frm.Oparams = new string[] { ent.RESULTID, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT.ToString(), ent.SFIELD.ToString() };
 
@@ -1535,7 +1588,11 @@ namespace WR.Client.UI
                 if (ent != null && selectedid != ent.RESULTID)
                 {
                     selectedid = ent.RESULTID;
-                    SelectTree(ent.RESULTID);
+
+                    if (isExpand)
+                        SelectTree(ent.RESULTID);
+
+                    isExpand = true;
                 }
             }
         }
@@ -1917,20 +1974,20 @@ namespace WR.Client.UI
                         || p.SUBSTRATE_ID.ToLower().IndexOf(txtId.Text.ToLower()) >= 0
                         || p.LAYER.ToLower().IndexOf(txtId.Text.ToLower()) >= 0).ToList();
 
-                switch (cbxOrderBy.SelectedIndex)
-                {
-                    case 0:
-                        list = list.OrderBy(s => s.COMPLETIONTIME).ToList();
-                        break;
-                    case 1:
-                        list = list.OrderBy(s => s.CHECKEDDATE).ToList();
-                        break;
-                    case 2:
-                        list = list.OrderBy(s => s.LOT).ToList();
-                        break;
-                    default:
-                        break;
-                }
+                //switch (cbxOrderBy.SelectedIndex)
+                //{
+                //    case 0:
+                //        list = list.OrderBy(s => s.COMPLETIONTIME).ToList();
+                //        break;
+                //    case 1:
+                //        list = list.OrderBy(s => s.CHECKEDDATE).ToList();
+                //        break;
+                //    case 2:
+                //        list = list.OrderBy(s => s.LOT).ToList();
+                //        break;
+                //    default:
+                //        break;
+                //}
 
                 grdData.DataSource = new BindingCollection<WmwaferResultEntity>(list);
             }
@@ -2065,6 +2122,7 @@ namespace WR.Client.UI
 
         private void rbnDefault_CheckedChanged(object sender, EventArgs e)
         {
+            isExpand = false;
             showMode = 0;
 
             if (rbnDefault.Checked)
@@ -2073,6 +2131,7 @@ namespace WR.Client.UI
 
         private void rbnCompletionTime_CheckedChanged(object sender, EventArgs e)
         {
+            isExpand = false;
             showMode = 1;
 
             if (rbnCompletionTime.Checked)
@@ -2081,6 +2140,7 @@ namespace WR.Client.UI
 
         private void rbnLot_CheckedChanged(object sender, EventArgs e)
         {
+            isExpand = false;
             showMode = 2;
 
             if (rbnLot.Checked)
@@ -2089,6 +2149,7 @@ namespace WR.Client.UI
 
         private void rbnReviewTime_CheckedChanged(object sender, EventArgs e)
         {
+            isExpand = false;
             showMode = 3;
 
             if (rbnReviewTime.Checked)

@@ -390,26 +390,36 @@ namespace WR.Client.UI
             }
         }
 
-        void arule_OptRule(string type, string[] data)
+        bool arule_OptRule(string type, string[] data)
         {
             IsysService service = sysService.GetService();
+            var rs = string.Empty;
+
             switch (type)
             {
                 case "ADD":
                     data[0] = Guid.NewGuid().ToString();
-                    service.AddRule(data[0], data[1], data[2], data[3], data[4].ToLower() == "all" ? "*" : data[4]);
+                    rs = service.AddRule(data[0], data[1], data[2], data[3], data[4].ToLower() == "all" ? "*" : data[4]);
                     break;
                 case "EDIT":
-                    service.EditRule(data[0], data[1], data[2], data[3], data[4].ToLower() == "all" ? "*" : data[4]);
+                    rs = service.EditRule(data[0], data[1], data[2], data[3], data[4].ToLower() == "all" ? "*" : data[4]);
                     break;
                 case "DEL":
-                    service.DelRule(data[0]);
+                    rs = service.DelRule(data[0]);
                     break;
                 default:
                     break;
             }
 
+            if (rs == "-1")
+            {
+                MsgBoxEx.Info("Name already exist");
+                return false;
+            }
+
             frm_config_Load(null, null);
+
+            return true;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -642,7 +652,12 @@ namespace WR.Client.UI
                 }
             }
 
-            service.UpdateDict(list);
+           var rs= service.UpdateDict(list);
+
+           if (rs == "0")
+           {
+               DataCache.CmnDict = service.GetCmn("");
+           }
 
             MsgBoxEx.Info("Save success, please refresh the data.");
         }

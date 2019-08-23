@@ -1796,6 +1796,8 @@ namespace WR.Client.UI
         /// <param name="e"></param>
         private void lbl_P_Restore_Click(object sender, EventArgs e)
         {
+            ResetTck();
+
             //PicShow.WrImage = PicShow.WrImage;
             if (PicShow.ZoomMultiple == 0)
                 return;
@@ -2829,7 +2831,7 @@ namespace WR.Client.UI
 
         private void PicShow_Click(object sender, EventArgs e)
         {
-            ResetTck();
+            //ResetTck();
         }
 
         private void panel5_Click(object sender, EventArgs e)

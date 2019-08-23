@@ -71,6 +71,60 @@ namespace WR.Client.UI
             chartYield.ChartAreas[0].AxisY.MajorGrid.Enabled = true;//不显示网格线
         }
 
+        public void ReportSelected()
+        {
+            if (Oparams != null && Oparams.Length == 4)
+            {
+                string[] data = Oparams[2].Split(new char[] { '|' });
+                cbxDevice.Text = data[0];
+                cbxDevice.SelectedValue = data[0];
+
+                //cbxLayer.Text = data[1];
+                cbxLayer.SelectedValue = string.Format("{0}|{1}||", data[0], data[1]);
+
+                //cbxLot.Text = Oparams[0];
+                cbxLot.SelectedValue = Oparams[2];
+                switch (Oparams[1])
+                {
+                    case "1":
+                        tabReport.SelectedTab = tabDensity;
+                        break;
+                    case "2":
+                        tabReport.SelectedTab = tabDefective;
+                        break;
+                    case "3":
+                        tabReport.SelectedTab = tabDefectList;
+                        break;
+                    case "4":
+                        tabReport.SelectedTab = tabDieSum;
+                        break;
+                    case "5":
+                        tabReport.SelectedTab = tabGood;
+                        break;
+                    case "6":
+                        tabReport.SelectedTab = tabDie;
+                        break;
+                    case "7":
+                        tabReport.SelectedTab = tabYield;
+                        break;
+                    case "8":
+                        tabReport.SelectedTab = tabPolat;
+                        break;
+                    case "9":
+                        tabReport.SelectedTab = tabLotYield;
+                        break;
+                    case "10":
+                        tabReport.SelectedTab = tabWaferYieldList;
+                        break;
+                    default:
+                        break;
+
+                }
+
+                btnQuery_Click(null, null);
+            }
+        }
+
         private void frm_report_Load(object sender, EventArgs e)
         {
             //tabPolat.Hide();
@@ -159,6 +213,12 @@ namespace WR.Client.UI
                         break;
                     case "8":
                         tabReport.SelectedTab = tabPolat;
+                        break;
+                    case "9":
+                        tabReport.SelectedTab = tabLotYield;
+                        break;
+                    case "10":
+                        tabReport.SelectedTab = tabWaferYieldList;
                         break;
                     default:
                         break;

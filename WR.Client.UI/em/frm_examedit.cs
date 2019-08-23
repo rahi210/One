@@ -74,9 +74,14 @@ namespace WR.Client.UI
                 res = service.UpdateLibray(Entity.LID, txtName.Text.Trim(), txtRemark.Text, (ckStatus.Checked ? "1" : "0"), DataCache.UserInfo.ID);
             }
 
-            if (res != 1)
+            if (res == -1)
             {
-                MsgBoxEx.Info(res.ToString());
+                MsgBoxEx.Info("Name already exist");
+                return;
+            }
+            else if (res != 1)
+            {
+                MsgBoxEx.Info("Save failed");
                 return;
             }
 
@@ -96,13 +101,16 @@ namespace WR.Client.UI
 
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                ResultList = frm.ResultList.Distinct().ToList();
+                ResultList = frm.ResultList.Distinct(new ComboxCompare()).ToList();
 
                 var list = ResultList.Select(s => s.NAME).ToArray();
 
-                lbResult.Items.AddRange(list);
-
-                lbResult.SelectedIndex = 0;
+                if (list.Count() > 0)
+                {
+                    lbResult.Items.Clear();
+                    lbResult.Items.AddRange(list);
+                    lbResult.SelectedIndex = 0;
+                }
             }
         }
 
@@ -116,6 +124,21 @@ namespace WR.Client.UI
                 if (lbResult.Items.Count > 0)
                     lbResult.SelectedIndex = 0;
             }
+        }
+    }
+
+    public class ComboxCompare : IEqualityComparer<ComboxModel>
+    {
+        public bool Equals(ComboxModel x, ComboxModel y)
+        {
+            if (x == null || y == null)
+                return false;
+            return x.ID.Equals(y.ID) && x.NAME == y.NAME;
+        }
+
+        public int GetHashCode(ComboxModel obj)
+        {
+            return obj.ID.GetHashCode();
         }
     }
 }

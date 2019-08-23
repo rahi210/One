@@ -106,9 +106,19 @@ namespace WR.Client.UI
                 res = service.UpdatePlan(emPlan.PID, txtName.Text.Trim(), startTime, endTime, (int)nudUser.Value, (int)nudDefect.Value, txtRemark.Text, DataCache.UserInfo.ID);
             }
 
-            if (res != 1)
+            //if (res != 1)
+            //{
+            //    MsgBoxEx.Info(res.ToString());
+            //    return;
+            //}
+            if (res == -1)
             {
-                MsgBoxEx.Info(res.ToString());
+                MsgBoxEx.Info("Name already exist");
+                return;
+            }
+            else if (res != 1)
+            {
+                MsgBoxEx.Info("Save failed");
                 return;
             }
 

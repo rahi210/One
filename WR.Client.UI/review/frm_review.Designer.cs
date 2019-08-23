@@ -163,6 +163,8 @@
             this.rbnCompletionTime = new System.Windows.Forms.RadioButton();
             this.rbnDefault = new System.Windows.Forms.RadioButton();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.lotYieldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.itmWaferYieldList = new System.Windows.Forms.ToolStripMenuItem();
             this.cnsList.SuspendLayout();
             this.cnsGrd.SuspendLayout();
             this.tlsMenu.SuspendLayout();
@@ -183,21 +185,21 @@
             this.toolStripSeparator1,
             this.tlsLReport});
             this.cnsList.Name = "contextMenuStrip2";
-            this.cnsList.Size = new System.Drawing.Size(137, 168);
+            this.cnsList.Size = new System.Drawing.Size(169, 190);
             // 
             // tlsLPreview
             // 
             this.tlsLPreview.Image = global::WR.Client.UI.Properties.Resources.preview24;
             this.tlsLPreview.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tlsLPreview.Name = "tlsLPreview";
-            this.tlsLPreview.Size = new System.Drawing.Size(136, 38);
+            this.tlsLPreview.Size = new System.Drawing.Size(168, 38);
             this.tlsLPreview.Text = "Preview";
             this.tlsLPreview.Click += new System.EventHandler(this.preview_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(133, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(165, 6);
             // 
             // tlsLLoad
             // 
@@ -208,7 +210,7 @@
             this.tlsLLoad.Image = global::WR.Client.UI.Properties.Resources.export24;
             this.tlsLLoad.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tlsLLoad.Name = "tlsLLoad";
-            this.tlsLLoad.Size = new System.Drawing.Size(136, 38);
+            this.tlsLLoad.Size = new System.Drawing.Size(168, 38);
             this.tlsLLoad.Text = "Export";
             // 
             // tlslxml
@@ -237,14 +239,14 @@
             this.tlsLDelete.Image = global::WR.Client.UI.Properties.Resources.delete24;
             this.tlsLDelete.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tlsLDelete.Name = "tlsLDelete";
-            this.tlsLDelete.Size = new System.Drawing.Size(136, 38);
+            this.tlsLDelete.Size = new System.Drawing.Size(168, 38);
             this.tlsLDelete.Text = "Delete";
             this.tlsLDelete.Click += new System.EventHandler(this.tlsLDelete_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(133, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(165, 6);
             // 
             // tlsLReport
             // 
@@ -256,9 +258,11 @@
             this.ItmGoodDie,
             this.ItmDefective,
             this.ItmYield,
-            this.ItmPolat});
+            this.ItmPolat,
+            this.lotYieldToolStripMenuItem,
+            this.itmWaferYieldList});
             this.tlsLReport.Name = "tlsLReport";
-            this.tlsLReport.Size = new System.Drawing.Size(136, 38);
+            this.tlsLReport.Size = new System.Drawing.Size(168, 38);
             this.tlsLReport.Text = "Report";
             // 
             // ItmDensity
@@ -1096,6 +1100,20 @@
             this.panel4.Size = new System.Drawing.Size(1253, 540);
             this.panel4.TabIndex = 1;
             // 
+            // lotYieldToolStripMenuItem
+            // 
+            this.lotYieldToolStripMenuItem.Name = "lotYieldToolStripMenuItem";
+            this.lotYieldToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.lotYieldToolStripMenuItem.Text = "Lot Yield";
+            this.lotYieldToolStripMenuItem.Click += new System.EventHandler(this.lotYieldToolStripMenuItem_Click);
+            // 
+            // itmWaferYieldList
+            // 
+            this.itmWaferYieldList.Name = "itmWaferYieldList";
+            this.itmWaferYieldList.Size = new System.Drawing.Size(235, 22);
+            this.itmWaferYieldList.Text = "Wafer Yield List";
+            this.itmWaferYieldList.Click += new System.EventHandler(this.itmWaferYieldList_Click);
+            // 
             // frm_review
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1203,6 +1221,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Layer;
         private System.Windows.Forms.DataGridViewTextBoxColumn RECIPE_ID;
+        private System.Windows.Forms.ToolStripMenuItem lotYieldToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem itmWaferYieldList;
 
     }
 }

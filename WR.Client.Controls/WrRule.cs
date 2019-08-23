@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace WR.Client.Controls
 {
-    public delegate void RuleOptEventHandler(string type, string[] data);
+    public delegate bool RuleOptEventHandler(string type, string[] data);
 
     public partial class WrRule : UserControl
     {
@@ -129,11 +129,14 @@ namespace WR.Client.Controls
                 OptRule("DEL", new string[] { Ruleid });
         }
 
-        internal void SaveRule(string type, string[] data)
+        internal bool SaveRule(string type, string[] data)
         {
+            var rs = false;
             //type:ADD、EDIT
             if (OptRule != null)
-                OptRule(type, data);
+                rs = OptRule(type, data);
+
+            return rs;
         }
 
         private void label1_Click(object sender, EventArgs e)

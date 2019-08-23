@@ -20,7 +20,6 @@ namespace WR.Client.UI
         /// </summary>
         private Control _focusedWrMenuItem;
         private FormBase frm;
-        private FormBase frmReport;
 
         public frm_main()
         {
@@ -349,16 +348,24 @@ namespace WR.Client.UI
                     frm.frmMain = this;
                     break;
                 case "Defect Report":
-                    if (frmReport == null)
+                    //if (frmReport == null)
+                    //{
+                    //    frm = new frm_report();
+                    //    frmReport = frm;
+                    //}
+                    //else
+                    //{
+                    //    frm = frmReport;
+                    //    frm.Visible = true;
+                    //}
+                    if (pnlContext.Controls.ContainsKey("frm_report"))
                     {
-                        frm = new frm_report();
-                        frmReport = frm;
+                        var frmReport = (frm_report)pnlContext.Controls.Find("frm_report", false)[0];
+                        frmReport.ReportSelected();
+                        frm = frmReport;
                     }
                     else
-                    {
-                        frm = frmReport;
-                        frm.Visible = true;
-                    }
+                        frm = new frm_report();
 
                     ((frm_report)frm).Oparams = Oparams;
                     frm.frmMain = this;

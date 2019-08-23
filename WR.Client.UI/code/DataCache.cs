@@ -203,7 +203,14 @@ namespace WR.Client.UI
             if (rows * cols == oldList.Count)
             {
                 if (filterNotExist)
-                    return oldList.Where(s => !s.DISPOSITION.Trim().Equals("NotExist")).ToList();
+                {
+                    var flist = oldList.Where(s => !s.DISPOSITION.Trim().Equals("NotExist")).ToList();
+
+                    flist[0].ROWS_ = rows;
+                    flist[0].COLUMNS_ = cols;
+
+                    return flist;
+                }
                 else
                     return oldList;
             }

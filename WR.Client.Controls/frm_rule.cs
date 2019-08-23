@@ -112,10 +112,13 @@ namespace WR.Client.Controls
                 return;
             }
 
-            if (pCtrl != null)
-                pCtrl.SaveRule(RType, new string[] { Ruleid, txtRule.Text.Trim(), txtDescrp.Text.Trim(), txtDevice.Text.Trim(), cbxLayer.Text.Trim() });
+            var rs = false;
 
-            DialogResult = DialogResult.OK;
+            if (pCtrl != null)
+                rs = pCtrl.SaveRule(RType, new string[] { Ruleid, txtRule.Text.Trim(), txtDescrp.Text.Trim(), txtDevice.Text.Trim(), cbxLayer.Text.Trim() });
+
+            if (rs)
+                DialogResult = DialogResult.OK;
         }
     }
 }
