@@ -758,7 +758,7 @@
             this.PicShow.TabIndex = 2;
             this.PicShow.TabStop = false;
             this.PicShow.WrImage = null;
-            this.PicShow.ZoomMultiple = 0;
+            this.PicShow.ZoomMultiple = 0D;
             this.PicShow.Click += new System.EventHandler(this.PicShow_Click);
             // 
             // panel5
@@ -924,7 +924,7 @@
             this.picWafer.TabIndex = 2;
             this.picWafer.TabStop = false;
             this.picWafer.WrImage = null;
-            this.picWafer.ZoomMultiple = 1;
+            this.picWafer.ZoomMultiple = 1D;
             this.picWafer.DefectChanged += new WR.Client.Controls.WrPictureBox.DelegateDefectChanged(this.picWafer_DefectChanged);
             this.picWafer.Click += new System.EventHandler(this.panel5_Click);
             this.picWafer.Paint += new System.Windows.Forms.PaintEventHandler(this.picWafer_Paint);
@@ -1430,7 +1430,7 @@
             this.picReffImage.TabIndex = 3;
             this.picReffImage.TabStop = false;
             this.picReffImage.WrImage = null;
-            this.picReffImage.ZoomMultiple = 0;
+            this.picReffImage.ZoomMultiple = 0D;
             // 
             // tabPage4
             // 

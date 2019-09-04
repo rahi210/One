@@ -184,6 +184,7 @@ namespace WR.Client.UI
                                         n.Name = dv.DEVICE + setup.LAYER + lot.LOT;
                                         n.ImageIndex = 6;
                                         n.SelectedImageIndex = 7;
+                                        n.Tag = lot.LOT;
 
                                         lotNodes.Add(n);
                                     }
@@ -274,6 +275,7 @@ namespace WR.Client.UI
                         lotNode.ImageIndex = 6;
                         lotNode.SelectedImageIndex = 7;
                         lotNode.Name = n;
+                        lotNode.Tag = n;
 
                         lotNodes.Add(lotNode);
 
@@ -365,37 +367,40 @@ namespace WR.Client.UI
 
                 grdData.DataSource = new BindingCollection<WmwaferResultEntity>(lotlist);
 
-                if (!string.IsNullOrEmpty(old_selectedid))
+                if (!isExpand)
                 {
-                    if (old_selectedid != "-1")
-                        selectIndex = lotlist.FindIndex(s => s.RESULTID == old_selectedid);
-                    else
-                        selectIndex = lotlist.FindIndex(s => s.COMPLETIONTIME == lotlist.Max(m => m.COMPLETIONTIME));
-                }
-
-                if (selectIndex <= 0)
-                    selectIndex = 0;
-                else
-                    grdData.CurrentCell = grdData[0, selectIndex];
-
-                //if (lstData.Visible)
-                {
-                    Random r = new Random();
-                    lstData.BeginUpdate();
-                    lstData.Clear();
-                    foreach (var item in lotlist)
+                    if (!string.IsNullOrEmpty(old_selectedid))
                     {
-                        lstData.Items.Add("ld" + item.RESULTID, item.LOT + "|" + item.SUBSTRATE_ID, r.Next(9));
+                        if (old_selectedid != "-1")
+                            selectIndex = lotlist.FindIndex(s => s.RESULTID == old_selectedid);
+                        else
+                            selectIndex = lotlist.FindIndex(s => s.COMPLETIONTIME == lotlist.Max(m => m.COMPLETIONTIME));
                     }
 
-                    lstData.EndUpdate();
+                    if (selectIndex <= 0)
+                        selectIndex = 0;
+                    else
+                        grdData.CurrentCell = grdData[0, selectIndex];
 
-                    if (lstData.Items.Count > 0)
+                    //if (lstData.Visible)
                     {
-                        if (lstData.Visible)
-                            trList.CollapseAll();
+                        Random r = new Random();
+                        lstData.BeginUpdate();
+                        lstData.Clear();
+                        foreach (var item in lotlist)
+                        {
+                            lstData.Items.Add("ld" + item.RESULTID, item.LOT + "|" + item.SUBSTRATE_ID, r.Next(9));
+                        }
 
-                        lstData.Items[selectIndex].Selected = true;
+                        lstData.EndUpdate();
+
+                        if (lstData.Items.Count > 0)
+                        {
+                            if (lstData.Visible)
+                                trList.CollapseAll();
+
+                            lstData.Items[selectIndex].Selected = true;
+                        }
                     }
                 }
             }
@@ -456,9 +461,22 @@ namespace WR.Client.UI
             }
             else
             {
-                var ent = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == trList.SelectedNode.Tag.ToString());
-                if (ent != null)
-                    Re_review(ent);
+                if (trList.SelectedNode.Level == 0)
+                {
+                    //批量review
+                    foreach (TreeNode node in trList.SelectedNode.Nodes)
+                    {
+                        var ent = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == node.Tag.ToString());
+                        if (ent != null)
+                            Re_review(ent);
+                    }
+                }
+                else
+                {
+                    var ent = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == trList.SelectedNode.Tag.ToString());
+                    if (ent != null)
+                        Re_review(ent);
+                }
             }
         }
 
@@ -991,10 +1009,13 @@ namespace WR.Client.UI
                             SelectID(node.Tag.ToString(), true);
                         trList.SelectedNode = node;
 
-                        if ((node.Level != 2 && node.Level != 4) && lstRe_view != null)
-                            lstRe_view.Enabled = false;
-                        else if (node.Level == 4)
+                        //if ((node.Level != 2 && node.Level != 4) && lstRe_view != null)
+                        //    lstRe_view.Enabled = false;
+                        //else if (node.Level == 4)
+                        if (node.Tag != null)
                             CheckItem(node.Tag.ToString());
+                        else
+                            lstRe_view.Enabled = false;
 
                         cnsList.Show(MousePosition.X, MousePosition.Y);
                     }
@@ -1004,7 +1025,6 @@ namespace WR.Client.UI
                     TreeNode node = trList.GetNodeAt(e.Location);
                     if (node != null)
                     {
-
                         trList.SelectedNode = node;
 
                         if (node.Level != 0)
@@ -1013,6 +1033,17 @@ namespace WR.Client.UI
 
                             SelectID(node.Tag.ToString(), true);
                             CheckItem(node.Tag.ToString());
+
+                            cnsList.Show(MousePosition.X, MousePosition.Y);
+                        }
+                        else
+                        {
+                            //if (lstRe_view != null)
+                            //    lstRe_view.Enabled = true;
+                            if (node.Tag != null)
+                                CheckItem(node.Tag.ToString());
+                            else
+                                lstRe_view.Enabled = false;
 
                             cnsList.Show(MousePosition.X, MousePosition.Y);
                         }
@@ -1299,11 +1330,11 @@ namespace WR.Client.UI
         /// </summary>
         private void CheckItem(string id)
         {
-            if (lstRe_view == null)
-                return;
-
             lstRe_view.Enabled = false;
             grdRe_view.Enabled = false;
+
+            if (lstRe_view == null || id == null)
+                return;
 
             //var ent = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == id);
             //if (ent == null)

@@ -1800,7 +1800,10 @@ namespace WR.Client.UI
 
             //PicShow.WrImage = PicShow.WrImage;
             if (PicShow.ZoomMultiple == 0)
+            {
+                PicShow.BackgroundImage = PicShow.WrImage;
                 return;
+            }
 
             if (PicShow.ZoomMultiple > 0)
                 PicShow.ZoomIn(PicShow.ZoomMultiple);

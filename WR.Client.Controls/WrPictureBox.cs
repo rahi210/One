@@ -513,8 +513,8 @@ namespace WR.Client.Controls
                         {
                             //var newlocX = locX + (int)((e.Location.X - mousedownpoint.X) / scaleX);
                             //var newlocY = locY + (int)((e.Location.Y - mousedownpoint.Y) / scaleY);
-                            locX = locX + (int)((e.Location.X - mousedownpoint.X) / scaleX);
-                            locY = locY + (int)((e.Location.Y - mousedownpoint.Y) / scaleY);
+                            locX = locX + (int)((e.Location.X - mousedownpoint.X) / scaleX/10);
+                            locY = locY + (int)((e.Location.Y - mousedownpoint.Y) / scaleY/10);
 
                             //if ((Math.Abs(newlocX)*scaleX + e.Location.X) - this.Width <= 0)
                             //    locX = newlocX;
@@ -642,7 +642,7 @@ namespace WR.Client.Controls
                 {
                     if (HasDraw)
                         //ZoomMultiple += 1;
-                        ZoomMultiple +=0.1;
+                        ZoomMultiple += 1;
                     else
                     {
                         ZoomOut(50);
@@ -651,7 +651,7 @@ namespace WR.Client.Controls
                 else if (e.Delta < 0)
                 {
                     if (HasDraw)
-                        ZoomMultiple -= 0.1;
+                        ZoomMultiple -= 1;
                     else
                     {
                         ZoomIn(50);

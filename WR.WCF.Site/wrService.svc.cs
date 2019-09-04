@@ -185,7 +185,8 @@ namespace WR.WCF.Site
                                                    case when b.inspecteddie>0 and b.maskc_die>=0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
                                                    case when b.inspecteddie>0 and b.maskd_die>=0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
                                                    case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die,
-                                                   case when b.inspecteddie>0 then round((b.inspecteddie- b.maska_defect- b.maskb_defect- b.maskc_defect- b.maskd_defect- b.maske_defect)/b.inspecteddie*100,2) end masknull_die
+                                                   case when b.inspecteddie>0 and (b.inspecteddie - b.maska_defect - b.maskb_defect - b.maskc_defect - b.maskd_defect - b.maske_defect)>0 
+                                                    then round((b.inspecteddie- b.maska_defect- b.maskb_defect- b.maskc_defect- b.maskd_defect- b.maske_defect)/b.inspecteddie*100,2) end masknull_die
                                                     from wm_waferresult t,wm_identification a,wm_inspectioninfo b,cmn_relation c
                                                     where t.identificationid=a.identificationid and t.resultid=b.resultid and instr(concat(a.device,'-',a.layer),concat(c.device,'-',case c.layer when '*' then '' else c.layer end))>0 
                                                         and ((t.completiontime>={1} and t.completiontime<={2}) or {3}) and c.userid='{0}' and t.delflag='0' order by a.device,a.layer,a.lot,cast(a.substrate_slot as unsigned)",
@@ -203,7 +204,7 @@ namespace WR.WCF.Site
                                                    case when b.inspecteddie>0 and b.maskc_die>=0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
                                                    case when b.inspecteddie>0 and b.maskd_die>=0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
                                                    case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die,
-                                                   case when b.inspecteddie>0 then round((b.inspecteddie- b.maska_defect- b.maskb_defect- b.maskc_defect- b.maskd_defect- b.maske_defect)/b.inspecteddie*100,2) end masknull_die
+                                                   case when b.inspecteddie>0 and (b.inspecteddie - b.maska_defect - b.maskb_defect - b.maskc_defect - b.maskd_defect - b.maske_defect)>0 then round((b.inspecteddie- b.maska_defect- b.maskb_defect- b.maskc_defect- b.maskd_defect- b.maske_defect)/b.inspecteddie*100,2) end masknull_die
                                                     from wm_waferresult t,wm_identification a,wm_inspectioninfo b
                                                     where t.identificationid=a.identificationid and t.resultid=b.resultid
                                                         and ((t.completiontime>={0} and t.completiontime<={1}) or {2}) and t.delflag='0' order by a.device,a.layer,a.lot,cast(a.substrate_slot as unsigned)",
@@ -223,7 +224,9 @@ namespace WR.WCF.Site
                                                    case when b.inspecteddie>0 and b.maskb_die>=0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) end maskb_die,
                                                    case when b.inspecteddie>0 and b.maskc_die>=0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
                                                    case when b.inspecteddie>0 and b.maskd_die>=0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
-                                                   case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
+                                                   case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die,
+                                                   case when b.inspecteddie>0 and (b.inspecteddie - b.maska_defect - b.maskb_defect - b.maskc_defect - b.maskd_defect - b.maske_defect)>0 
+                                                    then round((b.inspecteddie- b.maska_defect- b.maskb_defect- b.maskc_defect- b.maskd_defect- b.maske_defect)/b.inspecteddie*100,2) end masknull_die
                                                     from wm_waferresult t,wm_identification a,wm_inspectioninfo b,cmn_relation c
                                                     where t.identificationid=a.identificationid and t.resultid=b.resultid and instr(a.device||'-'||a.layer,c.device||'-'||case c.layer when '*' then '' else c.layer end)>0 
                                                         and ((t.completiontime>={1} and t.completiontime<={2}) or {3}) and c.userid='{0}' and t.delflag='0' order by a.device,a.layer,a.lot,to_number(a.substrate_slot)",
@@ -240,7 +243,9 @@ namespace WR.WCF.Site
                                                    case when b.inspecteddie>0 and b.maskb_die>=0 then round((b.inspecteddie- b.maskb_defect)/b.inspecteddie*100,2) end maskb_die,
                                                    case when b.inspecteddie>0 and b.maskc_die>=0 then round((b.inspecteddie- b.maskc_defect)/b.inspecteddie*100,2) end maskc_die,
                                                    case when b.inspecteddie>0 and b.maskd_die>=0 then round((b.inspecteddie- b.maskd_defect)/b.inspecteddie*100,2) end maskd_die,
-                                                   case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die
+                                                   case when b.inspecteddie>0 and b.maske_die>=0 then round((b.inspecteddie- b.maske_defect)/b.inspecteddie*100,2) end maske_die,
+                                                   case when b.inspecteddie>0 and (b.inspecteddie - b.maska_defect - b.maskb_defect - b.maskc_defect - b.maskd_defect - b.maske_defect)>0 
+                                                    then round((b.inspecteddie- b.maska_defect- b.maskb_defect- b.maskc_defect- b.maskd_defect- b.maske_defect)/b.inspecteddie*100,2) end masknull_die
                                                     from wm_waferresult t,wm_identification a,wm_inspectioninfo b
                                                     where t.identificationid=a.identificationid and t.resultid=b.resultid
                                                         and ((t.completiontime>={0} and t.completiontime<={1}) or {2}) and t.delflag='0' order by a.device,a.layer,a.lot,to_number(a.substrate_slot)",
@@ -2511,7 +2516,7 @@ namespace WR.WCF.Site
                         else if (lot.EndsWith("||"))
                             sql.AppendFormat("and instr(concat(a.device,'|',a.layer,'||'),'{0}')>0 ", lot);
                         else
-                            sql.AppendFormat("and instr(concat(a.device,'|',a.layer,'|',a.lot,'|'),'{0}')>0", lot);
+                            sql.AppendFormat("and instr(concat(a.device,'|',a.layer,'|',a.lot,'|'),'{0}')>0 ", lot);
                     }
                     else
                     {
@@ -2520,7 +2525,7 @@ namespace WR.WCF.Site
                         else if (lot.EndsWith("||"))
                             sql.AppendFormat("and instr(a.device||'|'||a.layer||'||','{0}')>0 ", lot);
                         else
-                            sql.AppendFormat("and instr(a.device||'|'||a.layer||'|'||a.lot||'|','{0}')>0", lot);
+                            sql.AppendFormat("and instr(a.device||'|'||a.layer||'|'||a.lot||'|','{0}')>0 ", lot);
                     }
 
                     sql.Append("order by a.device,a.layer,a.lot,a.substrate_id");

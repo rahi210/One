@@ -788,7 +788,7 @@ namespace WR.WCF.Site
 
                 using (BFdbContext db = new BFdbContext())
                 {
-                    db.ExecuteSqlCommand("delete cmn_dict where dictid='3000'");
+                    db.ExecuteSqlCommand("delete from cmn_dict where dictid='3000'");
 
                     using (db.BeginTransaction())
                     {
