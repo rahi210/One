@@ -1038,6 +1038,7 @@ namespace WR.Client.UI
                         }
                         else
                         {
+                            SetCntList(2);
                             //if (lstRe_view != null)
                             //    lstRe_view.Enabled = true;
                             if (node.Tag != null)
@@ -1214,7 +1215,7 @@ namespace WR.Client.UI
             }
             else
             {
-                if (node.Level == 1)
+                if (node.Level == 2)
                     id = node.Name;
                 else
                     id = node.Nodes[0].Name;
@@ -1928,27 +1929,31 @@ namespace WR.Client.UI
                         return;
                     }
 
-                    //var wfs = grdData.DataSource as BindingList<WmwaferResultEntity>;
                     var wfs = DataCache.WaferResultInfo;
                     var ent = wfs.FirstOrDefault(p => p.RESULTID == node.Tag.ToString());
 
-                    //SaveFileDialog sd = new SaveFileDialog();
-                    //sd.FileName = string.Format("{0}.sinf", ent.SUBSTRATE_ID.Replace(".", "").Replace(" ", ""));
-                    //sd.Filter = "SINF文件(*.sinf)|*.sinf";
-                    //if (sd.ShowDialog() == DialogResult.OK)
-                    //{
-                    //    ExportSinf(sd.FileName, ent);
-                    //    MsgBoxEx.Info("SINF file is complete.");
-                    //}
-
-                    Thread thr = new Thread(new ThreadStart(() =>
+                    if (ent != null)
                     {
-                        ExportSinf("", ent);
-                        MsgBoxEx.Info("SINF file is complete.");
-                    }));
+                        Thread thr = new Thread(new ThreadStart(() =>
+                        {
+                            ExportSinf("", ent);
+                            MsgBoxEx.Info("SINF file is complete.");
+                        }));
 
-                    thr.IsBackground = true;
-                    thr.Start();
+                        thr.IsBackground = true;
+                        thr.Start();
+                    }
+                    else
+                    {
+                        wfs = DataCache.WaferResultInfo.Where(s => s.LOT.Equals(node.Tag.ToString())).ToList();
+
+                        Task.Factory.StartNew(() =>
+                        {
+                            BatchExportSinf(wfs);
+
+                            MsgBoxEx.Info("SINF file is complete.");
+                        });
+                    }
                 }
             }
             catch (Exception ex)
