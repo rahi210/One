@@ -14,7 +14,7 @@ namespace WR.Client.Start
     public partial class frm_update : Form
     {
         private LoggerEx log = null;
-
+       
         public frm_update()
         {
             InitializeComponent();
@@ -72,17 +72,23 @@ namespace WR.Client.Start
             try
             {
                 string pathTmp = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "update");
-
+                
                 //上次更新日期
                 string updateDate = Config.GetXmlValue(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Start.exe.config"), "AppUpdate");
                 DateTime date_ = DateTime.MinValue;
                 //如果更新日期格式错误，初始最早日期
-                if (!DateTime.TryParseExact(updateDate, "yyyy-MM-dd HH:mm:ss",
-                    System.Globalization.CultureInfo.GetCultureInfo("zh-CN"),
+                //if (!DateTime.TryParseExact(updateDate, "yyyy-MM-dd HH:mm:ss",
+                //    System.Globalization.CultureInfo.GetCultureInfo("zh-CN"),
+                //    System.Globalization.DateTimeStyles.None,
+                //    out date_))
+                //    date_ = DateTime.ParseExact("20130101", "yyyyMMdd",
+                //        System.Globalization.CultureInfo.GetCultureInfo("zh-CN"));
+                  if (!DateTime.TryParseExact(updateDate, "yyyy-MM-dd HH:mm:ss",
+                    System.Globalization.CultureInfo.InvariantCulture,
                     System.Globalization.DateTimeStyles.None,
                     out date_))
                     date_ = DateTime.ParseExact("20130101", "yyyyMMdd",
-                        System.Globalization.CultureInfo.GetCultureInfo("zh-CN"));
+                        System.Globalization.CultureInfo.InvariantCulture);
 
                 updateDate = date_.ToString("yyyyMMddHHmmss");
 
