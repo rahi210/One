@@ -120,6 +120,15 @@ namespace WR.Client.UI
 
                     _waferResultInfo.ForEach(s => s.RECIPE_ID = string.IsNullOrEmpty(s.RECIPE_ID) ? "" : s.RECIPE_ID);
 
+                    //NUMDEFECT>0 良率=100，显示为99.99
+                    _waferResultInfo.ForEach(s => s.SFIELD = s.NUMDEFECT > 0 && s.SFIELD == 100 ? (decimal)99.99 : s.SFIELD);
+                    _waferResultInfo.ForEach(s => s.MASKA_DIE = s.NUMDEFECT > 0 && s.MASKA_DIE == 100 ? (decimal)99.99 : s.MASKA_DIE);
+                    _waferResultInfo.ForEach(s => s.MASKB_DIE = s.NUMDEFECT > 0 && s.MASKB_DIE == 100 ? (decimal)99.99 : s.MASKB_DIE);
+                    _waferResultInfo.ForEach(s => s.MASKC_DIE = s.NUMDEFECT > 0 && s.MASKC_DIE == 100 ? (decimal)99.99 : s.MASKC_DIE);
+                    _waferResultInfo.ForEach(s => s.MASKD_DIE = s.NUMDEFECT > 0 && s.MASKD_DIE == 100 ? (decimal)99.99 : s.MASKD_DIE);
+                    _waferResultInfo.ForEach(s => s.MASKE_DIE = s.NUMDEFECT > 0 && s.MASKE_DIE == 100 ? (decimal)99.99 : s.MASKE_DIE);
+                    _waferResultInfo.ForEach(s => s.MASKNULL_DIE = s.NUMDEFECT > 0 && s.MASKNULL_DIE == 100 ? (decimal)99.99 : s.MASKNULL_DIE);
+
                     YieldSetting = service.GetAllYieldSetting();
                 }
 

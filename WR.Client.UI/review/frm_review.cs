@@ -1015,7 +1015,10 @@ namespace WR.Client.UI
                         if (node.Tag != null)
                             CheckItem(node.Tag.ToString());
                         else
-                            lstRe_view.Enabled = false;
+                        {
+                            if (lstRe_view != null)
+                                lstRe_view.Enabled = false;
+                        }
 
                         cnsList.Show(MousePosition.X, MousePosition.Y);
                     }
@@ -1044,7 +1047,10 @@ namespace WR.Client.UI
                             if (node.Tag != null)
                                 CheckItem(node.Tag.ToString());
                             else
-                                lstRe_view.Enabled = false;
+                            {
+                                if (lstRe_view != null)
+                                    lstRe_view.Enabled = false;
+                            }
 
                             cnsList.Show(MousePosition.X, MousePosition.Y);
                         }
@@ -1331,11 +1337,11 @@ namespace WR.Client.UI
         /// </summary>
         private void CheckItem(string id)
         {
-            lstRe_view.Enabled = false;
-            grdRe_view.Enabled = false;
-
             if (lstRe_view == null || id == null)
                 return;
+
+            lstRe_view.Enabled = false;
+            grdRe_view.Enabled = false;
 
             //var ent = DataCache.WaferResultInfo.FirstOrDefault(p => p.RESULTID == id);
             //if (ent == null)

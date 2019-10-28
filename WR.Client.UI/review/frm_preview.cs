@@ -2961,6 +2961,9 @@ namespace WR.Client.UI
             //Oparams[4] = (goodCnt / dieCnt * 100).ToString("0.00");
             Oparams[4] = ((dieCnt - defectCnt) / dieCnt * 100).ToString("0.00");
 
+            if (defectCnt > 0 && decimal.Parse(Oparams[4]) == 100)
+                Oparams[4] = "99.99";
+
             lblWaferID.Text = string.Format("Lot:{0}  Wafer:{1} Defect Die:{2} Yield:{3}", Oparams[1], Oparams[2], Oparams[3], Oparams[4]);
         }
 

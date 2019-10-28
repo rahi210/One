@@ -2038,7 +2038,7 @@ namespace WR.WCF.Site
                             //    tablename = string.Empty;
 
                             if (lot.EndsWith("|||"))
-                                sql = string.Format(@"select d.device, d.layer, count(a.inspecteddieid) NumCnt
+                                sql = string.Format(@"select device, layer, sum(NumCnt) NumCnt from (select d.device, d.layer, count(a.inspecteddieid) NumCnt
                                                from wm_inspecteddielist{3} a,
                                                     wm_inspectioninfo   b,
                                                     wm_waferresult      c,
@@ -2047,9 +2047,33 @@ namespace WR.WCF.Site
                                                 and b.resultid = c.resultid
                                                 and c.identificationid = d.identificationid
                                                 and c.delflag = '0' and instr(concat(d.device,'|||'),'{0}')>0  and c.completiontime>={1} and c.completiontime<={2} 
-                                              group by d.device, d.layer", lot, stDate, edDate, tablename);
+                                                and a.DIELISTCOUNT IS NULL
+                                              group by d.device, d.layer
+                                              union all
+                                            select d.device, d.layer, sum(a.DIELISTCOUNT) NumCnt
+                                               from wm_inspecteddielist{3} a,
+                                                    wm_inspectioninfo   b,
+                                                    wm_waferresult      c,
+                                                    wm_identification   d
+                                              where a.inspid = b.inspid
+                                                and b.resultid = c.resultid
+                                                and c.identificationid = d.identificationid
+                                                and c.delflag = '0' and instr(concat(d.device,'|||'),'{0}')>0  and c.completiontime>={1} and c.completiontime<={2} 
+                                                and a.DIELISTCOUNT IS NOT NULL
+                                              group by d.device, d.layer
+                                              ) tmp group by device , layer", lot, stDate, edDate, tablename);
                             else if (lot.EndsWith("||"))
-                                sql = string.Format(@"select d.device, d.layer, count(a.inspecteddieid) NumCnt
+//                                sql = string.Format(@"select d.device, d.layer, count(a.inspecteddieid) NumCnt
+//                                               from wm_inspecteddielist{3} a,
+//                                                    wm_inspectioninfo   b,
+//                                                    wm_waferresult      c,
+//                                                    wm_identification   d
+//                                              where a.inspid = b.inspid
+//                                                and b.resultid = c.resultid
+//                                                and c.identificationid = d.identificationid
+//                                                and c.delflag = '0' and instr(concat(d.device,'|',d.layer,'||'),'{0}')>0  and c.completiontime>={1} and c.completiontime<={2} 
+//                                              group by d.device, d.layer", lot, stDate, edDate, tablename);
+                                sql = string.Format(@"select device, layer, sum(NumCnt) NumCnt from (select d.device, d.layer, count(a.inspecteddieid) NumCnt
                                                from wm_inspecteddielist{3} a,
                                                     wm_inspectioninfo   b,
                                                     wm_waferresult      c,
@@ -2058,9 +2082,33 @@ namespace WR.WCF.Site
                                                 and b.resultid = c.resultid
                                                 and c.identificationid = d.identificationid
                                                 and c.delflag = '0' and instr(concat(d.device,'|',d.layer,'||'),'{0}')>0  and c.completiontime>={1} and c.completiontime<={2} 
-                                              group by d.device, d.layer", lot, stDate, edDate, tablename);
+                                                and a.DIELISTCOUNT IS NULL
+                                              group by d.device, d.layer
+                                              union all
+                                            select d.device, d.layer, sum(a.DIELISTCOUNT) NumCnt
+                                               from wm_inspecteddielist{3} a,
+                                                    wm_inspectioninfo   b,
+                                                    wm_waferresult      c,
+                                                    wm_identification   d
+                                              where a.inspid = b.inspid
+                                                and b.resultid = c.resultid
+                                                and c.identificationid = d.identificationid
+                                                and c.delflag = '0' and instr(concat(d.device,'|',d.layer,'||'),'{0}')>0  and c.completiontime>={1} and c.completiontime<={2} 
+                                                and a.DIELISTCOUNT IS NOT NULL
+                                              group by d.device, d.layer
+                                              ) tmp group by device , layer", lot, stDate, edDate, tablename);
                             else
-                                sql = string.Format(@"select d.device, d.layer,d.lot,d.substrate_id, count(a.inspecteddieid) NumCnt
+//                                sql = string.Format(@"select d.device, d.layer,d.lot,d.substrate_id, count(a.inspecteddieid) NumCnt
+//                                               from wm_inspecteddielist{3} a,
+//                                                    wm_inspectioninfo   b,
+//                                                    wm_waferresult      c,
+//                                                    wm_identification   d
+//                                              where a.inspid = b.inspid
+//                                                and b.resultid = c.resultid
+//                                                and c.identificationid = d.identificationid
+//                                                and c.delflag = '0' and instr(concat(d.device,'|',d.layer,'|',d.lot,'|'),'{0}')>0  and c.completiontime>={1} and c.completiontime<={2}
+//                                              group by d.device, d.layer,d.lot,d.substrate_id", lot, stDate, edDate, tablename);
+                                sql = string.Format(@"select device, layer,lot,substrate_id, sum(NumCnt) NumCnt from (select d.device, d.layer,d.lot,d.substrate_id, count(a.inspecteddieid) NumCnt
                                                from wm_inspecteddielist{3} a,
                                                     wm_inspectioninfo   b,
                                                     wm_waferresult      c,
@@ -2069,7 +2117,21 @@ namespace WR.WCF.Site
                                                 and b.resultid = c.resultid
                                                 and c.identificationid = d.identificationid
                                                 and c.delflag = '0' and instr(concat(d.device,'|',d.layer,'|',d.lot,'|'),'{0}')>0  and c.completiontime>={1} and c.completiontime<={2}
-                                              group by d.device, d.layer,d.lot,d.substrate_id", lot, stDate, edDate, tablename);
+                                                and a.DIELISTCOUNT IS NULL
+                                              group by d.device, d.layer,d.lot,d.substrate_id
+                                              union all
+                                            select d.device, d.layer,d.lot,d.substrate_id, sum(a.DIELISTCOUNT) NumCnt
+                                               from wm_inspecteddielist{3} a,
+                                                    wm_inspectioninfo   b,
+                                                    wm_waferresult      c,
+                                                    wm_identification   d
+                                              where a.inspid = b.inspid
+                                                and b.resultid = c.resultid
+                                                and c.identificationid = d.identificationid
+                                                and c.delflag = '0' and instr(concat(d.device,'|',d.layer,'|',d.lot,'|'),'{0}')>0  and c.completiontime>={1} and c.completiontime<={2}
+                                                and a.DIELISTCOUNT IS NOT NULL
+                                              group by d.device, d.layer,d.lot,d.substrate_id
+                                              ) tmp group by device, layer,lot,substrate_id", lot, stDate, edDate, tablename);
 
                             list.AddRange(db.SqlQuery<WmItemsSummaryEntity>(sql).ToList());
                         }

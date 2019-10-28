@@ -1473,10 +1473,6 @@
             this.imageList2.Images.SetKeyName(0, "img.png");
             this.imageList2.Images.SetKeyName(1, "img2.png");
             // 
-            // clrDialog
-            // 
-            this.clrDialog.AllowFullOpen = false;
-            // 
             // timer1
             // 
             this.timer1.Interval = 2000;
