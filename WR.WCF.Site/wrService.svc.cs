@@ -37,16 +37,16 @@ namespace WR.WCF.Site
                 {
                     if (db.DatabaseType == DatabaseType.Mysql)
                         return db.SqlQuery<WMCLASSIFICATIONITEM>(string.Format(@"select a.itemid,a.schemeid,a.id,a.name,a.description,a.priority,a.isacceptable,a.type,a.userid,
-                                                                                    nvl(b.hotkey,a.hotkey) hotkey,ifnull(b.color,a.color) color
+                                                                                    nvl(b.hotkey,a.hotkey) hotkey,ifnull(b.color,a.color) color,a.delflag
                                                                               from wm_classificationitem a left join
                                                                                   (select * from wm_classificationuser where userid='{1}') b on a.itemid=b.itemid
-                                                                              where a.schemeid='{0}'", schemeid, userid)).ToList();
+                                                                              where a.schemeid='{0}' and a.delflag='0'", schemeid, userid)).ToList();
                     else
                         return db.SqlQuery<WMCLASSIFICATIONITEM>(string.Format(@"select a.itemid,a.schemeid,a.id,a.name,a.description,a.priority,a.isacceptable,a.type,a.userid,
-                                                                                    nvl(b.hotkey,a.hotkey) hotkey,nvl(b.color,a.color) color
+                                                                                    nvl(b.hotkey,a.hotkey) hotkey,nvl(b.color,a.color) color,a.delflag
                                                                               from wm_classificationitem a left join
                                                                                   (select * from wm_classificationuser where userid='{1}') b on a.itemid=b.itemid
-                                                                              where a.schemeid='{0}'", schemeid, userid)).ToList();
+                                                                              where a.schemeid='{0}' and a.delflag='0'", schemeid, userid)).ToList();
                 }
             }
             catch (Exception ex)
@@ -465,30 +465,42 @@ namespace WR.WCF.Site
         /// <param name="hotkeys"></param>
         /// <param name="userid"></param>
         /// <returns></returns>
-        public int UpdateClassificationItemUser(string hotkeys, string userid)
+        public int UpdateClassificationItemUser(string hotkeys, string userid, bool isAll = false)
         {
             using (BFdbContext db = new BFdbContext())
             {
                 var tran = db.BeginTransaction();
                 try
                 {
-                    if (string.IsNullOrEmpty(userid))
+                    if (isAll)
                     {
                         string[] keyArr = hotkeys.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (string item in keyArr)
                         {
                             string[] key = item.Split(new char[] { '|' });
-                            db.ExecuteSqlCommand(string.Format("update wm_classificationitem t set t.hotkey='{0}',t.color='{1}' where t.id='{2}'", key[1], key[2], key[0]));
+                            db.ExecuteSqlCommand(string.Format("update wm_classificationitem t set t.hotkey='{0}',t.color='{1}' ,t.id='{2}' ,t.name='{3}' ,t.priority='{4}' where t.itemid='{5}'", key[1], key[2], key[3], key[4], key[5], key[0]));
                         }
                     }
                     else
                     {
-                        string[] keyArr = hotkeys.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                        foreach (string item in keyArr)
+                        if (string.IsNullOrEmpty(userid))
                         {
-                            string[] key = item.Split(new char[] { '|' });
-                            db.ExecuteSqlCommand(string.Format("delete from wm_classificationuser where itemid = '{0}' and userid = '{1}'", key[0], userid));
-                            db.ExecuteSqlCommand(string.Format("insert into wm_classificationuser(itemid, hotkey, color, userid) values('{0}', '{1}', '{2}', '{3}')", key[0], key[1], key[2], userid));
+                            string[] keyArr = hotkeys.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                            foreach (string item in keyArr)
+                            {
+                                string[] key = item.Split(new char[] { '|' });
+                                db.ExecuteSqlCommand(string.Format("update wm_classificationitem t set t.hotkey='{0}',t.color='{1}' where t.id='{2}'", key[1], key[2], key[0]));
+                            }
+                        }
+                        else
+                        {
+                            string[] keyArr = hotkeys.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                            foreach (string item in keyArr)
+                            {
+                                string[] key = item.Split(new char[] { '|' });
+                                db.ExecuteSqlCommand(string.Format("delete from wm_classificationuser where itemid = '{0}' and userid = '{1}'", key[0], userid));
+                                db.ExecuteSqlCommand(string.Format("insert into wm_classificationuser(itemid, hotkey, color, userid) values('{0}', '{1}', '{2}', '{3}')", key[0], key[1], key[2], userid));
+                            }
                         }
                     }
 
@@ -1061,23 +1073,52 @@ namespace WR.WCF.Site
             {
                 using (BFdbContext db = new BFdbContext())
                 {
-                    string sql = string.Format("select substr(t.completiontime,1,6) from wm_waferresult t where t.dielayoutid='{0}'", id);
+                    //                    string sql = string.Format("select substr(t.completiontime,1,6) from wm_waferresult t where t.dielayoutid='{0}'", id);
 
-                    var date = db.SqlQuery<string>(sql).FirstOrDefault();
+                    //                    var date = db.SqlQuery<string>(sql).FirstOrDefault();
 
-                    if (int.Parse(date) > 201905)
+                    //                    if (int.Parse(date) > 201905)
+                    //                    {
+                    //                        sql = string.Format("select t.columns_,t.rows_, t.layoutdetails from WM_DIELAYOUT t where t.layoutid='{0}'", id);
+
+                    //                        return db.SqlQuery<WmdielayoutlistEntitiy>(sql).ToList();
+                    //                    }
+                    //                    else
+                    //                    {
+
+                    //                        sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist{1} t,wm_dielayout a
+                    //                                                    where t.layoutid=a.layoutid and t.layoutid='{0}'", id, date);
+
+                    //                        var list = db.SqlQuery<WmdielayoutlistEntitiy>(sql).ToList();
+
+                    //                        if (list.Count == 0)
+                    //                        {
+                    //                            sql = string.Format("select t.columns_,t.rows_, t.layoutdetails from WM_DIELAYOUT t where t.layoutid='{0}'", id);
+
+                    //                            list = db.SqlQuery<WmdielayoutlistEntitiy>(sql).ToList();
+                    //                        }
+
+                    //                        return list;
+                    //                    }
+
+                    string sql = string.Format("select t.columns_,t.rows_, t.layoutdetails from WM_DIELAYOUT t where t.layoutid='{0}'", id);
+
+                    var list = db.SqlQuery<WmdielayoutlistEntitiy>(sql).ToList();
+
+                    if (list != null && list.Count > 0 && list[0].Layoutdetails != null)
                     {
-                        sql = string.Format("select t.columns_,t.rows_, t.layoutdetails from WM_DIELAYOUT t where t.layoutid='{0}'", id);
-
-                        return db.SqlQuery<WmdielayoutlistEntitiy>(sql).ToList();
+                        return list;
                     }
                     else
                     {
+                        sql = string.Format("select substr(t.completiontime,1,6) from wm_waferresult t where t.dielayoutid='{0}'", id);
+
+                        var date = db.SqlQuery<string>(sql).FirstOrDefault();
 
                         sql = string.Format(@"select t.dieaddressx,t.dieaddressy,t.inspclassifiid,t.isinspectable,t.disposition,a.columns_,a.rows_ from wm_dielayoutlist{1} t,wm_dielayout a
                                                     where t.layoutid=a.layoutid and t.layoutid='{0}'", id, date);
 
-                        var list = db.SqlQuery<WmdielayoutlistEntitiy>(sql).ToList();
+                        list = db.SqlQuery<WmdielayoutlistEntitiy>(sql).ToList();
 
                         if (list.Count == 0)
                         {
@@ -2063,16 +2104,16 @@ namespace WR.WCF.Site
                                               group by d.device, d.layer
                                               ) tmp group by device , layer", lot, stDate, edDate, tablename);
                             else if (lot.EndsWith("||"))
-//                                sql = string.Format(@"select d.device, d.layer, count(a.inspecteddieid) NumCnt
-//                                               from wm_inspecteddielist{3} a,
-//                                                    wm_inspectioninfo   b,
-//                                                    wm_waferresult      c,
-//                                                    wm_identification   d
-//                                              where a.inspid = b.inspid
-//                                                and b.resultid = c.resultid
-//                                                and c.identificationid = d.identificationid
-//                                                and c.delflag = '0' and instr(concat(d.device,'|',d.layer,'||'),'{0}')>0  and c.completiontime>={1} and c.completiontime<={2} 
-//                                              group by d.device, d.layer", lot, stDate, edDate, tablename);
+                                //                                sql = string.Format(@"select d.device, d.layer, count(a.inspecteddieid) NumCnt
+                                //                                               from wm_inspecteddielist{3} a,
+                                //                                                    wm_inspectioninfo   b,
+                                //                                                    wm_waferresult      c,
+                                //                                                    wm_identification   d
+                                //                                              where a.inspid = b.inspid
+                                //                                                and b.resultid = c.resultid
+                                //                                                and c.identificationid = d.identificationid
+                                //                                                and c.delflag = '0' and instr(concat(d.device,'|',d.layer,'||'),'{0}')>0  and c.completiontime>={1} and c.completiontime<={2} 
+                                //                                              group by d.device, d.layer", lot, stDate, edDate, tablename);
                                 sql = string.Format(@"select device, layer, sum(NumCnt) NumCnt from (select d.device, d.layer, count(a.inspecteddieid) NumCnt
                                                from wm_inspecteddielist{3} a,
                                                     wm_inspectioninfo   b,
@@ -2098,16 +2139,16 @@ namespace WR.WCF.Site
                                               group by d.device, d.layer
                                               ) tmp group by device , layer", lot, stDate, edDate, tablename);
                             else
-//                                sql = string.Format(@"select d.device, d.layer,d.lot,d.substrate_id, count(a.inspecteddieid) NumCnt
-//                                               from wm_inspecteddielist{3} a,
-//                                                    wm_inspectioninfo   b,
-//                                                    wm_waferresult      c,
-//                                                    wm_identification   d
-//                                              where a.inspid = b.inspid
-//                                                and b.resultid = c.resultid
-//                                                and c.identificationid = d.identificationid
-//                                                and c.delflag = '0' and instr(concat(d.device,'|',d.layer,'|',d.lot,'|'),'{0}')>0  and c.completiontime>={1} and c.completiontime<={2}
-//                                              group by d.device, d.layer,d.lot,d.substrate_id", lot, stDate, edDate, tablename);
+                                //                                sql = string.Format(@"select d.device, d.layer,d.lot,d.substrate_id, count(a.inspecteddieid) NumCnt
+                                //                                               from wm_inspecteddielist{3} a,
+                                //                                                    wm_inspectioninfo   b,
+                                //                                                    wm_waferresult      c,
+                                //                                                    wm_identification   d
+                                //                                              where a.inspid = b.inspid
+                                //                                                and b.resultid = c.resultid
+                                //                                                and c.identificationid = d.identificationid
+                                //                                                and c.delflag = '0' and instr(concat(d.device,'|',d.layer,'|',d.lot,'|'),'{0}')>0  and c.completiontime>={1} and c.completiontime<={2}
+                                //                                              group by d.device, d.layer,d.lot,d.substrate_id", lot, stDate, edDate, tablename);
                                 sql = string.Format(@"select device, layer,lot,substrate_id, sum(NumCnt) NumCnt from (select d.device, d.layer,d.lot,d.substrate_id, count(a.inspecteddieid) NumCnt
                                                from wm_inspecteddielist{3} a,
                                                     wm_inspectioninfo   b,
@@ -3577,6 +3618,29 @@ namespace WR.WCF.Site
                 }
 
                 return list;
+            }
+        }
+
+        public int DeleteClassificationItem(string id, string schemeid, string by)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    WMCLASSIFICATIONITEM model = db.WMCLASSIFICATIONITEM.Find(id, schemeid);
+
+                    model.DELFLAG = "1";
+                    model.USERID = by;
+
+                    var rs = db.Update<WMCLASSIFICATIONITEM>(model);
+
+                    return rs;
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
             }
         }
     }

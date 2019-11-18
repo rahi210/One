@@ -60,5 +60,9 @@ namespace WR.WCF.DataContract
         [DataMember]
         public string USERID
         { get; set; }
+
+        [DataMember]
+        public string DELFLAG
+        { get; set; }
     }
 }

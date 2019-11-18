@@ -123,8 +123,8 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.grdClass = new CRD.WinUI.Editors.WrDataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colClassification = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colHotKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -134,8 +134,10 @@
             this.Column14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column16 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Delflag = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mnFront = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tlsEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.tlsDel = new System.Windows.Forms.ToolStripMenuItem();
             this.tlsSave = new System.Windows.Forms.ToolStripMenuItem();
             this.tlsClassCancel = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -735,9 +737,9 @@
             // 
             // PicShow
             // 
-            this.PicShow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.PicShow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.PicShow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.PicShow.ColCnt = 0;
             this.PicShow.CurrentDefect = null;
@@ -1082,8 +1084,8 @@
             this.grdClass.ColumnHeadersHeight = 26;
             this.grdClass.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.grdClass.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
-            this.Column2,
+            this.colId,
+            this.colClassification,
             this.colHotKey,
             this.Column4,
             this.Column3,
@@ -1092,7 +1094,8 @@
             this.Column13,
             this.Column14,
             this.Column15,
-            this.Column16});
+            this.Column16,
+            this.Delflag});
             this.grdClass.ContextMenuStrip = this.mnFront;
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
@@ -1121,6 +1124,7 @@
             this.grdClass.RowHeadersVisible = false;
             this.grdClass.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.grdClass.RowTemplate.Height = 23;
+            this.grdClass.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grdClass.ShowCellErrors = false;
             this.grdClass.ShowRowErrors = false;
             this.grdClass.Size = new System.Drawing.Size(452, 299);
@@ -1128,26 +1132,27 @@
             this.grdClass.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.grdClass_CellBeginEdit);
             this.grdClass.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdClass_CellClick);
             this.grdClass.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grdClass_CellFormatting);
+            this.grdClass.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.grdClass_CellValidating);
             this.grdClass.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.grdClass_DataError);
             this.grdClass.Click += new System.EventHandler(this.panel5_Click);
             // 
-            // Column1
+            // colId
             // 
-            this.Column1.DataPropertyName = "ID";
+            this.colId.DataPropertyName = "ID";
             dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle7;
-            this.Column1.HeaderText = "Id";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Width = 40;
+            this.colId.DefaultCellStyle = dataGridViewCellStyle7;
+            this.colId.HeaderText = "Id";
+            this.colId.Name = "colId";
+            this.colId.ReadOnly = true;
+            this.colId.Width = 40;
             // 
-            // Column2
+            // colClassification
             // 
-            this.Column2.DataPropertyName = "NAME";
-            this.Column2.HeaderText = "Classification";
-            this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
-            this.Column2.Width = 200;
+            this.colClassification.DataPropertyName = "NAME";
+            this.colClassification.HeaderText = "Classification";
+            this.colClassification.Name = "colClassification";
+            this.colClassification.ReadOnly = true;
+            this.colClassification.Width = 200;
             // 
             // colHotKey
             // 
@@ -1191,9 +1196,9 @@
             // Column13
             // 
             this.Column13.DataPropertyName = "PRIORITY";
-            this.Column13.HeaderText = "PRIORITY";
+            this.Column13.HeaderText = "Priority";
             this.Column13.Name = "Column13";
-            this.Column13.Visible = false;
+            this.Column13.ReadOnly = true;
             // 
             // Column14
             // 
@@ -1216,14 +1221,22 @@
             this.Column16.Name = "Column16";
             this.Column16.Visible = false;
             // 
+            // Delflag
+            // 
+            this.Delflag.DataPropertyName = "Delflag";
+            this.Delflag.HeaderText = "Column1";
+            this.Delflag.Name = "Delflag";
+            this.Delflag.Visible = false;
+            // 
             // mnFront
             // 
             this.mnFront.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tlsEdit,
+            this.tlsDel,
             this.tlsSave,
             this.tlsClassCancel});
             this.mnFront.Name = "mnFront";
-            this.mnFront.Size = new System.Drawing.Size(115, 70);
+            this.mnFront.Size = new System.Drawing.Size(115, 92);
             this.mnFront.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.mnFront_ItemClicked);
             // 
             // tlsEdit
@@ -1232,6 +1245,13 @@
             this.tlsEdit.Name = "tlsEdit";
             this.tlsEdit.Size = new System.Drawing.Size(114, 22);
             this.tlsEdit.Text = "Edit";
+            // 
+            // tlsDel
+            // 
+            this.tlsDel.Image = global::WR.Client.UI.Properties.Resources.Delete;
+            this.tlsDel.Name = "tlsDel";
+            this.tlsDel.Size = new System.Drawing.Size(114, 22);
+            this.tlsDel.Text = "Delete";
             // 
             // tlsSave
             // 
@@ -1615,17 +1635,6 @@
         private Controls.WrPictureBox picWafer;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ToolStripMenuItem tlsClassCancel;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewComboBoxColumn colHotKey;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column11;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column13;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column14;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column16;
         private System.Windows.Forms.Label lbl_P_Restore;
         private System.Windows.Forms.TrackBar tckBright;
         private System.Windows.Forms.TrackBar tckContract;
@@ -1670,5 +1679,18 @@
         private System.Windows.Forms.Label lblAddDefect;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.DataVisualization.Charting.Chart chtDefectSize;
+        private System.Windows.Forms.ToolStripMenuItem tlsDel;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colClassification;
+        private System.Windows.Forms.DataGridViewComboBoxColumn colHotKey;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column13;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column14;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column16;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Delflag;
     }
 }

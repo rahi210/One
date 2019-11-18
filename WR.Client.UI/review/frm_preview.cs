@@ -77,6 +77,7 @@ namespace WR.Client.UI
 
         public bool IsLayoutRole { get; set; }
         public bool IsSave { get; set; }
+        public bool IsClassificationRole { get; set; }
 
         private DateTime lastRunTime;
         //private LoggerEx log = null;
@@ -133,6 +134,13 @@ namespace WR.Client.UI
                 splitter1.Enabled = false;
                 splitter2.Enabled = false;
                 splitter3.Enabled = false;
+            }
+
+            IsClassificationRole = DataCache.Tbmenus.Count(s => s.MENUCODE == "50010") > 0;
+
+            if (!IsClassificationRole)
+            {
+
             }
 
             //panel2.Width = Convert.ToInt32(panel4.Height * 1.25);
@@ -364,6 +372,8 @@ namespace WR.Client.UI
 
                         clst = clst.Where(s => !forbidClassificationItem.Contains(s.ID.ToString())).ToList();
                     }
+
+                    clst.ForEach(s => s.USERID = "");
 
                     if (this.InvokeRequired)
                         this.Invoke(new Action(() =>
@@ -893,16 +903,32 @@ namespace WR.Client.UI
             //picWafer.DefectList = defectlist.Select(s => new { Location = s.DieAddress, FillColor = s.Color }).Distinct()
             //    .Select(s => new DefectCoordinate { Location = s.Location, FillColor = s.FillColor }).ToList();
 
-            var dlist = (from d in defectlist
-                         group d by d.DieAddress into g
-                         select new { Location = g.Key, Cclassid = g.Max(s => s.Cclassid), FillColor = g.Max(s => s.Color) })
-                         .Select(s =>
-                          new DefectCoordinate
-                          {
-                              Location = s.Location,
-                              FillColor = s.FillColor
-                          })
-                         .ToList();
+            //var dlist = (from d in defectlist
+            //             group d by d.DieAddress into g
+            //             select new { Location = g.Key, Cclassid = g.Max(s => s.Cclassid), FillColor = g.Max(s => s.Color) })
+            //             .Select(s =>
+            //              new DefectCoordinate
+            //              {
+            //                  Location = s.Location,
+            //                  FillColor = s.FillColor
+            //              })
+            //             .ToList();
+
+
+            var plist = from p in
+                            (from d in defectlist
+                             join c in items on d.InspclassifiId equals c.ITEMID
+                             select new { d.DieAddress, d.Cclassid, d.Color, c.PRIORITY })
+                        group p by p.DieAddress into g
+                        select new { DieAddress = g.Key, Priority = g.Max(s => s.PRIORITY) };
+
+            var dlist = (from p in plist
+                         join c in items on p.Priority equals c.PRIORITY
+                         select new DefectCoordinate
+                         {
+                             Location = p.DieAddress,
+                             FillColor = c.COLOR
+                         }).ToList();
 
             picWafer.DefectList = dlist;
             picWafer.DieLayoutList = listDieLayout;
@@ -917,445 +943,6 @@ namespace WR.Client.UI
             picWafer.ReDraw();
 
             log.Debug("picWafer.ReDraw End...............");
-        }
-
-        // <summary>
-        /// 画图
-        /// </summary>
-        private void DrawDefect_0627(string loction)
-        {
-            if (_dielayoutlist == null || _dielayoutlist.Count < 1)
-                return;
-
-            //if (!hasDraw)
-            //    return;
-
-            int col = _dielayoutlist[0].COLUMNS_;
-            int row = _dielayoutlist[0].ROWS_;
-
-            //die宽、高
-            int ww = 5;
-            int wh = 4;
-            int wd = col * ww + 40;
-            int hg = row * wh + 40;
-
-            if (col == row)
-            {
-                ww = 5;
-                wh = 5;
-                hg = row * wh + 20;
-            }
-            else if (col < row)
-            {
-                ww = 4;
-                wh = 5;
-
-                wd = col * ww + 40;
-                hg = row * wh + 20;
-            }
-            else if ((col - row) > 30)
-            {
-                wh = 6;
-                hg = row * wh + 20;
-            }
-            else if ((col - row) < 10)
-            {
-                wd = col * ww + 60;
-                hg = row * wh + 60;
-            }
-
-            //计算偏移量
-            int offsetX = (wd - col * ww) / 2;
-            int offsetY = (hg - row * wh) / 2;
-
-            //背景图
-            Bitmap btp = new Bitmap(wd, hg);
-            Graphics gc = Graphics.FromImage(btp);
-            gc.Clear(Color.White);
-            gc.SmoothingMode = SmoothingMode.HighSpeed;
-
-            GraphicsPath ep = new GraphicsPath();
-            ep.AddEllipse(0, 0, btp.Width, btp.Height);
-            gc.FillPath(_bgColor, ep);
-
-            //背景颜色
-            GraphicsPath bp = new GraphicsPath();
-            //晶片颜色
-            GraphicsPath wp = new GraphicsPath();
-            //缺陷晶片颜色
-            GraphicsPath rp = new GraphicsPath();
-
-            //画出die
-            foreach (WmdielayoutlistEntitiy die in _dielayoutlist)
-            {
-                bp.AddRectangle(new Rectangle(die.DIEADDRESSX * ww + offsetX, (row - die.DIEADDRESSY) * wh + offsetY, ww, wh));
-                wp.AddRectangle(new Rectangle(die.DIEADDRESSX * ww + offsetX, (row - die.DIEADDRESSY) * wh + offsetY, ww - 1, wh - 1));
-            }
-
-            gc.FillPath(_dPen, bp);
-            gc.FillPath(_lPen, wp);
-
-            var items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
-
-            bool lineg = false;
-            int lx = 0;
-            int ly = 0;
-
-            double scaleX = Math.Round(Convert.ToDouble(picWafer.Width) / wd, 8);
-            double scaleY = Math.Round(Convert.ToDouble(picWafer.Height) / hg, 8);
-
-            //画出defect
-            foreach (WmdefectlistEntity def in _defectlist)
-            {
-                if (string.IsNullOrEmpty(def.DieAddress))
-                    continue;
-
-                string[] adr = def.DieAddress.Split(new char[] { ',' });
-                int ax = int.Parse(adr[0]);
-                int ay = int.Parse(adr[1]);
-
-                if (items != null)
-                {
-                    //显示定义的颜色
-                    var clr = items.FirstOrDefault(p => p.ITEMID == def.InspclassifiId);
-                    if (clr != null && string.IsNullOrEmpty(clr.USERID))
-                    {
-                        def.Color = clr.COLOR;
-                    }
-                }
-
-                ////NotProcess属于没有被检测的die，这种die显示灰色
-                //var dieNotProcessCnt = _dielayoutlist.Count(s => s.DIEADDRESSX == ax && s.DIEADDRESSY == ay && s.DISPOSITION.Trim() == "NotProcess");
-                //if (dieNotProcessCnt > 0)
-                //    def.Color = Color.Gray.Name;
-
-                gc.FillRectangle(new SolidBrush(ConvterColor(def.Color)), ax * ww + offsetX, (row - ay) * wh + offsetY, ww - 1, wh - 1);
-
-                //die坐标信息集合
-                WR.Client.Controls.DefectCoordinate defectModel = new Controls.DefectCoordinate();
-
-                defectModel.Location = def.DieAddress;
-                defectModel.Points = new List<Point>() { new Point(Convert.ToInt32((ax * ww + offsetX) * scaleX),Convert.ToInt32(((row - ay) * wh + offsetY) * scaleY))
-                    ,new Point(Convert.ToInt32((ax * ww + offsetX+ww-1) * scaleX),Convert.ToInt32(((row - ay) * wh + offsetY) * scaleY))
-                    ,new Point(Convert.ToInt32((ax * ww + offsetX+ww-1) * scaleX),Convert.ToInt32(((row - ay) * wh + offsetY+wh-1) * scaleY))
-                    ,new Point(Convert.ToInt32((ax * ww + offsetX) * scaleX),Convert.ToInt32(((row - ay) * wh + offsetY+wh-1) * scaleY))};
-
-                picWafer.DefectList.Add(defectModel);
-
-                //判断定位画线
-                if (def.DieAddress == loction)
-                {
-                    lineg = true;
-                    lx = ax;
-                    ly = row - ay;
-                    //gc.DrawLine(_linePen, 0, ay * wh + 11, btp.Width, ay * wh + 11);
-                    //gc.DrawLine(_linePen, ax * ww + 21, 0, ax * ww + 21, btp.Height);
-                }
-            }
-
-            //NotProcess属于没有被检测的die，这种die显示灰色
-            var notProcessLayoutList = _dielayoutlist.Where(s => s.DISPOSITION.Trim() == "NotProcess").Select(s => new { s.DIEADDRESSX, s.DIEADDRESSY }).ToList();
-
-            foreach (var n in notProcessLayoutList)
-            {
-                gc.FillRectangle(new SolidBrush(ConvterColor(Color.Gray.Name)), n.DIEADDRESSX * ww + offsetX, (row - n.DIEADDRESSY) * wh + offsetY, ww - 1, wh - 1);
-            }
-            //定位画线
-            if (lineg)
-            {
-                gc.DrawLine(_linePen, 0, ly * wh + offsetY + 1, btp.Width, ly * wh + offsetY + 1);
-                gc.DrawLine(_linePen, lx * ww + offsetX + 1, 0, lx * ww + offsetX + 1, btp.Height);
-            }
-
-            //画出定位三角
-            Point p1 = new Point(btp.Width / 2, btp.Height - 10);
-            Point p2 = new Point(btp.Width / 2 - 6, btp.Height);
-            Point p3 = new Point(btp.Width / 2 + 6, btp.Height);
-            gc.FillPolygon(_egPen, new Point[] { p1, p2, p3 }, System.Drawing.Drawing2D.FillMode.Alternate);
-            gc.Dispose();
-
-            //缩略图片
-            Bitmap outBmp = new Bitmap(picWafer.Width, picWafer.Height);
-
-            Graphics g = Graphics.FromImage(outBmp);
-            g.Clear(Color.Transparent);
-
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            g.CompositingQuality = CompositingQuality.HighQuality;
-            g.SmoothingMode = SmoothingMode.HighQuality;
-
-            g.DrawImage(btp, new Rectangle(0, 0, outBmp.Width, outBmp.Height), new Rectangle(0, 0, btp.Width, btp.Height), GraphicsUnit.Pixel);
-            g.Dispose();
-
-            //绑定图片
-            picWafer.WrImage = outBmp;
-            hasDraw = false;
-        }
-
-        /// <summary>
-        /// 画图
-        /// </summary>
-        private void DrawDefect1(string loction)
-        {
-            if (_dielayoutlist == null || _dielayoutlist.Count < 1)
-                return;
-
-            int col = _dielayoutlist[0].COLUMNS_;
-            int row = _dielayoutlist[0].ROWS_;
-
-            //die宽、高
-            int ww = 5;
-            int wh = 4;
-            int wd = col * ww + 40;
-            int hg = row * wh + 40;
-
-            if (col == row)
-            {
-                ww = 5;
-                wh = 5;
-                hg = row * wh + 20;
-            }
-            else if (col < row)
-            {
-                ww = 4;
-                wh = 5;
-
-                wd = col * ww + 40;
-                hg = row * wh + 20;
-            }
-            else if ((col - row) > 30)
-            {
-                wh = 6;
-                hg = row * wh + 20;
-            }
-
-            //背景图
-            Bitmap btp = new Bitmap(wd, hg);
-            Graphics gc = Graphics.FromImage(btp);
-            gc.Clear(Color.White);
-            gc.SmoothingMode = SmoothingMode.HighSpeed;
-
-            GraphicsPath ep = new GraphicsPath();
-            ep.AddEllipse(0, 0, btp.Width, btp.Height);
-            gc.FillPath(_bgColor, ep);
-
-            //背景颜色
-            GraphicsPath bp = new GraphicsPath();
-            //晶片颜色
-            GraphicsPath wp = new GraphicsPath();
-            //缺陷晶片颜色
-            GraphicsPath rp = new GraphicsPath();
-
-            //画出die
-            foreach (WmdielayoutlistEntitiy die in _dielayoutlist)
-            {
-                bp.AddRectangle(new Rectangle(die.DIEADDRESSX * ww + 20, (row - die.DIEADDRESSY + 4) * wh + 10, ww, wh));
-                wp.AddRectangle(new Rectangle(die.DIEADDRESSX * ww + 20, (row - die.DIEADDRESSY + 4) * wh + 10, ww - 1, wh - 1));
-            }
-
-            gc.FillPath(_dPen, bp);
-            gc.FillPath(_lPen, wp);
-
-            var items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
-
-            bool lineg = false;
-            int lx = 0;
-            int ly = 0;
-
-            //画出defect
-            foreach (WmdefectlistEntity def in _defectlist)
-            {
-                if (string.IsNullOrEmpty(def.DieAddress))
-                    continue;
-
-                string[] adr = def.DieAddress.Split(new char[] { ',' });
-                int ax = int.Parse(adr[0]);
-                int ay = int.Parse(adr[1]);
-
-                if (items != null)
-                {
-                    //显示定义的颜色
-                    var clr = items.FirstOrDefault(p => p.ITEMID == def.InspclassifiId);
-                    if (clr != null && string.IsNullOrEmpty(clr.USERID))
-                    {
-                        def.Color = clr.COLOR;
-                    }
-                }
-                gc.FillRectangle(new SolidBrush(ConvterColor(def.Color)), ax * ww + 20, (row - ay + 4) * wh + 10, ww - 1, wh - 1);
-
-                //判断定位画线
-                if (def.DieAddress == loction)
-                {
-                    lineg = true;
-                    lx = ax;
-                    ly = row - ay + 4;
-                    //gc.DrawLine(_linePen, 0, ay * wh + 11, btp.Width, ay * wh + 11);
-                    //gc.DrawLine(_linePen, ax * ww + 21, 0, ax * ww + 21, btp.Height);
-                }
-            }
-
-            //定位画线
-            if (lineg)
-            {
-                gc.DrawLine(_linePen, 0, ly * wh + 11, btp.Width, ly * wh + 11);
-                gc.DrawLine(_linePen, lx * ww + 21, 0, lx * ww + 21, btp.Height);
-            }
-
-            //画出定位三角
-            Point p1 = new Point(btp.Width / 2, btp.Height - 10);
-            Point p2 = new Point(btp.Width / 2 - 6, btp.Height);
-            Point p3 = new Point(btp.Width / 2 + 6, btp.Height);
-            gc.FillPolygon(_egPen, new Point[] { p1, p2, p3 }, System.Drawing.Drawing2D.FillMode.Alternate);
-            gc.Dispose();
-
-            //缩略图片
-            Bitmap outBmp = new Bitmap(picWafer.Width, picWafer.Width);
-            Graphics g = Graphics.FromImage(outBmp);
-            g.Clear(Color.Transparent);
-
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            g.CompositingQuality = CompositingQuality.HighQuality;
-            g.SmoothingMode = SmoothingMode.HighQuality;
-
-            g.DrawImage(btp, new Rectangle(0, 0, outBmp.Width, outBmp.Height), new Rectangle(0, 0, btp.Width, btp.Height), GraphicsUnit.Pixel);
-            g.Dispose();
-
-            //绑定图片
-            picWafer.WrImage = outBmp;
-        }
-
-        /// <summary>
-        /// 画图 old
-        /// </summary>
-        [Obsolete("y轴向下的画图，已废弃")]
-        private void DrawDefect_old(string loction)
-        {
-            if (_dielayoutlist == null || _dielayoutlist.Count < 1)
-                return;
-
-            int col = _dielayoutlist[0].COLUMNS_;
-            int row = _dielayoutlist[0].ROWS_;
-
-            //die宽、高
-            int ww = 5;
-            int wh = 4;
-            int wd = col * ww + 40;
-            int hg = row * wh + 40;
-
-            if (col == row)
-            {
-                ww = 5;
-                wh = 5;
-                hg = row * wh + 20;
-            }
-            else if (col < row)
-            {
-                ww = 4;
-                wh = 5;
-
-                wd = col * ww + 40;
-                hg = row * wh + 20;
-            }
-            else if ((col - row) > 30)
-            {
-                wh = 6;
-                hg = row * wh + 20;
-            }
-
-
-            //背景图
-            Bitmap btp = new Bitmap(wd, hg);
-            Graphics gc = Graphics.FromImage(btp);
-            gc.Clear(Color.White);
-            gc.SmoothingMode = SmoothingMode.HighSpeed;
-
-            GraphicsPath ep = new GraphicsPath();
-            ep.AddEllipse(0, 0, btp.Width, btp.Height);
-            gc.FillPath(_bgColor, ep);
-
-            //背景颜色
-            GraphicsPath bp = new GraphicsPath();
-            //晶片颜色
-            GraphicsPath wp = new GraphicsPath();
-            //缺陷晶片颜色
-            GraphicsPath rp = new GraphicsPath();
-
-            //画出die
-            foreach (WmdielayoutlistEntitiy die in _dielayoutlist)
-            {
-                bp.AddRectangle(new Rectangle(die.DIEADDRESSX * ww + 20, die.DIEADDRESSY * wh + 10, ww, wh));
-                wp.AddRectangle(new Rectangle(die.DIEADDRESSX * ww + 20, die.DIEADDRESSY * wh + 10, ww - 1, wh - 1));
-            }
-
-            gc.FillPath(_dPen, bp);
-            gc.FillPath(_lPen, wp);
-
-            var items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
-
-            bool lineg = false;
-            int lx = 0;
-            int ly = 0;
-
-            //画出defect
-            foreach (WmdefectlistEntity def in _defectlist)
-            {
-                if (string.IsNullOrEmpty(def.DieAddress))
-                    continue;
-
-                string[] adr = def.DieAddress.Split(new char[] { ',' });
-                int ax = int.Parse(adr[0]);
-                int ay = int.Parse(adr[1]);
-
-                if (items != null)
-                {
-                    //显示定义的颜色
-                    var clr = items.FirstOrDefault(p => p.ITEMID == def.InspclassifiId);
-                    if (clr != null && string.IsNullOrEmpty(clr.USERID))
-                    {
-                        def.Color = clr.COLOR;
-                    }
-                }
-                gc.FillRectangle(new SolidBrush(ConvterColor(def.Color)), ax * ww + 20, ay * wh + 10, ww - 1, wh - 1);
-
-                //判断定位画线
-                if (def.DieAddress == loction)
-                {
-                    lineg = true;
-                    lx = ax;
-                    ly = ay;
-                    //gc.DrawLine(_linePen, 0, ay * wh + 11, btp.Width, ay * wh + 11);
-                    //gc.DrawLine(_linePen, ax * ww + 21, 0, ax * ww + 21, btp.Height);
-                }
-            }
-
-            //定位画线
-            if (lineg)
-            {
-                gc.DrawLine(_linePen, 0, ly * wh + 11, btp.Width, ly * wh + 11);
-                gc.DrawLine(_linePen, lx * ww + 21, 0, lx * ww + 21, btp.Height);
-            }
-
-            //画出定位三角
-            Point p1 = new Point(btp.Width / 2, btp.Height - 10);
-            Point p2 = new Point(btp.Width / 2 - 6, btp.Height);
-            Point p3 = new Point(btp.Width / 2 + 6, btp.Height);
-            gc.FillPolygon(_egPen, new Point[] { p1, p2, p3 }, System.Drawing.Drawing2D.FillMode.Alternate);
-            gc.Dispose();
-
-            //缩略图片
-            Bitmap outBmp = new Bitmap(picWafer.Width, picWafer.Width);
-            Graphics g = Graphics.FromImage(outBmp);
-            g.Clear(Color.Transparent);
-
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            g.CompositingQuality = CompositingQuality.HighQuality;
-            g.SmoothingMode = SmoothingMode.HighQuality;
-
-            g.DrawImage(btp, new Rectangle(0, 0, outBmp.Width, outBmp.Height), new Rectangle(0, 0, btp.Width, btp.Height), GraphicsUnit.Pixel);
-            g.Dispose();
-
-            //绑定图片
-            picWafer.WrImage = outBmp;
         }
 
         /// <summary>
@@ -1861,24 +1448,71 @@ namespace WR.Client.UI
                     if (!string.IsNullOrEmpty(p.USERID))
                     {
                         string[] r = p.USERID.Split(new char[] { '|' });
-                        p.HOTKEY = r[0];
-                        p.COLOR = r[1];
-                        p.USERID = "";
+
+                        if (r.Length > 1)
+                        {
+                            p.HOTKEY = r[0];
+                            p.COLOR = r[1];
+                            p.ID = int.Parse(r[2]);
+                            p.NAME = r[3];
+                            p.PRIORITY = int.Parse(r[4]);
+                            p.USERID = "";
+                        }
                     }
                 });
 
                 grdClass.Invalidate();
+            }
+            else if (e.ClickedItem == tlsDel)
+            {
+                if (grdClass.SelectedRows.Count == 0)
+                    return;
+
+                if (MsgBoxEx.ConfirmYesNo("Are you sure to delete the record?") == DialogResult.No)
+                    return;
+
+                var cId = grdClass.SelectedRows[0].Cells["Column11"].Value.ToString();
+
+                IwrService service = wrService.GetService();
+                int res = service.DeleteClassificationItem(cId, Schemeid, DataCache.UserInfo.ID);
+                if (res == 1)
+                {
+                    var clst = service.GetClassificationItem(Schemeid, DataCache.UserInfo.ID).OrderBy(p => p.ID).ToList();
+
+                    //过滤没有权限的缺陷分类
+                    var classificationRoleCnt = DataCache.Tbmenus.Count(s => s.MENUCODE == "40001");
+
+                    if (classificationRoleCnt > 0)
+                    {
+                        var forbidClassificationItem = DataCache.CmnDict.Where(s => s.DICTID == "3000").Select(s => s.CODE).ToList();
+
+                        clst = clst.Where(s => !forbidClassificationItem.Contains(s.ID.ToString())).ToList();
+                    }
+
+                    clst.ForEach(s => s.USERID = "");
+
+                    grdClass.DataSource = clst;
+                }
             }
             else
             {
                 //colHotKey.ReadOnly = false;
                 grdClass.Columns["colHotKey"].ReadOnly = false;
 
+                if (IsClassificationRole)
+                {
+                    grdClass.Columns["colId"].ReadOnly = false;
+                    grdClass.Columns["colClassification"].ReadOnly = false;
+                    grdClass.Columns["Column13"].ReadOnly = false;
+                }
+
                 tlsEdit.Enabled = false;
                 tlsEdit.Checked = true;
 
                 tlsSave.Enabled = true;
                 tlsClassCancel.Enabled = true;
+
+                tlsDel.Enabled = false;
             }
         }
 
@@ -1890,8 +1524,14 @@ namespace WR.Client.UI
             tlsSave.Enabled = false;
             tlsClassCancel.Enabled = false;
 
+            tlsDel.Enabled = true;
+
             //colHotKey.ReadOnly = true;
             grdClass.Columns["colHotKey"].ReadOnly = true;
+            grdClass.Columns["colId"].ReadOnly = true;
+
+            grdClass.Columns["colClassification"].ReadOnly = true;
+            grdClass.Columns["Column13"].ReadOnly = true;
         }
 
         /// <summary>
@@ -1911,13 +1551,28 @@ namespace WR.Client.UI
             {
                 if (!string.IsNullOrEmpty(item.USERID))
                 {
+                    //id
+                    if (items.Any(p => p.ITEMID != item.ITEMID && p.ID == item.ID))
+                    {
+                        MsgBoxEx.Info(string.Format("Id[{0}] already repeated!", item.ID));
+                        return false;
+                    }
+
+                    //hot key
                     if (items.Any(p => p.ITEMID != item.ITEMID && p.HOTKEY == item.HOTKEY && !string.IsNullOrEmpty(item.HOTKEY)))
                     {
                         MsgBoxEx.Info(string.Format("Acc Keys[{0}] already repeated!", DataCache.CmnDict.FirstOrDefault(p => p.DICTID == "2010" && p.CODE == item.HOTKEY).NAME));
                         return false;
                     }
 
-                    sbt.AppendFormat(";{0}|{1}|{2}", item.ITEMID, item.HOTKEY, item.COLOR);
+                    //priority
+                    if (items.Any(p => p.ITEMID != item.ITEMID && p.PRIORITY == item.PRIORITY))
+                    {
+                        MsgBoxEx.Info(string.Format("Priority[{0}] already repeated!", item.PRIORITY));
+                        return false;
+                    }
+
+                    sbt.AppendFormat(";{0}|{1}|{2}|{3}|{4}|{5}", item.ITEMID, item.HOTKEY, item.COLOR, item.ID, item.NAME, item.PRIORITY);
                 }
             }
 
@@ -1925,7 +1580,7 @@ namespace WR.Client.UI
                 return true;
 
             IwrService service = wrService.GetService();
-            int res = service.UpdateClassificationItemUser(sbt.ToString(), DataCache.UserInfo.ID);
+            int res = service.UpdateClassificationItemUser(sbt.ToString(), DataCache.UserInfo.ID, IsClassificationRole);
             if (res == 1)
             {
                 items.ForEach((p) => { p.USERID = ""; });
@@ -2819,7 +2474,7 @@ namespace WR.Client.UI
             if (!string.IsNullOrEmpty(item.USERID))
                 return;
 
-            item.USERID = string.Format("{0}|{1}", item.HOTKEY, item.COLOR);
+            item.USERID = string.Format("{0}|{1}|{2}|{3}|{4}", item.HOTKEY, item.COLOR, item.ID, item.NAME, item.PRIORITY);
         }
 
         private void tckBright_Scroll(object sender, EventArgs e)
@@ -3434,6 +3089,32 @@ namespace WR.Client.UI
             //}
 
             grdData.DataSource = new BindingCollection<WmdefectlistEntity>(_defectlist);
+        }
+
+        private void grdClass_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            if (grdClass.Columns[e.ColumnIndex].Name == "colId")
+            {
+                int newValue;
+
+                if (!int.TryParse(e.FormattedValue.ToString(), out newValue) || newValue < 0 || newValue > 999)
+                {
+                    grdClass.Rows[e.RowIndex].ErrorText = "Please enter a valid number of 0-999";
+                    MsgBoxEx.Error("Please enter a valid number of 0-999");
+                    e.Cancel = true;
+                }
+            }
+            else if (grdClass.Columns[e.ColumnIndex].Name == "Column13")
+            {
+                int newValue;
+
+                if (!int.TryParse(e.FormattedValue.ToString(), out newValue) || newValue < 1 || newValue > 99)
+                {
+                    grdClass.Rows[e.RowIndex].ErrorText = "Please enter a valid number of 1-99";
+                    MsgBoxEx.Error("Please enter a valid number of 1-99");
+                    e.Cancel = true;
+                }
+            }
         }
     }
 

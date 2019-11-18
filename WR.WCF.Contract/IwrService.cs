@@ -43,10 +43,10 @@ namespace WR.WCF.Contract
         List<WmdefectlistEntity> GetDefectList(string resultid, string ischecked);
 
         [OperationContract]
-        WmwaferResultEntity UpdateDefect(string resultid, string checkedby, string mclassid, string finish, string addclassid="");
+        WmwaferResultEntity UpdateDefect(string resultid, string checkedby, string mclassid, string finish, string addclassid = "");
 
         [OperationContract]
-        int UpdateClassificationItemUser(string hotkeys, string userid);
+        int UpdateClassificationItemUser(string hotkeys, string userid, bool isAll = false);
 
         [OperationContract]
         int DeleteWafer(string waferid, string delby);
@@ -171,7 +171,7 @@ namespace WR.WCF.Contract
         List<WMYIELDSETTING> GetAllYieldSetting();
 
         [OperationContract]
-        int AddYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield,string imagename);
+        int AddYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield, string imagename);
 
         [OperationContract]
         int EditYield(string repiceId, string type, decimal layeryield, decimal waferyield, decimal maskayield, decimal maskbyield, decimal maskcyield, decimal maskdyield, decimal maskeyield, string imagename);
@@ -194,6 +194,9 @@ namespace WR.WCF.Contract
 
         [OperationContract]
         List<WmLotReport> GetLotReport(string lot, string stDate, string edDate, string isFilter);
+
+        [OperationContract]
+        int DeleteClassificationItem(string id, string schemeid, string by);
     }
 
     [MessageContract]
