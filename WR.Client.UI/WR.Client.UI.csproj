@@ -115,6 +115,12 @@
     <Compile Include="review\frm_merge.Designer.cs">
       <DependentUpon>frm_merge.cs</DependentUpon>
     </Compile>
+    <Compile Include="review\frm_classedit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="review\frm_classedit.Designer.cs">
+      <DependentUpon>frm_classedit.cs</DependentUpon>
+    </Compile>
     <Compile Include="sm\frm_yieldsetting.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -254,6 +260,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="review\frm_merge.resx">
       <DependentUpon>frm_merge.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="review\frm_classedit.resx">
+      <DependentUpon>frm_classedit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="sm\frm_yieldedit.resx">
       <DependentUpon>frm_yieldedit.cs</DependentUpon>

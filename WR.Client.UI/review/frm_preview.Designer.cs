@@ -136,6 +136,7 @@
             this.Column16 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Delflag = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mnFront = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tlsAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.tlsEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.tlsDel = new System.Windows.Forms.ToolStripMenuItem();
             this.tlsSave = new System.Windows.Forms.ToolStripMenuItem();
@@ -1231,13 +1232,21 @@
             // mnFront
             // 
             this.mnFront.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tlsAdd,
             this.tlsEdit,
             this.tlsDel,
             this.tlsSave,
             this.tlsClassCancel});
             this.mnFront.Name = "mnFront";
-            this.mnFront.Size = new System.Drawing.Size(115, 92);
+            this.mnFront.Size = new System.Drawing.Size(115, 114);
             this.mnFront.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.mnFront_ItemClicked);
+            // 
+            // tlsAdd
+            // 
+            this.tlsAdd.Image = global::WR.Client.UI.Properties.Resources.AddUser;
+            this.tlsAdd.Name = "tlsAdd";
+            this.tlsAdd.Size = new System.Drawing.Size(114, 22);
+            this.tlsAdd.Text = "Add";
             // 
             // tlsEdit
             // 
@@ -1692,5 +1701,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column16;
         private System.Windows.Forms.DataGridViewTextBoxColumn Delflag;
+        private System.Windows.Forms.ToolStripMenuItem tlsAdd;
     }
 }

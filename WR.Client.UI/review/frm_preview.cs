@@ -136,11 +136,12 @@ namespace WR.Client.UI
                 splitter3.Enabled = false;
             }
 
-            IsClassificationRole = DataCache.Tbmenus.Count(s => s.MENUCODE == "50010") > 0;
+            IsClassificationRole = DataCache.Tbmenus.Count(s => s.MENUCODE == "40001") > 0;
 
             if (!IsClassificationRole)
             {
-
+                tlsDel.Visible = false;
+                tlsAdd.Visible = false;
             }
 
             //panel2.Width = Convert.ToInt32(panel4.Height * 1.25);
@@ -278,8 +279,8 @@ namespace WR.Client.UI
                     else
                         sts = GetStatus();
 
-                    var defList = service.GetDefectList(Resultid, sts).OrderBy(s => s.ImageName).ToList();
-                    //var defList = service.GetDefectList(Resultid, sts).ToList();
+                    //var defList = service.GetDefectList(Resultid, sts).OrderBy(s => s.ImageName).ToList();
+                    var defList = service.GetDefectList(Resultid, sts).OrderByDescending(s => s.Cclassid).ToList();
                     _defectlist = defList;
 
                     if (this.InvokeRequired)
@@ -1015,6 +1016,7 @@ namespace WR.Client.UI
                 string color = grdClass[e.ColumnIndex, e.RowIndex].Value.ToString().ToUpper();
                 e.Value = null;
                 e.CellStyle.BackColor = ConvterColor(color);
+                e.CellStyle.SelectionBackColor = ConvterColor(color);
             }
         }
 
@@ -1463,12 +1465,38 @@ namespace WR.Client.UI
 
                 grdClass.Invalidate();
             }
+            else if (e.ClickedItem == tlsAdd)
+            {
+                List<WMCLASSIFICATIONITEM> items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
+
+                var frm = new frm_classedit(Schemeid, items);
+
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    IwrService service = wrService.GetService();
+                    var clst = service.GetClassificationItem(Schemeid, DataCache.UserInfo.ID).OrderBy(p => p.ID).ToList();
+
+                    //过滤没有权限的缺陷分类
+                    var classificationRoleCnt = DataCache.Tbmenus.Count(s => s.MENUCODE == "40001");
+
+                    if (classificationRoleCnt > 0)
+                    {
+                        var forbidClassificationItem = DataCache.CmnDict.Where(s => s.DICTID == "3000").Select(s => s.CODE).ToList();
+
+                        clst = clst.Where(s => !forbidClassificationItem.Contains(s.ID.ToString())).ToList();
+                    }
+
+                    clst.ForEach(s => s.USERID = "");
+
+                    grdClass.DataSource = clst;
+                }
+            }
             else if (e.ClickedItem == tlsDel)
             {
                 if (grdClass.SelectedRows.Count == 0)
                     return;
 
-                if (MsgBoxEx.ConfirmYesNo("Are you sure to delete the record?") == DialogResult.No)
+                if (MsgBoxEx.ConfirmYesNo(string.Format("Are you sure to delete the record[Id={0}]?", grdClass.SelectedRows[0].Cells["colId"].Value)) == DialogResult.No)
                     return;
 
                 var cId = grdClass.SelectedRows[0].Cells["Column11"].Value.ToString();
@@ -1504,6 +1532,9 @@ namespace WR.Client.UI
                     grdClass.Columns["colId"].ReadOnly = false;
                     grdClass.Columns["colClassification"].ReadOnly = false;
                     grdClass.Columns["Column13"].ReadOnly = false;
+
+                    tlsDel.Enabled = false;
+                    tlsAdd.Enabled = false;
                 }
 
                 tlsEdit.Enabled = false;
@@ -1511,8 +1542,6 @@ namespace WR.Client.UI
 
                 tlsSave.Enabled = true;
                 tlsClassCancel.Enabled = true;
-
-                tlsDel.Enabled = false;
             }
         }
 
@@ -1524,7 +1553,11 @@ namespace WR.Client.UI
             tlsSave.Enabled = false;
             tlsClassCancel.Enabled = false;
 
-            tlsDel.Enabled = true;
+            if (IsClassificationRole)
+            {
+                tlsDel.Enabled = true;
+                tlsAdd.Enabled = true;
+            }
 
             //colHotKey.ReadOnly = true;
             grdClass.Columns["colHotKey"].ReadOnly = true;
@@ -1565,12 +1598,12 @@ namespace WR.Client.UI
                         return false;
                     }
 
-                    //priority
-                    if (items.Any(p => p.ITEMID != item.ITEMID && p.PRIORITY == item.PRIORITY))
-                    {
-                        MsgBoxEx.Info(string.Format("Priority[{0}] already repeated!", item.PRIORITY));
-                        return false;
-                    }
+                    ////priority
+                    //if (items.Any(p => p.ITEMID != item.ITEMID && p.PRIORITY == item.PRIORITY))
+                    //{
+                    //    MsgBoxEx.Info(string.Format("Priority[{0}] already repeated!", item.PRIORITY));
+                    //    return false;
+                    //}
 
                     sbt.AppendFormat(";{0}|{1}|{2}|{3}|{4}|{5}", item.ITEMID, item.HOTKEY, item.COLOR, item.ID, item.NAME, item.PRIORITY);
                 }
@@ -2335,7 +2368,7 @@ namespace WR.Client.UI
                         var clf = cls.FirstOrDefault(p => p.HOTKEY == ky.CODE && string.IsNullOrEmpty(p.USERID));
                         if (clf != null)
                         {
-                            if (grdData.Visible)
+                            if (grdData.Visible && grdData.Focused)
                             {
                                 if (picWafer.SelectDefect.Count > 0 && picWafer.Status == "Reclass")
                                 {
@@ -3112,6 +3145,15 @@ namespace WR.Client.UI
                 {
                     grdClass.Rows[e.RowIndex].ErrorText = "Please enter a valid number of 1-99";
                     MsgBoxEx.Error("Please enter a valid number of 1-99");
+                    e.Cancel = true;
+                }
+            }
+            else if (grdClass.Columns[e.ColumnIndex].Name == "colClassification")
+            {
+                if (e.FormattedValue.ToString().Length > 30)
+                {
+                    grdClass.Rows[e.RowIndex].ErrorText = "Please enter no more than 30 characters";
+                    MsgBoxEx.Info("Please enter no more than 30 characters");
                     e.Cancel = true;
                 }
             }

@@ -197,6 +197,9 @@ namespace WR.WCF.Contract
 
         [OperationContract]
         int DeleteClassificationItem(string id, string schemeid, string by);
+
+        [OperationContract]
+        int AddClassificationItem(string schemeid, int id, string name, string color, string hotkey, int priority, string by);
     }
 
     [MessageContract]

@@ -987,7 +987,7 @@ namespace WR.WCF.Site
                 {
                     sbt.AppendFormat(@"update wm_waferresult t
                                    set ischecked = '{0}',
-                                       numdefect = nvl((select f.defectivedie
+                                       numdefect = ifnull((select f.defectivedie
                                                          from wm_inspectioninfo f
                                                         where f.resultid = t.resultid),
                                                        0),
@@ -1003,7 +1003,7 @@ namespace WR.WCF.Site
                 {
                     sbt.AppendFormat(@"update wm_waferresult t
                                    set ischecked = '{0}',
-                                       numdefect = ifnull((select f.defectivedie
+                                       numdefect = nvl((select f.defectivedie
                                                          from wm_inspectioninfo f
                                                         where f.resultid = t.resultid),
                                                        0),
@@ -3633,6 +3633,60 @@ namespace WR.WCF.Site
                     model.USERID = by;
 
                     var rs = db.Update<WMCLASSIFICATIONITEM>(model);
+
+                    return rs;
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw GetFault(ex);
+            }
+        }
+
+        public int AddClassificationItem(string schemeid, int id, string name, string color, string hotkey, int priority, string by)
+        {
+            try
+            {
+                using (BFdbContext db = new BFdbContext())
+                {
+                    var rs = 0;
+                    var hasExist = db.WMCLASSIFICATIONITEM.Count(s => s.ID == id && s.SCHEMEID == schemeid && s.DELFLAG == "0") > 0;
+
+                    if (hasExist)
+                        return -1;
+
+                    var model = db.WMCLASSIFICATIONITEM.FirstOrDefault(s => s.ID == id && s.SCHEMEID == schemeid && s.DELFLAG == "1");
+
+                    if (model != null)
+                    {
+                        model.ID = id;
+                        model.NAME = name;
+                        model.COLOR = color;
+                        model.HOTKEY = hotkey;
+                        model.PRIORITY = priority;
+                        model.USERID = by;
+                        model.DELFLAG = "0";
+
+                        rs = db.Update<WMCLASSIFICATIONITEM>(model);
+                    }
+                    else
+                    {
+                        model = new WMCLASSIFICATIONITEM();
+
+                        model.ITEMID = Guid.NewGuid().ToString();
+                        model.SCHEMEID = schemeid;
+                        model.ID = id;
+                        model.NAME = name;
+                        model.COLOR = color;
+                        model.HOTKEY = hotkey;
+                        model.PRIORITY = priority;
+                        model.USERID = by;
+                        model.DELFLAG = "0";
+                        model.TYPE = "2";
+
+                        rs = db.Insert<WMCLASSIFICATIONITEM>(model);
+                    }
 
                     return rs;
                 }
