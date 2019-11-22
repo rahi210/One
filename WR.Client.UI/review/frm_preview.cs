@@ -364,6 +364,12 @@ namespace WR.Client.UI
                     Schemeid = wf.CLASSIFICATIONINFOID;
                     var clst = service.GetClassificationItem(Schemeid, DataCache.UserInfo.ID).OrderBy(p => p.ID).ToList();
 
+                    //按优先级排序
+                    defList = (from d in defList
+                               join c in clst on d.InspclassifiId equals c.ITEMID
+                               orderby c.PRIORITY descending
+                               select d).ToList();
+
                     //过滤没有权限的缺陷分类
                     var classificationRoleCnt = DataCache.Tbmenus.Count(s => s.MENUCODE == "40001");
 
@@ -1439,7 +1445,10 @@ namespace WR.Client.UI
             }
             else if (e.ClickedItem == tlsClassCancel)
             {
-                SetClsMenu();
+                if (grdClass.IsCurrentCellInEditMode)
+                {
+                    grdClass.CancelEdit();
+                }
 
                 List<WMCLASSIFICATIONITEM> items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
                 if (items == null || items.Count < 1)
@@ -1464,6 +1473,7 @@ namespace WR.Client.UI
                 });
 
                 grdClass.Invalidate();
+                SetClsMenu();
             }
             else if (e.ClickedItem == tlsAdd)
             {
@@ -1485,6 +1495,14 @@ namespace WR.Client.UI
 
                         clst = clst.Where(s => !forbidClassificationItem.Contains(s.ID.ToString())).ToList();
                     }
+
+                    tlsReclass.DropDownItems.Clear();
+                    clst.ForEach((p) =>
+                    {
+                        ToolStripItem itm = tlsReclass.DropDownItems.Add(string.Format("{0} {1}", p.ID, p.NAME));
+                        itm.Tag = p.ITEMID;
+                        itm.Click += new EventHandler(itm_Click);
+                    });
 
                     clst.ForEach(s => s.USERID = "");
 
@@ -1516,6 +1534,14 @@ namespace WR.Client.UI
 
                         clst = clst.Where(s => !forbidClassificationItem.Contains(s.ID.ToString())).ToList();
                     }
+
+                    tlsReclass.DropDownItems.Clear();
+                    clst.ForEach((p) =>
+                    {
+                        ToolStripItem itm = tlsReclass.DropDownItems.Add(string.Format("{0} {1}", p.ID, p.NAME));
+                        itm.Tag = p.ITEMID;
+                        itm.Click += new EventHandler(itm_Click);
+                    });
 
                     clst.ForEach(s => s.USERID = "");
 
@@ -1565,6 +1591,7 @@ namespace WR.Client.UI
 
             grdClass.Columns["colClassification"].ReadOnly = true;
             grdClass.Columns["Column13"].ReadOnly = true;
+            grdData.Focus();
         }
 
         /// <summary>
@@ -1573,7 +1600,22 @@ namespace WR.Client.UI
         /// <returns></returns>
         private bool SaveHotKey()
         {
-            grdClass.EndEdit();
+            try
+            {
+                grdClass.Columns["colId"].ReadOnly = true;
+
+                grdClass.Columns["colClassification"].ReadOnly = true;
+                grdClass.Columns["Column13"].ReadOnly = true;
+            }
+            catch (Exception ex)
+            {
+                grdClass.Columns["colId"].ReadOnly = false;
+
+                grdClass.Columns["colClassification"].ReadOnly = false;
+                grdClass.Columns["Column13"].ReadOnly = false;
+
+                return false;
+            }
 
             List<WMCLASSIFICATIONITEM> items = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
             if (items == null || items.Count < 1)
@@ -1584,6 +1626,18 @@ namespace WR.Client.UI
             {
                 if (!string.IsNullOrEmpty(item.USERID))
                 {
+                    //if (item.ID < 0 || item.ID > 999)
+                    //{
+                    //    MsgBoxEx.Error("Please enter a valid number of 0-999");
+                    //    return false;
+                    //}
+
+                    //if (item.PRIORITY < 1 || item.PRIORITY > 99)
+                    //{
+                    //    MsgBoxEx.Error("Please enter a valid number of 1-99");
+                    //    return false;
+                    //}
+
                     //id
                     if (items.Any(p => p.ITEMID != item.ITEMID && p.ID == item.ID))
                     {
@@ -1595,6 +1649,12 @@ namespace WR.Client.UI
                     if (items.Any(p => p.ITEMID != item.ITEMID && p.HOTKEY == item.HOTKEY && !string.IsNullOrEmpty(item.HOTKEY)))
                     {
                         MsgBoxEx.Info(string.Format("Acc Keys[{0}] already repeated!", DataCache.CmnDict.FirstOrDefault(p => p.DICTID == "2010" && p.CODE == item.HOTKEY).NAME));
+                        return false;
+                    }
+
+                    if (item.NAME.Length > 40)
+                    {
+                        MsgBoxEx.Info(string.Format("Classification[{0}] is greater than 40 characters", item.NAME));
                         return false;
                     }
 
@@ -2690,6 +2750,13 @@ namespace WR.Client.UI
             {
                 var selectDefectList = _defectlist.Where(s => picWafer.SelectDefect.Contains(s.DieAddress)).ToList();
 
+                var clst = grdClass.DataSource as List<WMCLASSIFICATIONITEM>;
+                //按优先级排序
+                selectDefectList = (from d in selectDefectList
+                                    join c in clst on d.InspclassifiId equals c.ITEMID
+                                    orderby c.PRIORITY descending
+                                    select d).ToList();
+
                 grdData.DataSource = new BindingCollection<WmdefectlistEntity>(selectDefectList);
                 //grdData.DataSource = selectDefectList;
 
@@ -3134,6 +3201,7 @@ namespace WR.Client.UI
                 {
                     grdClass.Rows[e.RowIndex].ErrorText = "Please enter a valid number of 0-999";
                     MsgBoxEx.Error("Please enter a valid number of 0-999");
+                    grdClass.CancelEdit();
                     e.Cancel = true;
                 }
             }
@@ -3145,15 +3213,18 @@ namespace WR.Client.UI
                 {
                     grdClass.Rows[e.RowIndex].ErrorText = "Please enter a valid number of 1-99";
                     MsgBoxEx.Error("Please enter a valid number of 1-99");
+                    grdClass.CancelEdit();
                     e.Cancel = true;
                 }
             }
             else if (grdClass.Columns[e.ColumnIndex].Name == "colClassification")
             {
-                if (e.FormattedValue.ToString().Length > 30)
+                if (e.FormattedValue.ToString().Length > 40)
                 {
                     grdClass.Rows[e.RowIndex].ErrorText = "Please enter no more than 30 characters";
-                    MsgBoxEx.Info("Please enter no more than 30 characters");
+                    MsgBoxEx.Info("Please enter no more than 40 characters");
+
+                    grdClass.CancelEdit();
                     e.Cancel = true;
                 }
             }

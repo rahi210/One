@@ -71,15 +71,15 @@ namespace WR.Client.UI
                 return;
             }
 
-            if (txtClassification.Text.Trim().Length > 30)
+            if (txtClassification.Text.Trim().Length > 40)
             {
                 txtClassification.Focus();
-                MsgBoxEx.Info("Please enter no more than 30 characters");
+                MsgBoxEx.Info("Please enter no more than 40 characters");
                 return;
             }
 
             //hot key
-            var hotkey = "-";
+            var hotkey = "";
             if (cbxHotkey.SelectedValue != null)
             {
                 if (items.Any(p => p.HOTKEY == cbxHotkey.SelectedValue.ToString()))
