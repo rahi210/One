@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "WROffline"
-#define MyAppVersion "1.1.9.0085"
+#define MyAppVersion "1.1.9.0096"
 #define MyAppPublisher "SMEE"
 #define MyAppExeName "Start.exe"
 
@@ -17,8 +17,9 @@ AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 DefaultDirName={pf}\WROffline
 DisableProgramGroupPage=yes
-OutputBaseFilename=setup_wr
-SetupIconFile=D:\yang.luo\工作\others\SMEE\版本\20180517\wafer.ico
+OutputBaseFilename={#MyAppName}{#MyAppVersion}
+OutputDir=D:\yang.luo\工作\others\SMEE\版本\20191028
+SetupIconFile=D:\yang.luo\工作\others\SMEE\WFRC_Src\ClientBin\wafer.ico
 Compression=lzma
 SolidCompression=yes
 
