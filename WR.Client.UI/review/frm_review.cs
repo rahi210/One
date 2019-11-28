@@ -543,10 +543,12 @@ namespace WR.Client.UI
                         {
                             frm.Oparams = new string[] { ent.RESULTID, ent.LOT, ent.SUBSTRATE_ID, ent.NUMDEFECT.ToString(), ent.SFIELD.ToString() };
                             frm.mnuSelect_ItemClick(frm.mnuReview, null);
+                            return;
                         }
                     }
                 }
-                else if (e.Node.Level == 2 || e.Node.Level == 1 || e.Node.Level == 0)
+                //else if (e.Node.Level == 2 || e.Node.Level == 1 || e.Node.Level == 0)
+                if (e.Node.Level == 2 || e.Node.Level == 1 || e.Node.Level == 0)
                 {
                     //if (lotnode == e.Node)
                     //    return;

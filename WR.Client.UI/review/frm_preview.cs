@@ -1602,6 +1602,7 @@ namespace WR.Client.UI
         {
             try
             {
+                grdClass.Columns["colHotKey"].ReadOnly = true;
                 grdClass.Columns["colId"].ReadOnly = true;
 
                 grdClass.Columns["colClassification"].ReadOnly = true;
@@ -1609,6 +1610,7 @@ namespace WR.Client.UI
             }
             catch (Exception ex)
             {
+                grdClass.Columns["colHotKey"].ReadOnly = true;
                 grdClass.Columns["colId"].ReadOnly = false;
 
                 grdClass.Columns["colClassification"].ReadOnly = false;
